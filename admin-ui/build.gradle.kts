@@ -1,4 +1,4 @@
-import com.moowork.gradle.node.npm.NpmTask
+
 
 
 plugins {
@@ -30,18 +30,6 @@ node{
 
 tasks{
     findByName("jar")?.dependsOn("ngBuild")
-
-//   register<NpmTask>("npmStart"){
-//        dependsOn("bootJar")
-//        println("Task - npmStart")
-//        setArgs(listOf("ng","serve"))
-//    }
-//
-//    register<NpmTask>("npmRunBuild"){
-//        println("Task - npmRunBuild")
-//        setArgs(listOf("run","build"))
-//    }
-//    findByName("npmRunBuild")?.dependsOn("buildFrontend")
 
     register<Exec>("ngBuild"){
         println("Task - ngBuild")

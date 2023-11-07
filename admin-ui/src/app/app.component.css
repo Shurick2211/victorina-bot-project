@@ -1,0 +1,11 @@
+button{
+  width: 98%;
+  font-weight: bold
+}
+button:hover {
+  background: #353740;
+}
+main {
+  background: blanchedalmond;
+}
+

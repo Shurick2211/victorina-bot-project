@@ -2,13 +2,28 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
+import {RouterModule, RouterOutlet, Routes} from "@angular/router";
+import { CreateVictorinaComponent } from './create-victorina/create-victorina.component';
+import { ListVictorinasComponent } from './list-victorinas/list-victorinas.component';
+
+
+
+const appRoutes: Routes = [
+  {path: '', component: CreateVictorinaComponent},
+  {path: 'list', component: ListVictorinasComponent}
+
+]
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    CreateVictorinaComponent,
+    ListVictorinasComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    RouterOutlet,
+    RouterModule.forRoot(appRoutes),
   ],
   providers: [],
   bootstrap: [AppComponent]
