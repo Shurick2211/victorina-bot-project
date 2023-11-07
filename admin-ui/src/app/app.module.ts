@@ -3,8 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import {RouterModule, RouterOutlet, Routes} from "@angular/router";
-import { CreateVictorinaComponent } from './create-victorina/create-victorina.component';
-import { ListVictorinasComponent } from './list-victorinas/list-victorinas.component';
+import { CreateVictorinaComponent } from './components/create-victorina/create-victorina.component';
+import { ListVictorinasComponent } from './components/list-victorinas/list-victorinas.component';
 
 
 
