@@ -5,6 +5,11 @@ import { AppComponent } from './app.component';
 import {RouterModule, RouterOutlet, Routes} from "@angular/router";
 import { CreateVictorinaComponent } from './components/create-victorina/create-victorina.component';
 import { ListVictorinasComponent } from './components/list-victorinas/list-victorinas.component';
+import {FormsModule} from "@angular/forms";
+import { QuestionComponent } from './components/question/question.component';
+import {MatCardModule} from '@angular/material/card';
+import {MatButtonModule} from "@angular/material/button";
+
 
 
 
@@ -18,12 +23,17 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     CreateVictorinaComponent,
-    ListVictorinasComponent
+    ListVictorinasComponent,
+    QuestionComponent
   ],
   imports: [
     BrowserModule,
     RouterOutlet,
+    FormsModule,
     RouterModule.forRoot(appRoutes),
+    FormsModule,
+    MatCardModule,
+    MatButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]

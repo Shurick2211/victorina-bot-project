@@ -1,0 +1,15 @@
+.pad{
+  padding-left: 10px;
+}
+h3{
+  text-align: center;
+}
+textarea{
+  width: 90%;
+  margin-top: 20px;
+  margin-left: 10px;
+}
+
+.have_margin{
+  margin: 10px;
+}

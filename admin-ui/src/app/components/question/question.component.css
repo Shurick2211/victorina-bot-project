@@ -1,0 +1,11 @@
+
+mat-card {
+  background: beige;
+  box-shadow: 3px 3px 16px -2px rgba(0, 0, 0, .5);
+  margin: 10px;
+  width: 98%;
+}
+textarea{
+  margin: 10px;
+  width: 95%;
+}

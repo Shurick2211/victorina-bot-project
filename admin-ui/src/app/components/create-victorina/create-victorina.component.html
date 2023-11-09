@@ -1,1 +1,28 @@
-<p>create-victorina works!</p>
+<div class="pad">
+  <h3>Create new victorina!</h3>
+  <div>
+    <span>Name:</span>
+    <input style="margin-left: 10px" size="100" type="text" name="victorina-name" [(ngModel)]="victorina.name">
+  </div>
+  <div>
+    <span>Title:</span>
+    <textarea  name="victorina-title" style=" margin-left: 10px"
+              rows="3" [(ngModel)]="victorina.title"></textarea>
+  </div>
+  <hr>
+
+  <div>
+    <app-question></app-question>
+  </div>
+
+  <hr>
+  <div class="have_margin">
+    <span>{{victorina.name}}</span>
+    <span>{{victorina.title}}</span>
+    <br>
+    <span>{{info}}</span>
+    <button name = "display" (click)="display()" >Display</button>
+  </div>
+
+
+</div>
