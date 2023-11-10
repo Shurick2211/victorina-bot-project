@@ -18,7 +18,6 @@ export class QuestionComponent implements OnInit{
   checkeds:Array<boolean>;
 
 
-
   constructor() {
     this.question = new Question('', new Array<string>(2), 0)
     this.checkeds = new Array<boolean>(this.question.answers.length)
@@ -55,4 +54,6 @@ export class QuestionComponent implements OnInit{
   ngOnInit(): void {
     this.checkeds[this.question.rightAnswer] = true
   }
+
+
 }

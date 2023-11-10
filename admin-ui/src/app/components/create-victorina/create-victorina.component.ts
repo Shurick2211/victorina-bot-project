@@ -36,6 +36,9 @@ export class CreateVictorinaComponent implements OnInit{
     this.q = new Question('',new Array<string>(q.answers.length), -1)
   }
 
+  editToInfo(q: Question, i: number){
+    this.victorina.questions[i] = q
 
+  }
 
 }
