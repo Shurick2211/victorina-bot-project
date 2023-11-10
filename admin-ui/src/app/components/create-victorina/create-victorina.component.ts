@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Victorina} from "../../dto/victorina";
+import {Question} from "../../dto/question";
 
 @Component({
   selector: 'app-create-victorina',
@@ -9,11 +10,15 @@ import {Victorina} from "../../dto/victorina";
 export class CreateVictorinaComponent implements OnInit{
 
   victorina: Victorina;
+  q:Question;
 
   info:string = ''
 
+
+
   constructor() {
     this.victorina = new Victorina();
+    this.q = new Question('',['',''],-1)
   }
 
   ngOnInit(): void {
@@ -23,5 +28,14 @@ export class CreateVictorinaComponent implements OnInit{
 
   display() {
     this.info = this.victorina.toString()
+
   }
+
+  addToInfo(q:Question){
+    this.victorina.questions.push(q)
+    this.q = new Question('',new Array<string>(q.answers.length), -1)
+  }
+
+
+
 }

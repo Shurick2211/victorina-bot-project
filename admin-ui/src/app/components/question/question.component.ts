@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Question} from "../../dto/question";
 
 
@@ -7,13 +7,25 @@ import {Question} from "../../dto/question";
   templateUrl: './question.component.html',
   styleUrls: ['./question.component.css']
 })
-export class QuestionComponent {
+export class QuestionComponent implements OnInit{
+
+  @Input()
   question:Question;
+  @Output()
+  quest = new EventEmitter<Question>();
+  @Input()
+  isActive = false;
+  checkeds:Array<boolean>;
+
 
 
   constructor() {
     this.question = new Question('', new Array<string>(2), 0)
+    this.checkeds = new Array<boolean>(this.question.answers.length)
+    this.checkeds.forEach(value => value = false)
   }
+
+
 
 
   click() {
@@ -22,6 +34,7 @@ export class QuestionComponent {
 
   clickAdd() {
     this.question.answers.push("")
+    this.checkeds.push(false)
   }
 
   trackByFn(index: any, item: any) {
@@ -29,6 +42,17 @@ export class QuestionComponent {
   }
 
   clickNum(i: number) {
-    this.question.rightAnswer = i
+    for (let j = 0; j<this.checkeds.length; j++)
+      if((i==j) && this.checkeds[j]) this.question.rightAnswer = i;
+      else this.checkeds[j] = false;
+    // console.log(`${i} ${this.checkeds.toString()}`)
+  }
+
+  save(){
+    this.quest.emit(this.question)
+  }
+
+  ngOnInit(): void {
+    this.checkeds[this.question.rightAnswer] = true
   }
 }
