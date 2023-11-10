@@ -48,7 +48,9 @@ export class QuestionComponent implements OnInit{
   }
 
   save(){
+
     this.quest.emit(this.question)
+    this.checkeds = new Array<boolean>(this.question.answers.length)
   }
 
   ngOnInit(): void {
