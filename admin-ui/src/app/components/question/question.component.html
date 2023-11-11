@@ -18,6 +18,7 @@
     <mat-card-actions>
       <button mat-button class="large-font" *ngIf="isActive && !isEdit" (click)="clickAdd()">+</button>
       <button mat-button class="large-font" *ngIf="isActive && !isEdit" (click)="clickDell()">-</button>
+      <span *ngIf="notReady" style="margin-left: 20px; color: red">Not ready!</span>
     </mat-card-actions>
 
 

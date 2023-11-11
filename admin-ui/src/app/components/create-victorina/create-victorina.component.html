@@ -3,6 +3,7 @@
   <div>
     <span>Name:</span>
     <input style="margin-left: 10px" size="100" type="text" name="victorina-name" [(ngModel)]="victorina.name">
+    <button name = "save" class="button-success" style="margin-left: 10px" (click)="save()" >Save!</button>
   </div>
   <div>
     <span>Title:</span>
@@ -19,16 +20,6 @@
   <div *ngFor="let quest of victorina.questions; let i = index;">
     <app-question [question]="quest"  (deleteQ)="deleteQuestion(i)" [num]="i+1"
                   (quest) = "editToInfo($event, i)" [isActive]="false"></app-question>
-  </div>
-
-
-  <hr>
-  <div class="have_margin">
-    <span>{{victorina.name}}</span>
-    <span>{{victorina.title}}</span>
-    <br>
-    <span>{{info}}</span>
-    <button name = "display" (click)="display()" >Display</button>
   </div>
 
 

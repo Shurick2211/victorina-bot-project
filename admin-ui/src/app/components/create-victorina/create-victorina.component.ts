@@ -12,9 +12,6 @@ export class CreateVictorinaComponent implements OnInit{
   victorina: Victorina;
   q:Question;
 
-  info:string = ''
-
-
 
   constructor() {
     this.victorina = new Victorina();
@@ -25,11 +22,6 @@ export class CreateVictorinaComponent implements OnInit{
 
   }
 
-
-  display() {
-    this.info = this.victorina.toString()
-
-  }
 
   addToInfo(q:Question){
     this.victorina.questions.push(q)
@@ -44,5 +36,9 @@ export class CreateVictorinaComponent implements OnInit{
   deleteQuestion(i: number) {
     console.log(i)
     this.victorina.questions.splice(i--,1)
+  }
+
+  save() {
+    console.log(this.victorina.toString())
   }
 }

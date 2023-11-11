@@ -24,6 +24,8 @@ export class QuestionComponent implements OnInit{
   @Input()
   num:number=0;
 
+  notReady = false;
+
   constructor() {
     this.question = new Question('', new Array<string>(2), 0)
     this.checkeds = new Array<boolean>(this.question.answers.length)
@@ -61,6 +63,7 @@ export class QuestionComponent implements OnInit{
   save(){
     if(this.question.text !== '' && this.question.rightAnswer > -1
         && this.question.answers[0] !=='' && this.question.answers[1] !=='') {
+      this.notReady = false
       this.quest.emit(this.question)
       if (!this.isEdit) {
         this.checkeds = new Array<boolean>(this.question.answers.length)
@@ -68,6 +71,8 @@ export class QuestionComponent implements OnInit{
         this.isEdit = !this.isEdit
         this.isActive = !this.isActive
       }
+    } else {
+      this.notReady = true
     }
   }
 
