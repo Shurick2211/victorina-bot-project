@@ -42,6 +42,9 @@ export class CreateVictorinaComponent implements OnInit{
 
   save() {
     console.log(this.victorina.toString())
-    this.httpService.createVictorina(this.victorina)
+    this.httpService.createVictorina(this.victorina).subscribe(
+      response => {
+        console.log(response.toString)
+      })
   }
 }

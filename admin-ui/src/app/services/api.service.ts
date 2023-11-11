@@ -7,7 +7,7 @@ import {Observable} from "rxjs";
   providedIn: 'root'
 })
 export class ApiService {
-  private api = 'frontrequests';
+  private api = 'http://localhost:5000/frontrequests';
 
   constructor(private http: HttpClient) { }
 
