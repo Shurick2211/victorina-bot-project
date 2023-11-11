@@ -41,4 +41,7 @@ export class CreateVictorinaComponent implements OnInit{
 
   }
 
+  deleteQuestion(i: number) {
+    this.victorina.questions.slice(i--,i)
+  }
 }

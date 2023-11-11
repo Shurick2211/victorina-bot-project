@@ -17,6 +17,10 @@ export class QuestionComponent implements OnInit{
   isActive = false;
   checkeds:Array<boolean>;
 
+  isEdit = false;
+  @Output()
+  deleteQ = new EventEmitter<boolean>();
+
 
   constructor() {
     this.question = new Question('', new Array<string>(2), 0)
@@ -36,6 +40,13 @@ export class QuestionComponent implements OnInit{
     this.checkeds.push(false)
   }
 
+  clickDell(){
+    if (this.question.answers.length > 2) {
+      this.question.answers.pop()
+      this.checkeds.pop()
+    }
+  }
+
   trackByFn(index: any, item: any) {
     return index;
   }
@@ -48,14 +59,20 @@ export class QuestionComponent implements OnInit{
   }
 
   save(){
-
     this.quest.emit(this.question)
-    this.checkeds = new Array<boolean>(this.question.answers.length)
+    if (!this.isEdit) {
+      this.checkeds = new Array<boolean>(this.question.answers.length)
+    } else {
+      this.isEdit = !this.isEdit
+      this.isActive = !this.isActive
+    }
   }
 
   ngOnInit(): void {
     this.checkeds[this.question.rightAnswer] = true
   }
 
-
+  deleteQuestion(){
+    this.deleteQ.emit(true)
+  }
 }

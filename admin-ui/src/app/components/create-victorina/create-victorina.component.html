@@ -17,7 +17,7 @@
   <hr>
   <h4>Saved question:</h4>
   <div *ngFor="let quest of victorina.questions; let i = index;">
-    <app-question [question]="quest" (quest) = "editToInfo($event, i)" [isActive]="false"></app-question>
+    <app-question [question]="quest"  (deleteQ)="deleteQuestion(i)" (quest) = "editToInfo($event, i)" [isActive]="false"></app-question>
   </div>
 
 
