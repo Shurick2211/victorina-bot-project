@@ -10,6 +10,8 @@ import { QuestionComponent } from './components/question/question.component';
 import {MatCardModule} from '@angular/material/card';
 import {MatButtonModule} from "@angular/material/button";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {ApiService} from "./services/api.service";
+import {HttpClientModule} from "@angular/common/http";
 
 
 
@@ -35,9 +37,10 @@ const appRoutes: Routes = [
     FormsModule,
     MatCardModule,
     MatButtonModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [ApiService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

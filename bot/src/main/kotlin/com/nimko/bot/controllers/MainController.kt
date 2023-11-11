@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.info.ProjectInfoAutoConfiguration
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import kotlin.reflect.jvm.internal.impl.metadata.ProtoBuf.Type.Argument.Projection
@@ -33,5 +35,8 @@ class MainController @Autowired constructor(val service:FrontRequestService){
         summary = "Test RestAPI"
     )
     fun getRequest() = service.getRequest()
+
+    @PostMapping
+    fun createVictorina(@RequestBody victorina:String ) = service.createVictorina(victorina)
 
 }

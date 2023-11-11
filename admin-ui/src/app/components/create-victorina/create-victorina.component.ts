@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {Victorina} from "../../dto/victorina";
 import {Question} from "../../dto/question";
+import {ApiService} from "../../services/api.service";
+
 
 @Component({
   selector: 'app-create-victorina',
@@ -13,7 +15,7 @@ export class CreateVictorinaComponent implements OnInit{
   q:Question;
 
 
-  constructor() {
+  constructor(private httpService:ApiService) {
     this.victorina = new Victorina();
     this.q = new Question('',['',''],-1)
   }
@@ -40,5 +42,6 @@ export class CreateVictorinaComponent implements OnInit{
 
   save() {
     console.log(this.victorina.toString())
+    this.httpService.createVictorina(this.victorina)
   }
 }
