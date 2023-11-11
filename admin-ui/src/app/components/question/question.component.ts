@@ -21,14 +21,14 @@ export class QuestionComponent implements OnInit{
   @Output()
   deleteQ = new EventEmitter<boolean>();
 
+  @Input()
+  num:number=0;
 
   constructor() {
     this.question = new Question('', new Array<string>(2), 0)
     this.checkeds = new Array<boolean>(this.question.answers.length)
     this.checkeds.forEach(value => value = false)
   }
-
-
 
 
   click() {
@@ -59,12 +59,15 @@ export class QuestionComponent implements OnInit{
   }
 
   save(){
-    this.quest.emit(this.question)
-    if (!this.isEdit) {
-      this.checkeds = new Array<boolean>(this.question.answers.length)
-    } else {
-      this.isEdit = !this.isEdit
-      this.isActive = !this.isActive
+    if(this.question.text !== '' && this.question.rightAnswer > -1
+        && this.question.answers[0] !=='' && this.question.answers[1] !=='') {
+      this.quest.emit(this.question)
+      if (!this.isEdit) {
+        this.checkeds = new Array<boolean>(this.question.answers.length)
+      } else {
+        this.isEdit = !this.isEdit
+        this.isActive = !this.isActive
+      }
     }
   }
 

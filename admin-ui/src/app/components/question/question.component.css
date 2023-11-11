@@ -9,3 +9,13 @@ textarea{
   margin: 10px;
   width: 95%;
 }
+
+button {
+  background: antiquewhite;
+  margin-left: 10px;
+
+}
+
+.large-font {
+  font-size: large;
+}
