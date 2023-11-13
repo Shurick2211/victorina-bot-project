@@ -1,5 +1,4 @@
 import {Question} from "./question";
-import {Input, Output} from "@angular/core";
 
 export class Victorina {
    name:string;

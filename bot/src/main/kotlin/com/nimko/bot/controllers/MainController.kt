@@ -37,6 +37,9 @@ class MainController @Autowired constructor(val service:FrontRequestService){
     fun getRequest() = service.getRequest()
 
     @PostMapping
+    @Operation(
+        summary = "Create victorina"
+    )
     fun createVictorina(@RequestBody victorina:String ) = service.createVictorina(victorina)
 
 }
