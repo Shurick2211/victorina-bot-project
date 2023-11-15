@@ -1,22 +1,13 @@
 import {Question} from "./question";
 
 export class Victorina {
-   name:string;
-   title:string;
-   questions:Array<Question>;
 
-  constructor() {
-    this.name = '';
-    this.title = '';
-    this.questions = new Array<Question>();
+  constructor(public id: string, public name: string, public title: string,
+              public questions: Question[], public ownerId: string,
+              public winnerId: string) {
 
   }
-  // constructor(name:string, title:string, questions:Array<Question>) {
-  //   this._name = name;
-  //   this._title = title;
-  //   this._questions = questions;
-  // }
-  //
+
   toString():string{
     return `Victorina[name=${this.name}; title=${this.title}; question=${this.questions}]`
   }

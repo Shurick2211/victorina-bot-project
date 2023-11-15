@@ -1,5 +1,6 @@
 package com.nimko.bot.controllers
 
+import com.nimko.bot.models.Victorina
 import com.nimko.bot.services.FrontRequestService
 import io.swagger.v3.oas.annotations.OpenAPIDefinition
 import io.swagger.v3.oas.annotations.Operation
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController
 import kotlin.reflect.jvm.internal.impl.metadata.ProtoBuf.Type.Argument.Projection
 
 @RestController
-@RequestMapping("/frontrequests")
+@RequestMapping("/victorinas")
 @OpenAPIDefinition(info =
 Info(
     title =  "Victorina-bot",
@@ -24,7 +25,7 @@ Info(
     description = "API for Victorina-bot",
     contact = Contact(name = "Olexandr Nimko",
         email = "shurick2211@gmail.com",
-        url = "https://github.com/Shurick2211/")
+        url = "https://github.com/Shurick2211/victorina-bot-project.git")
 )
 )
 @Tag(name = "REST Controller",description = "My Victorina-bot Controller")
@@ -32,14 +33,14 @@ class MainController @Autowired constructor(val service:FrontRequestService){
 
     @GetMapping
     @Operation(
-        summary = "Test RestAPI"
+        summary = "Get All victorins from Db"
     )
-    fun getRequest() = service.getRequest()
+    fun allVictorins() = service.getRequest()
 
     @PostMapping
     @Operation(
         summary = "Create victorina"
     )
-    fun createVictorina(@RequestBody victorina:String ) = service.createVictorina(victorina)
+    fun createVictorina(@RequestBody victorina:Victorina ) = service.createVictorina(victorina)
 
 }

@@ -18,6 +18,10 @@ repositories {
     maven { url = uri("https://repo.spring.io/snapshot") }
 }
 
+springBoot {
+    buildInfo()
+}
+
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
@@ -32,6 +36,17 @@ dependencies {
 }
 
 tasks{
+    processResources {
+        filesMatching("**/application.properties") {
+            expand( project.properties )
+        }
+    }
+
+    bootRun{
+       systemProperties = System.getProperties() as Map<String,String>
+   }
+
+
     withType<KotlinCompile> {
         kotlinOptions {
             freeCompilerArgs += "-Xjsr305=strict"
