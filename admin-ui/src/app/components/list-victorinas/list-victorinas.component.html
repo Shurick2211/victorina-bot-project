@@ -5,6 +5,7 @@
     <th>Name</th>
     <th>Title</th>
     <th>Questions</th>
+    <th>Actions</th>
     </thead>
     <tbody>
     <tr *ngFor="let victorina of victorinas;let i = index;">
@@ -16,6 +17,11 @@
               {{in+1}} {{victorinas[i].questions[in].text}}
             </li>
           </ul>
+      </td>
+      <td>
+        <button style="margin-bottom:10px;" name="edit" (click)="edit(i)">Edit</button>
+        <br>
+        <button  name="delete" (click)="delete(i)">Delete</button>
       </td>
     </tr>
     </tbody>

@@ -24,4 +24,11 @@ export class ListVictorinasComponent implements OnInit{
     })
   }
 
+  edit(i: number) {
+    
+  }
+
+  delete(i: number) {
+    
+  }
 }
