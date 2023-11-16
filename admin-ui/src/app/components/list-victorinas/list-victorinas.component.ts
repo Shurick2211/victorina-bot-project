@@ -16,19 +16,22 @@ export class ListVictorinasComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.apiService.getAllVictorinas().subscribe(response => {
-      this.victorinas = response
-      console.log(this.victorinas)
-    })
+    this.getAll()
   }
 
-  edit(i: number) {
 
-  }
 
   delete(i: number) {
     this.apiService.deleteVictorina(`${this.victorinas[i].id}`).subscribe(response => {
       console.log(response)
+    })
+    this.getAll()
+  }
+
+  private getAll(){
+    this.apiService.getAllVictorinas().subscribe(response => {
+      this.victorinas = response
+      console.log(this.victorinas)
     })
   }
 }

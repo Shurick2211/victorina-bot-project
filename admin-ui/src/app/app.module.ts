@@ -12,13 +12,15 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {ApiService} from "./services/api.service";
 import {HttpClientModule} from "@angular/common/http";
+import { EditVictorinaComponent } from './components/edit-victorina/edit-victorina.component';
 
 
 
 
 const appRoutes: Routes = [
   {path: '', component: CreateVictorinaComponent},
-  {path: 'list', component: ListVictorinasComponent}
+  {path: 'list', component: ListVictorinasComponent},
+  {path: 'edit', component: EditVictorinaComponent}
 
 ]
 
@@ -27,7 +29,8 @@ const appRoutes: Routes = [
     AppComponent,
     CreateVictorinaComponent,
     ListVictorinasComponent,
-    QuestionComponent
+    QuestionComponent,
+    EditVictorinaComponent
   ],
   imports: [
     BrowserModule,

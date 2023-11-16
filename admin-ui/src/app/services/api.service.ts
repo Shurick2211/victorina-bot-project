@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpParams} from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 import {Victorina} from "../dto/victorina";
 import {Observable} from "rxjs";
 
@@ -20,6 +20,6 @@ export class ApiService {
   }
 
   deleteVictorina(id: String):Observable<any>{
-    return this.http.delete<any>(this.api,{body: id})
+    return this.http.delete<any>(this.api,{body: id, observe:'response'})
   }
 }
