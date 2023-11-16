@@ -17,7 +17,7 @@ export class CreateVictorinaComponent implements OnInit{
 
 
   constructor(private httpService:ApiService) {
-    this.victorina = new Victorina('','','', new Array<Question>(), '','');
+    this.victorina = new Victorina(null,'','', new Array<Question>(), '','');
     this.q = new Question('',['',''],-1)
   }
 

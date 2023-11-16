@@ -2,7 +2,7 @@ import {Question} from "./question";
 
 export class Victorina {
 
-  constructor(public id: string, public name: string, public title: string,
+  constructor(public id: unknown, public name: string, public title: string,
               public questions: Question[], public ownerId: string,
               public winnerId: string) {
 

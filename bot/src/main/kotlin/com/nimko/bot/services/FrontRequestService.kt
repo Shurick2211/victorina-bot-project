@@ -18,7 +18,6 @@ class FrontRequestService  @Autowired constructor(val victorinasDb: VictorinaRep
     }
 
     fun createVictorina(victorina:Victorina):ResponseEntity<Any>{
-        victorina.id=null
         victorinasDb.save(victorina)
         return ResponseEntity.ok().build()
     }
