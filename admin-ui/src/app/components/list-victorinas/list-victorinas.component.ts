@@ -13,8 +13,6 @@ export class ListVictorinasComponent implements OnInit{
 
   constructor(private apiService:ApiService) {
 
-
-
   }
 
   ngOnInit(): void {
@@ -25,10 +23,12 @@ export class ListVictorinasComponent implements OnInit{
   }
 
   edit(i: number) {
-    
+
   }
 
   delete(i: number) {
-    
+    this.apiService.deleteVictorina(`${this.victorinas[i].id}`).subscribe(response => {
+      console.log(response)
+    })
   }
 }

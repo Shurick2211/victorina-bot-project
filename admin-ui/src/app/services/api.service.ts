@@ -18,4 +18,8 @@ export class ApiService {
   getAllVictorinas():Observable<Victorina[]>{
     return this.http.get<Victorina[]>(this.api)
   }
+
+  deleteVictorina(id: String):Observable<any>{
+    return this.http.delete<any>(this.api,{body: id})
+  }
 }
