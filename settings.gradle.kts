@@ -16,3 +16,4 @@ rootProject.name = "victorina-bot-project"
 
 include("admin-ui")
 include("bot")
+include("message-services")

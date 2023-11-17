@@ -30,7 +30,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     implementation("org.springdoc:springdoc-openapi-ui:1.7.0")
     runtimeOnly(project(":admin-ui","default"))
-
+    implementation(project(":message-services","default"))
 
 
 }
