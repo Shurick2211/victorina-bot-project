@@ -10,6 +10,8 @@ import {StorageService} from "../../services/storage.service";
   styleUrls: ['./create-victorina.component.css']
 })
 export class CreateVictorinaComponent implements OnInit{
+  @Input()
+  title=''
 
   @Input()
   victorina: Victorina ;
@@ -22,7 +24,7 @@ export class CreateVictorinaComponent implements OnInit{
   }
 
   ngOnInit(): void {
-
+    if(this.title.length < 1) this.title = 'Create new victorina!'
   }
 
 
