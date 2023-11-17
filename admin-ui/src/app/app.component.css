@@ -1,6 +1,7 @@
 button{
   width: 98%;
-  font-weight: bold
+  font-weight: bold;
+  margin-top: 5px;
 }
 button:hover {
   background: #353740;
