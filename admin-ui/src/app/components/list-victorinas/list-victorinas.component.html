@@ -19,9 +19,9 @@
           </ul>
       </td>
       <td>
-        <button style="margin-bottom:10px;" name="edit" [routerLink]="['edit',i]">Edit</button>
+        <button style="margin-bottom:10px;"  class="btn btn-secondary" name="edit" [routerLink]="['/edit',i]">Edit</button>
         <br>
-        <button  name="delete" (click)="storage.delete(i)">Delete</button>
+        <button  class="btn btn-secondary" name="delete" (click)="storage.delete(i)">Delete</button>
       </td>
     </tr>
     </tbody>

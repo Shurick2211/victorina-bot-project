@@ -56,5 +56,6 @@ export class CreateVictorinaComponent implements OnInit{
   private newVictorina(){
     this.victorina = new Victorina(null,'','', new Array<Question>(), '','');
     this.q = new Question('',['',''],-1)
+    this.title = 'Create new victorina!'
   }
 }
