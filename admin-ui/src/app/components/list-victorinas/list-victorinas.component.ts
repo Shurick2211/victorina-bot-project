@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Victorina} from "../../dto/victorina";
-import {ApiService} from "../../services/api.service";
+import {StorageService} from "../../services/storage.service";
 
 @Component({
   selector: 'app-list-victorinas',
@@ -8,30 +7,15 @@ import {ApiService} from "../../services/api.service";
   styleUrls: ['./list-victorinas.component.css']
 })
 export class ListVictorinasComponent implements OnInit{
-  victorinas = new Array<Victorina>();
 
 
-  constructor(private apiService:ApiService) {
-
+  constructor(public storage:StorageService) {
   }
 
   ngOnInit(): void {
-    this.getAll()
+    this.storage.refresh()
   }
 
 
 
-  delete(i: number) {
-    this.apiService.deleteVictorina(`${this.victorinas[i].id}`).subscribe(response => {
-      console.log(response)
-    })
-    this.getAll()
-  }
-
-  private getAll(){
-    this.apiService.getAllVictorinas().subscribe(response => {
-      this.victorinas = response
-      console.log(this.victorinas)
-    })
-  }
 }

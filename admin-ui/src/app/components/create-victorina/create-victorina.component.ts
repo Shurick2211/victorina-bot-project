@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Victorina} from "../../dto/victorina";
 import {Question} from "../../dto/question";
-import {ApiService} from "../../services/api.service";
+import {StorageService} from "../../services/storage.service";
 
 
 @Component({
@@ -12,11 +12,11 @@ import {ApiService} from "../../services/api.service";
 export class CreateVictorinaComponent implements OnInit{
 
   @Input()
-  victorina: Victorina;
-  q:Question;
+  victorina: Victorina ;
+  q:Question ;
+  isNotReady = false;
 
-
-  constructor(private httpService:ApiService) {
+  constructor(private storage:StorageService) {
     this.victorina = new Victorina(null,'','', new Array<Question>(), '','');
     this.q = new Question('',['',''],-1)
   }
@@ -42,10 +42,17 @@ export class CreateVictorinaComponent implements OnInit{
   }
 
   save() {
-    console.log(this.victorina.toString())
-    this.httpService.createVictorina(this.victorina).subscribe(
-      response => {
-        console.log(response.status)
-      })
+    if (this.victorina.questions.length > 0 && this.victorina.name.length > 0) {
+      this.isNotReady = false
+      console.log(this.victorina.toString())
+      this.storage.save(this.victorina)
+      this.newVictorina()
+    } else this.isNotReady = true
+
+  }
+
+  private newVictorina(){
+    this.victorina = new Victorina(null,'','', new Array<Question>(), '','');
+    this.q = new Question('',['',''],-1)
   }
 }

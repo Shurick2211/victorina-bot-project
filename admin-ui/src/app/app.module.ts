@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import {RouterModule, RouterOutlet, Routes} from "@angular/router";
+import { RouterModule, RouterOutlet, Routes} from "@angular/router";
 import { CreateVictorinaComponent } from './components/create-victorina/create-victorina.component';
 import { ListVictorinasComponent } from './components/list-victorinas/list-victorinas.component';
 import {FormsModule} from "@angular/forms";
@@ -20,7 +20,7 @@ import { EditVictorinaComponent } from './components/edit-victorina/edit-victori
 const appRoutes: Routes = [
   {path: '', component: CreateVictorinaComponent},
   {path: 'list', component: ListVictorinasComponent},
-  {path: 'edit', component: EditVictorinaComponent}
+  {path: 'edit/:id', component: EditVictorinaComponent}
 
 ]
 

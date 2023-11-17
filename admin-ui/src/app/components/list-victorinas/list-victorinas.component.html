@@ -8,20 +8,20 @@
     <th>Actions</th>
     </thead>
     <tbody>
-    <tr *ngFor="let victorina of victorinas;let i = index;">
-      <td> {{victorinas[i].name}}</td>
-      <td> {{victorinas[i].title}}</td>
+    <tr *ngFor="let victorina of storage.victorinas;let i = index;">
+      <td> {{storage.victorinas[i].name}}</td>
+      <td> {{storage.victorinas[i].title}}</td>
       <td>
-          <ul *ngFor="let question of victorinas[i].questions; let in = index">
+          <ul *ngFor="let question of storage.victorinas[i].questions; let in = index">
             <li>
-              {{in+1}} {{victorinas[i].questions[in].text}}
+              {{in+1}} {{storage.victorinas[i].questions[in].text}}
             </li>
           </ul>
       </td>
       <td>
-        <button style="margin-bottom:10px;" name="edit" routerLink="/edit">Edit</button>
+        <button style="margin-bottom:10px;" name="edit" [routerLink]="['edit',i]">Edit</button>
         <br>
-        <button  name="delete" (click)="delete(i)">Delete</button>
+        <button  name="delete" (click)="storage.delete(i)">Delete</button>
       </td>
     </tr>
     </tbody>

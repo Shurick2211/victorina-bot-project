@@ -14,3 +14,8 @@ textarea{
 .have_margin{
   margin: 10px;
 }
+
+.not-ready{
+  color: red;
+  font-size: large;
+}
