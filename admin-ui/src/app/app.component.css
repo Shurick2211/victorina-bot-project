@@ -9,3 +9,6 @@ main {
   background: blanchedalmond;
 }
 
+.all-screen{
+  min-height: 100vh;
+}

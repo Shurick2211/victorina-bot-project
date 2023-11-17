@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {Victorina} from "../../dto/victorina";
 import {Question} from "../../dto/question";
 import {StorageService} from "../../services/storage.service";
+import {ActivatedRoute, Router} from "@angular/router";
 
 
 @Component({
@@ -17,9 +18,16 @@ export class CreateVictorinaComponent implements OnInit{
   victorina: Victorina ;
   q:Question ;
   isNotReady = false;
-
-  constructor(private storage:StorageService) {
-    this.victorina = new Victorina(null,'','', new Array<Question>(), '','');
+  num = undefined;
+  constructor(private storage:StorageService, private activeRoute:ActivatedRoute, private router:Router) {
+    this.num = activeRoute.snapshot.params['id']
+    if (!this.num) {
+      this.victorina = new Victorina(null,'','', new Array<Question>(), '','');
+      this.title = 'Create new victorina!'
+    } else {
+      this.victorina = storage.victorinas[this.num]
+      this.title = 'Edit victorina!'
+    }
     this.q = new Question('',['',''],-1)
   }
 
@@ -48,14 +56,10 @@ export class CreateVictorinaComponent implements OnInit{
       this.isNotReady = false
       console.log(this.victorina.toString())
       this.storage.save(this.victorina)
-      this.newVictorina()
+      this.router.navigateByUrl('/create')
     } else this.isNotReady = true
 
   }
 
-  private newVictorina(){
-    this.victorina = new Victorina(null,'','', new Array<Question>(), '','');
-    this.q = new Question('',['',''],-1)
-    this.title = 'Create new victorina!'
-  }
+
 }
