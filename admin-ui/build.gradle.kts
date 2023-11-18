@@ -30,16 +30,24 @@ node{
 
 tasks{
     findByName("jar")?.dependsOn("ngBuild")
+    findByName("ngBuild")?.dependsOn("npmInst")
+
+    register<Exec>("npmInst"){
+      val command = if (System.getProperty("os.name").toUpperCase().contains("WINDOWS")) {
+        listOf("npm.cmd", "install")
+      } else {
+        listOf("npm","install")
+      }
+      commandLine(command)
+    }
 
     register<Exec>("ngBuild"){
-        println("Task - ngBuild")
         val command = if (System.getProperty("os.name").toUpperCase().contains("WINDOWS")) {
-            listOf("ng.cmd", "build")
+            listOf("npm.cmd", "run","build")
         } else {
-            listOf("ng", "build")
+            listOf("npm","run","build")
         }
         commandLine(command)
-
     }
 
   jar{
