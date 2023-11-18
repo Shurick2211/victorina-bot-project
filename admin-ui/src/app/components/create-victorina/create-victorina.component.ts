@@ -32,7 +32,9 @@ export class CreateVictorinaComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    if(this.title.length < 1) this.title = 'Create new victorina!'
+    if(this.title.length < 1) {
+      this.title = 'Create new victorina!'
+    }
   }
 
 
@@ -56,6 +58,7 @@ export class CreateVictorinaComponent implements OnInit{
       this.isNotReady = false
       console.log(this.victorina.toString())
       this.storage.save(this.victorina)
+      this.victorina = new Victorina(null,'','', new Array<Question>(), '','');
       this.router.navigateByUrl('/create')
     } else this.isNotReady = true
 
