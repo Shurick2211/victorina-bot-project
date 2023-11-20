@@ -19,16 +19,15 @@ class TelegramBot (
 
     @Value("\${name.telega}")
     lateinit var name:String;
-    override fun getBotUsername(): String = name
 
     init{
         listener.getBot(this)
     }
     override fun onUpdateReceived(update: Update?) {
-       // log.info(update.toString())
+        log.info(update.toString())
         listener.getUpdate(update!!)
     }
 
-
+    override fun getBotUsername(): String = name
 
 }

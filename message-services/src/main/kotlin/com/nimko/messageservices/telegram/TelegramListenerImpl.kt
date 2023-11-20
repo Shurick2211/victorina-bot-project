@@ -1,5 +1,7 @@
 package com.nimko.messageservices.telegram
 
+import com.nimko.messageservices.models.message.ChannelIdMessage
+import com.nimko.messageservices.models.message.ResponseDataMessage
 import com.nimko.messageservices.models.message.TextMessage
 import com.nimko.messageservices.services.MessageServicesListener
 import com.nimko.messageservices.services.MessageServicesSender
@@ -15,12 +17,27 @@ class TelegramListenerImpl(
 
 
     override fun getUpdate(update: Update) {
+
         when{
             update.hasMessage() -> {
-                messageListener.getTextMessage(TextMessage(update.message.chatId.toString(), update.message.text))
+                val chatId = update.message.chatId.toString()
+                val text = update.message.text
+                val user = update.message.from
+                if (update.message.forwardFromChat == null) {
+                    if (text.startsWith("/start"))
+                        messageListener.getTextMessage(TextMessage(chatId, "Hello!", user))
+                    else
+                        messageListener.getTextMessage(TextMessage(chatId, text, user))
+                }
+                else {
+                    messageListener.getChannelId(ChannelIdMessage(chatId,
+                        update.message.forwardFromChat.id.toString(),
+                        update.message.forwardFromChat, user))
+                }
             }
             update.hasCallbackQuery() -> {
-                println(update.callbackQuery.message)
+                messageListener.getDataMessage(
+                    ResponseDataMessage(update.callbackQuery.from.id.toString(),update.callbackQuery))
             }
 
         }

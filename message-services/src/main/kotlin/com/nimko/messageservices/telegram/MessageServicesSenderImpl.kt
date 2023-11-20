@@ -31,6 +31,7 @@ class MessageServicesSenderImpl(
     override fun sendChangeInlineButton(message: ChangeInlineMessage) {
         val answer = EditMessageReplyMarkup()
         answer.chatId = message.userId
+        answer.messageId = message.messageId.toInt()
         answer.replyMarkup = createInlineButton(message.buttons)
         sendAnswerInline(answer)
     }
@@ -52,27 +53,23 @@ class MessageServicesSenderImpl(
 
     private fun createInlineButton(buttons: List<InlineButton>):InlineKeyboardMarkup{
         val keyboard = ArrayList<MutableList<InlineKeyboardButton>>()
-        var i = 1
+        var buttonsRow:MutableList<InlineKeyboardButton> = ArrayList(2)
         buttons.forEach{
             val button = InlineKeyboardButton()
             button.text = it.name
-            button.switchInlineQuery = it.responseData
+            button.callbackData = it.responseData
 
-            val buttonsRow:MutableList<InlineKeyboardButton> = ArrayList(2)
-            when(i%2){
-                 0 -> {
-                     buttonsRow.add(button)
-                     keyboard.add(buttonsRow)
-                 }
-                 1 -> {
-                     buttonsRow.clear()
-                     buttonsRow.add(button)
-                 }
+            buttonsRow.add(button)
+
+            if(buttonsRow.size == 2) {
+                keyboard.add(buttonsRow)
+                buttonsRow = ArrayList(2)
             }
-            i++
+
         }
         val inlineKeyboardMarkup = InlineKeyboardMarkup()
         inlineKeyboardMarkup.keyboard = keyboard
+        println(keyboard)
         return inlineKeyboardMarkup;
     }
 

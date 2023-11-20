@@ -4,5 +4,6 @@ import com.nimko.messageservices.models.others.InlineButton
 
 data class ChangeInlineMessage(
     val userId:String,
+    val messageId:String,
     val buttons:List<InlineButton>
 )
