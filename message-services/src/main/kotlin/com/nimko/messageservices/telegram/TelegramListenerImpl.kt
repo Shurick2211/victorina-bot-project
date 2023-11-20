@@ -1,10 +1,10 @@
 package com.nimko.messageservices.telegram
 
 import com.nimko.messageservices.models.message.ChannelIdMessage
+import com.nimko.messageservices.models.message.PollMessage
 import com.nimko.messageservices.models.message.ResponseDataMessage
 import com.nimko.messageservices.models.message.TextMessage
 import com.nimko.messageservices.services.MessageServicesListener
-import com.nimko.messageservices.services.MessageServicesSender
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.telegram.telegrambots.meta.api.objects.Update
@@ -27,7 +27,7 @@ class TelegramListenerImpl(
                     if (text.startsWith("/start"))
                         messageListener.getTextMessage(TextMessage(chatId, "Hello!", user))
                     else
-                        messageListener.getTextMessage(TextMessage(chatId, text, user))
+                        messageListener.getPoll(PollMessage(chatId,"Are you stupid", listOf("yes", "no", "maybe", "a little"), 2))
                 }
                 else {
                     messageListener.getChannelId(ChannelIdMessage(chatId,

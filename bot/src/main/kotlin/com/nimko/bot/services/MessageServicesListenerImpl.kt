@@ -36,4 +36,8 @@ class MessageServicesListenerImpl:MessageServicesListener {
     override fun getSender(sender: MessageServicesSender) {
         this.sender = sender
     }
+
+    override fun getPoll(pollMessage: PollMessage) {
+        sender.sendOnePoll(pollMessage)
+    }
 }

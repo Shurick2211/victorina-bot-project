@@ -2,9 +2,12 @@ package com.nimko.messageservices.telegram
 
 import com.nimko.messageservices.models.message.ChangeInlineMessage
 import com.nimko.messageservices.models.message.MenuMessage
+import com.nimko.messageservices.models.message.PollMessage
 import com.nimko.messageservices.models.message.TextMessage
 import com.nimko.messageservices.models.others.InlineButton
 import com.nimko.messageservices.services.MessageServicesSender
+import org.telegram.telegrambots.meta.api.methods.polls.SendPoll
+import org.telegram.telegrambots.meta.api.methods.polls.SendPoll.SendPollBuilder
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
@@ -42,6 +45,10 @@ class MessageServicesSenderImpl(
         sendMessage(menuSend)
     }
 
+    override fun sendOnePoll(poll: PollMessage) {
+        sendPoll(createPoll(poll))
+    }
+
     private fun createMessage(userId:String, text:String): SendMessage{
         val sendMessage = SendMessage()
         sendMessage.chatId = userId
@@ -49,6 +56,18 @@ class MessageServicesSenderImpl(
         sendMessage.enableHtml(true)
         sendMessage.enableMarkdown(true)
         return sendMessage
+    }
+
+    private fun createPoll(poll: PollMessage): SendPoll{
+        val pollMessage = SendPoll()
+        pollMessage.chatId = poll.chatId
+        pollMessage.question = poll.question
+        pollMessage.options = poll.options
+        pollMessage.correctOptionId = poll.correctOption
+        pollMessage.allowMultipleAnswers = false
+        pollMessage.type="quiz"
+        pollMessage.explanation = "Ha-ha-ha!"
+        return pollMessage
     }
 
     private fun createInlineButton(buttons: List<InlineButton>):InlineKeyboardMarkup{
@@ -94,6 +113,10 @@ class MessageServicesSenderImpl(
 
     override fun sendAnswerInline(answer: EditMessageReplyMarkup) {
         bot.execute(answer)
+    }
+
+    override fun sendPoll(poll: SendPoll) {
+        bot.execute(poll)
     }
 
 }
