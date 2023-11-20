@@ -4,19 +4,29 @@ import com.nimko.messageservices.models.message.ChannelIdMessage
 import com.nimko.messageservices.models.message.ResponseDataMessage
 import com.nimko.messageservices.models.message.TextMessage
 import com.nimko.messageservices.services.MessageServicesListener
+import com.nimko.messageservices.services.MessageServicesSender
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
 class MessageServicesListenerImpl:MessageServicesListener {
+
+    lateinit var sender: MessageServicesSender
+
     override fun getTextMessage(textMessage: TextMessage) {
-        TODO("Not yet implemented")
+       println(textMessage)
+        sender.sendText(textMessage)
     }
 
     override fun getDataMessage(responseDataMessage: ResponseDataMessage) {
-        TODO("Not yet implemented")
+        println(responseDataMessage.data)
     }
 
     override fun getChannelId(channelIdMessage: ChannelIdMessage) {
-        TODO("Not yet implemented")
+        println(channelIdMessage.channelId)
+    }
+
+    override fun getSender(sender: MessageServicesSender) {
+        this.sender = sender
     }
 }

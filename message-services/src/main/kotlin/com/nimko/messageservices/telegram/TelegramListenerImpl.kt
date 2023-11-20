@@ -2,13 +2,14 @@ package com.nimko.messageservices.telegram
 
 import com.nimko.messageservices.models.message.TextMessage
 import com.nimko.messageservices.services.MessageServicesListener
+import com.nimko.messageservices.services.MessageServicesSender
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.telegram.telegrambots.meta.api.objects.Update
 
 @Service
-class TelegaListenerImpl(
-    @Autowired val messageListener: MessageServicesListener
+class TelegramListenerImpl(
+    @Autowired val messageListener: MessageServicesListener,
 ): TelegramListener {
 
 
@@ -19,9 +20,16 @@ class TelegaListenerImpl(
                 messageListener.getTextMessage(TextMessage(update.message.chatId.toString(), update.message.text))
             }
             update.hasCallbackQuery() -> {
-                TODO("Not yet implemented")
+                println(update.callbackQuery.message)
             }
 
         }
     }
+
+    override fun getBot(bot: TelegramBot) {
+        val sender = MessageServicesSenderImpl(bot)
+        messageListener.getSender(sender)
+    }
+
+
 }

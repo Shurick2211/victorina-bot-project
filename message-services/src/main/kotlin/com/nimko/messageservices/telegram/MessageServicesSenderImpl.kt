@@ -5,8 +5,6 @@ import com.nimko.messageservices.models.message.MenuMessage
 import com.nimko.messageservices.models.message.TextMessage
 import com.nimko.messageservices.models.others.InlineButton
 import com.nimko.messageservices.services.MessageServicesSender
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Service
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
@@ -14,31 +12,33 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow
 
-@Service
+
 class MessageServicesSenderImpl(
-    @Autowired val sender:TelegramSendable
-):MessageServicesSender {
+    bot: TelegramBot
+):TelegramSender(bot),MessageServicesSender {
+
+
     override fun sendText(message: TextMessage) {
-        sender.sendMessage(createMessage(message.userId, message.textMessage))
+        sendMessage(createMessage(message.userId, message.textMessage))
     }
 
     override fun sendTextAndInlineButton(textMessage: TextMessage, buttons: List<InlineButton>) {
         val sendMessage = createMessage(textMessage.userId, textMessage.textMessage)
         sendMessage.replyMarkup = createInlineButton(buttons)
-        sender.sendMessage(sendMessage)
+        sendMessage(sendMessage)
     }
 
     override fun sendChangeInlineButton(message: ChangeInlineMessage) {
         val answer = EditMessageReplyMarkup()
         answer.chatId = message.userId
         answer.replyMarkup = createInlineButton(message.buttons)
-        sender.sendAnswerInline(answer)
+        sendAnswerInline(answer)
     }
 
     override fun sendMenu(menu: MenuMessage) {
         val menuSend = createMessage(menu.userId, menu.title)
         menuSend.replyMarkup = createMenuButton(menu.buttonNames)
-        sender.sendMessage(menuSend)
+        sendMessage(menuSend)
     }
 
     private fun createMessage(userId:String, text:String): SendMessage{
@@ -89,6 +89,14 @@ class MessageServicesSenderImpl(
         }
         replyKeyboardMarkup.keyboard = keyboard
         return replyKeyboardMarkup
+    }
+
+    override fun sendMessage(sendMessage: SendMessage) {
+        bot.execute(sendMessage)
+    }
+
+    override fun sendAnswerInline(answer: EditMessageReplyMarkup) {
+        bot.execute(answer)
     }
 
 }

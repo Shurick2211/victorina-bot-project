@@ -11,4 +11,6 @@ interface MessageServicesListener {
     fun getDataMessage(responseDataMessage: ResponseDataMessage)
 
     fun getChannelId(channelIdMessage: ChannelIdMessage)
+
+    fun getSender(sender: MessageServicesSender)
 }

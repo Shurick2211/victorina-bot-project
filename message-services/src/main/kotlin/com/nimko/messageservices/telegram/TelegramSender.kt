@@ -3,11 +3,11 @@ package com.nimko.messageservices.telegram
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup
 
-interface TelegramSendable {
+abstract class TelegramSender(val bot: TelegramBot) {
 
-    fun sendMessage(sendMessage: SendMessage)
+    abstract fun sendMessage(sendMessage: SendMessage)
 
-    fun sendAnswerInline(answer: EditMessageReplyMarkup)
+    abstract fun sendAnswerInline(answer: EditMessageReplyMarkup)
 
 
 }
