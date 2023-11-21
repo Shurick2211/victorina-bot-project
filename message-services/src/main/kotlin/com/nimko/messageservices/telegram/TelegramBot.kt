@@ -23,7 +23,7 @@ class TelegramBot (
         listener.getBot(this)
     }
     override fun onUpdateReceived(update: Update?) {
-        TODO("change level log on debag!")
+        //change level log on debag!
         log.info(update.toString())
         listener.getUpdate(update!!)
     }

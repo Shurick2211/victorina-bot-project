@@ -44,18 +44,11 @@ class MessageServicesListenerImpl @Autowired constructor(
         else
             personServices.onQuiz(person,responseDataMessage,null, sender)
 
-//        sender.sendChangeInlineButton(ChangeInlineMessage(responseDataMessage.chatId,
-//            responseDataMessage.callbackQuery.message.messageId.toString()
-//            ,listOf(InlineButton("OK!", "ok"))))
     }
 
     override fun getChannelId(channelIdMessage: ChannelIdMessage) {
         personServices.registrationCreator(null,null
             ,channelIdMessage,sender)
-
-//        sender.sendTextAndInlineButton(
-//            TextMessage(channelIdMessage.adminId,"${channelIdMessage.channel}", channelIdMessage.user),
-//            listOf(InlineButton("Yes!", "yes"), InlineButton("No!", "no")))
     }
 
     override fun getSender(sender: MessageServicesSender) {

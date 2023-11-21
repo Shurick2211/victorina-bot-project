@@ -12,9 +12,15 @@ import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.objects.User
 
 @Component
-class PersonServicesImpl @Autowired constructor(val personRepo:PersonRepo):PersonServices{
+class PersonServicesImpl @Autowired constructor(
+    val personRepo:PersonRepo,
+    val channelServices: ChannelServices):PersonServices{
 
     final val START_MESSAGE = "Hello in Quiz-bot! "
+    final val START_REG_MES = "If you are a channel's admin - resend here a channel's post. \n " +
+            "Else - push \"Ready\""
+    final val CANNEL_REG_MES = "If you want add others channels - resend here a channel's post. \n " +
+            "Else - push \"Ready\""
 
     override fun registration(user: User, sender: MessageServicesSender) {
         val person = getPerson(user.id.toString())
@@ -34,14 +40,7 @@ class PersonServicesImpl @Autowired constructor(val personRepo:PersonRepo):Perso
             )
         )
         //temporary
-        sender.sendTextAndInlineButton(
-            TextMessage(user.id.toString(),
-                "Have victorina press start or no!", user),
-            listOf(
-                InlineButton("Start", "start"),
-                InlineButton("No", "free")
-            )
-        )
+        sendFreeMessage(user.id.toString(), sender)
 
     }
 
@@ -51,8 +50,34 @@ class PersonServicesImpl @Autowired constructor(val personRepo:PersonRepo):Perso
         channelIdMessage: ChannelIdMessage?,
         sender: MessageServicesSender
     ) {
-        println(person)
+        if(person != null && responseDataMessage == null && channelIdMessage == null){
+            person.state = PersonState.REGISTRATION_CREATOR
+            personRepo.save(person)
+            sender.sendTextAndInlineButton(
+                TextMessage(person.id, START_REG_MES, null),
+                listOf(InlineButton("Ready!", "ready"))
+            )
+        }
+        if(person == null && responseDataMessage == null && channelIdMessage != null){
+            val admin = getPerson(channelIdMessage.adminId)!!
+            if (admin.channelsIdAdmin == null){
+                admin.channelsIdAdmin = ArrayList()
+            }
+            admin.channelsIdAdmin!!.add(channelIdMessage.channelId)
+            channelServices.saveChannel(channelIdMessage.channel)
+            sender.sendTextAndInlineButton(
+                TextMessage(admin.id, CANNEL_REG_MES, null),
+                listOf(InlineButton("Ready!", "ready"))
+            )
+        }
+        if(person != null && responseDataMessage != null && channelIdMessage == null){
+            person.state = PersonState.FREE
+            personRepo.save(person)
+            sendFreeMessage(person.id, sender)
+        }
     }
+
+
 
     override fun onQuiz(person: Person?,
                         responseDataMessage: ResponseDataMessage?,
@@ -60,12 +85,9 @@ class PersonServicesImpl @Autowired constructor(val personRepo:PersonRepo):Perso
                         sender: MessageServicesSender
     ) {
         responseDataMessage?.let {
-            if(responseDataMessage.callbackQuery.data == "start")
-                sender.sendChangeInlineButton(
-                    ChangeInlineMessage(responseDataMessage.chatId,
-                    responseDataMessage.callbackQuery.message.messageId.toString(), emptyList()
-                    )
-                )
+            if(responseDataMessage.callbackQuery.data == "start") {
+                deleteInlineKeyboard(responseDataMessage.chatId,
+                    responseDataMessage.callbackQuery.message.messageId.toString(), sender)
                 //temporary
                 sender.sendOnePoll(
                     PollMessage(
@@ -75,6 +97,7 @@ class PersonServicesImpl @Autowired constructor(val personRepo:PersonRepo):Perso
                         2, "Hi-hi-hi!"
                     )
                 )
+            }
         }
 
     }
@@ -85,4 +108,18 @@ class PersonServicesImpl @Autowired constructor(val personRepo:PersonRepo):Perso
 
     override fun getPerson(userId: String): Person? = personRepo.findById(userId).orElse(null)
 
+    private fun deleteInlineKeyboard(chatId:String, messageId:String, sender: MessageServicesSender) {
+        sender.sendChangeInlineButton(ChangeInlineMessage(chatId, messageId, emptyList()))
+    }
+
+    private fun sendFreeMessage(userId: String, sender: MessageServicesSender) {
+        sender.sendTextAndInlineButton(
+            TextMessage(userId,
+                "Have victorina press start or no!", null),
+            listOf(
+                InlineButton("Start", "start"),
+                InlineButton("No", "free")
+            )
+        )
+    }
 }
