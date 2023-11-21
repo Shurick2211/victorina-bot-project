@@ -66,7 +66,8 @@ class MessageServicesSenderImpl(
         pollMessage.correctOptionId = poll.correctOption
         pollMessage.allowMultipleAnswers = false
         pollMessage.type="quiz"
-        pollMessage.explanation = "Ha-ha-ha!"
+        pollMessage.isAnonymous = false
+        poll.explanation?.let { pollMessage.explanation = it }
         return pollMessage
     }
 

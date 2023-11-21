@@ -1,9 +1,6 @@
 package com.nimko.messageservices.services
 
-import com.nimko.messageservices.models.message.ChannelIdMessage
-import com.nimko.messageservices.models.message.PollMessage
-import com.nimko.messageservices.models.message.ResponseDataMessage
-import com.nimko.messageservices.models.message.TextMessage
+import com.nimko.messageservices.models.message.*
 
 interface MessageServicesListener {
 
@@ -16,4 +13,6 @@ interface MessageServicesListener {
     fun getSender(sender: MessageServicesSender)
 
     fun getPoll(pollMessage: PollMessage)
+
+    fun getPollAnswer(pollAnswer: PollAnswer)
 }
