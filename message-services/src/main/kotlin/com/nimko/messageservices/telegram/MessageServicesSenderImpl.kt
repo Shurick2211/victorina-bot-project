@@ -87,9 +87,9 @@ class MessageServicesSenderImpl(
             }
 
         }
+        if (!buttonsRow.isEmpty()) keyboard.add(buttonsRow)
         val inlineKeyboardMarkup = InlineKeyboardMarkup()
         inlineKeyboardMarkup.keyboard = keyboard
-        println(keyboard)
         return inlineKeyboardMarkup;
     }
 

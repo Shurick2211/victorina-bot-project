@@ -16,11 +16,13 @@ class PersonServicesImpl @Autowired constructor(
     val personRepo:PersonRepo,
     val channelServices: ChannelServices):PersonServices{
 
-    final val START_MESSAGE = "Hello in Quiz-bot! "
-    final val START_REG_MES = "If you are a channel's admin - resend here a channel's post. \n " +
+    private final val START_MESSAGE = "Hello in Quiz-bot! "
+    private final val START_REG_MES = "If you are a channel's admin - resend here a channel's post. \n " +
             "Else - push \"Ready\""
-    final val CANNEL_REG_MES = "If you want add others channels - resend here a channel's post. \n " +
+    private final val CANNEL_REG_MES = "If you want add others channels - resend here a channel's post. \n " +
             "Else - push \"Ready\""
+    private final val FINISH_REGISTRATION_MESSAGE = "Registration you as creator quiz was end. Link in admin-site: " +
+            "<a href=\"http://\">Admin-site</a>"
 
     override fun registration(user: User, sender: MessageServicesSender) {
         val person = getPerson(user.id.toString())
@@ -73,9 +75,13 @@ class PersonServicesImpl @Autowired constructor(
         if(person != null && responseDataMessage != null && channelIdMessage == null){
             person.state = PersonState.FREE
             personRepo.save(person)
+            deleteInlineKeyboard(person.id,
+                responseDataMessage.callbackQuery.message.messageId.toString(), sender)
+            sendRegistrationFinishMessage(person.id, sender)
             sendFreeMessage(person.id, sender)
         }
     }
+
 
 
 
@@ -121,5 +127,9 @@ class PersonServicesImpl @Autowired constructor(
                 InlineButton("No", "free")
             )
         )
+    }
+
+    private fun sendRegistrationFinishMessage(userId: String, sender: MessageServicesSender) {
+        sender.sendText(TextMessage(userId, FINISH_REGISTRATION_MESSAGE, null))
     }
 }
