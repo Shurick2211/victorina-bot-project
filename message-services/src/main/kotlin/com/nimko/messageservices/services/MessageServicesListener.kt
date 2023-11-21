@@ -1,6 +1,6 @@
 package com.nimko.messageservices.services
 
-import com.nimko.messageservices.models.message.*
+import com.nimko.messageservices.telegram.models.message.*
 
 interface MessageServicesListener {
 

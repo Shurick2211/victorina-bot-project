@@ -12,8 +12,7 @@ class TelegramBot (
     @Value("\${token.telega}") botToken:String,
     @Autowired val listener: TelegramListener
 
-)
-    : TelegramLongPollingBot(botToken){
+):TelegramLongPollingBot(botToken){
 
      val log = LoggerFactory.getLogger("Telega")
 
@@ -24,6 +23,7 @@ class TelegramBot (
         listener.getBot(this)
     }
     override fun onUpdateReceived(update: Update?) {
+        TODO("change level log on debag!")
         log.info(update.toString())
         listener.getUpdate(update!!)
     }

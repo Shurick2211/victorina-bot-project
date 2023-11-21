@@ -1,27 +1,36 @@
 package com.nimko.bot.services
 
 import com.nimko.bot.utils.PersonState
-import com.nimko.messageservices.models.message.*
 import com.nimko.messageservices.services.MessageServicesListener
 import com.nimko.messageservices.services.MessageServicesSender
+import com.nimko.messageservices.telegram.models.message.*
+import com.nimko.messageservices.telegram.utils.Commands
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
-class MessageServicesListenerImpl:MessageServicesListener {
-
-    @Autowired
-    lateinit var personServices: PersonServices
+class MessageServicesListenerImpl @Autowired constructor(
+    val personServices: PersonServices
+):MessageServicesListener {
 
     lateinit var sender: MessageServicesSender
 
+    val log = LoggerFactory.getLogger("MSG_SERV")
+
     override fun getTextMessage(textMessage: TextMessage) {
         when(textMessage.textMessage){
-            "/start" -> {
+            Commands.START.getCommand() -> {
                 personServices.registration(textMessage.user!!,sender)
             }
+            Commands.CREATOR.getCommand() -> {
+                personServices.registrationCreator(
+                    personServices.getPerson(textMessage.userId),
+                    null,null, sender
+                )
+            }
             else -> {
-
+                log.info(textMessage.toString())
             }
         }
     }

@@ -1,13 +1,12 @@
 package com.nimko.messageservices.telegram
 
-import com.nimko.messageservices.models.message.ChangeInlineMessage
-import com.nimko.messageservices.models.message.MenuMessage
-import com.nimko.messageservices.models.message.PollMessage
-import com.nimko.messageservices.models.message.TextMessage
-import com.nimko.messageservices.models.others.InlineButton
+import com.nimko.messageservices.telegram.models.message.ChangeInlineMessage
+import com.nimko.messageservices.telegram.models.message.MenuMessage
+import com.nimko.messageservices.telegram.models.message.PollMessage
+import com.nimko.messageservices.telegram.models.message.TextMessage
+import com.nimko.messageservices.telegram.models.others.InlineButton
 import com.nimko.messageservices.services.MessageServicesSender
 import org.telegram.telegrambots.meta.api.methods.polls.SendPoll
-import org.telegram.telegrambots.meta.api.methods.polls.SendPoll.SendPollBuilder
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
@@ -17,18 +16,18 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 
 
 class MessageServicesSenderImpl(
-    bot: TelegramBot
-):TelegramSender(bot),MessageServicesSender {
+    val bot: TelegramBot
+):MessageServicesSender {
 
 
     override fun sendText(message: TextMessage) {
-        sendMessage(createMessage(message.userId, message.textMessage))
+        bot.execute(createMessage(message.userId, message.textMessage))
     }
 
     override fun sendTextAndInlineButton(textMessage: TextMessage, buttons: List<InlineButton>) {
         val sendMessage = createMessage(textMessage.userId, textMessage.textMessage)
         sendMessage.replyMarkup = createInlineButton(buttons)
-        sendMessage(sendMessage)
+        bot.execute(sendMessage)
     }
 
     override fun sendChangeInlineButton(message: ChangeInlineMessage) {
@@ -36,17 +35,17 @@ class MessageServicesSenderImpl(
         answer.chatId = message.userId
         answer.messageId = message.messageId.toInt()
         answer.replyMarkup = createInlineButton(message.buttons)
-        sendAnswerInline(answer)
+        bot.execute(answer)
     }
 
     override fun sendMenu(menu: MenuMessage) {
         val menuSend = createMessage(menu.userId, menu.title)
         menuSend.replyMarkup = createMenuButton(menu.buttonNames)
-        sendMessage(menuSend)
+        bot.execute(menuSend)
     }
 
     override fun sendOnePoll(poll: PollMessage) {
-        sendPoll(createPoll(poll))
+        bot.execute(createPoll(poll))
     }
 
     private fun createMessage(userId:String, text:String): SendMessage{
@@ -72,8 +71,9 @@ class MessageServicesSenderImpl(
     }
 
     private fun createInlineButton(buttons: List<InlineButton>):InlineKeyboardMarkup{
+        val BUTTONS_ON_ROW = 2
         val keyboard = ArrayList<MutableList<InlineKeyboardButton>>()
-        var buttonsRow:MutableList<InlineKeyboardButton> = ArrayList(2)
+        var buttonsRow:MutableList<InlineKeyboardButton> = ArrayList(BUTTONS_ON_ROW)
         buttons.forEach{
             val button = InlineKeyboardButton()
             button.text = it.name
@@ -81,9 +81,9 @@ class MessageServicesSenderImpl(
 
             buttonsRow.add(button)
 
-            if(buttonsRow.size == 2) {
+            if(buttonsRow.size == BUTTONS_ON_ROW) {
                 keyboard.add(buttonsRow)
-                buttonsRow = ArrayList(2)
+                buttonsRow = ArrayList(BUTTONS_ON_ROW)
             }
 
         }
@@ -108,16 +108,6 @@ class MessageServicesSenderImpl(
         return replyKeyboardMarkup
     }
 
-    override fun sendMessage(sendMessage: SendMessage) {
-        bot.execute(sendMessage)
-    }
 
-    override fun sendAnswerInline(answer: EditMessageReplyMarkup) {
-        bot.execute(answer)
-    }
-
-    override fun sendPoll(poll: SendPoll) {
-        bot.execute(poll)
-    }
 
 }

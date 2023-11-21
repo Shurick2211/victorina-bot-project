@@ -1,4 +1,4 @@
-package com.nimko.messageservices.models.others
+package com.nimko.messageservices.telegram.models.others
 
 data class InlineButton(
     val name:String,

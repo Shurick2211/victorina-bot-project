@@ -1,4 +1,4 @@
-package com.nimko.messageservices.models.message
+package com.nimko.messageservices.telegram.models.message
 
 data class PollMessage(
     val chatId:String,

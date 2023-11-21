@@ -1,7 +1,10 @@
 package com.nimko.messageservices.telegram
 
-import com.nimko.messageservices.models.message.*
 import com.nimko.messageservices.services.MessageServicesListener
+import com.nimko.messageservices.telegram.models.message.ChannelIdMessage
+import com.nimko.messageservices.telegram.models.message.PollAnswer
+import com.nimko.messageservices.telegram.models.message.ResponseDataMessage
+import com.nimko.messageservices.telegram.models.message.TextMessage
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.telegram.telegrambots.meta.api.objects.Update
@@ -19,16 +22,18 @@ class TelegramListenerImpl(
                 val user = update.message.from
                 if (update.message.forwardFromChat == null) {
                    messageListener.getTextMessage(TextMessage(chatId,text,user))
-                }
-                else {
-                    messageListener.getChannelId(ChannelIdMessage(chatId,
+                } else {
+                    messageListener.getChannelId(
+                        ChannelIdMessage(chatId,
                         update.message.forwardFromChat.id.toString(),
-                        update.message.forwardFromChat, user))
+                        update.message.forwardFromChat, user)
+                    )
                 }
             }
             update.hasCallbackQuery() -> {
                 messageListener.getDataMessage(
-                    ResponseDataMessage(update.callbackQuery.from.id.toString(),update.callbackQuery))
+                    ResponseDataMessage(update.callbackQuery.from.id.toString(),update.callbackQuery)
+                )
             }
             update.hasPollAnswer() -> {
                 messageListener.getPollAnswer(
