@@ -6,9 +6,11 @@ import com.nimko.messageservices.telegram.models.message.PollMessage
 import com.nimko.messageservices.telegram.models.message.TextMessage
 import com.nimko.messageservices.telegram.models.others.InlineButton
 import com.nimko.messageservices.services.MessageServicesSender
+import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember
 import org.telegram.telegrambots.meta.api.methods.polls.SendPoll
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup
+import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
@@ -46,6 +48,10 @@ class MessageServicesSenderImpl(
 
     override fun sendOnePoll(poll: PollMessage) {
         bot.execute(createPoll(poll))
+    }
+
+    override fun checkIsUserOfChannel(chatId: String, userId: String):ChatMember {
+       return bot.execute(GetChatMember(chatId,userId.toLong()))
     }
 
     private fun createMessage(userId:String, text:String): SendMessage{

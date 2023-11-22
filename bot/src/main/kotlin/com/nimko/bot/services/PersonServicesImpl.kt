@@ -10,6 +10,7 @@ import com.nimko.messageservices.telegram.utils.Commands
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.objects.User
+import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException
 
 @Component
 class PersonServicesImpl @Autowired constructor(
@@ -131,5 +132,15 @@ class PersonServicesImpl @Autowired constructor(
 
     private fun sendRegistrationFinishMessage(userId: String, sender: MessageServicesSender) {
         sender.sendText(TextMessage(userId, FINISH_REGISTRATION_MESSAGE, null))
+    }
+
+    private fun checkUserAsChannelMember(channelId: String, userId: String, sender: MessageServicesSender):Boolean? {
+        return try{
+            val status = sender.checkIsUserOfChannel(channelId, userId).status
+            if(status == "kicked" || status == "left") false
+            else true
+        } catch (e:TelegramApiRequestException){
+            null
+        }
     }
 }
