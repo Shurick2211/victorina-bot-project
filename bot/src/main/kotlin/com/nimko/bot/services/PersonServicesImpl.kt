@@ -8,22 +8,26 @@ import com.nimko.messageservices.telegram.models.message.*
 import com.nimko.messageservices.telegram.models.others.InlineButton
 import com.nimko.messageservices.telegram.utils.Commands
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.MessageSource
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.objects.User
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException
+import java.util.Locale
 
 @Component
 class PersonServicesImpl @Autowired constructor(
     val personRepo:PersonRepo,
-    val channelServices: ChannelServices):PersonServices{
+    val channelServices: ChannelServices,
+    val messageSource: MessageSource
+):PersonServices{
 
-    private final val START_MESSAGE = "Hello in Quiz-bot! "
-    private final val START_REG_MES = "If you are a channel's admin - resend here a channel's post. \n " +
-            "Else - push \"Ready\""
-    private final val CANNEL_REG_MES = "If you want add others channels - resend here a channel's post. \n " +
-            "Else - push \"Ready\""
-    private final val FINISH_REGISTRATION_MESSAGE = "Registration you as creator quiz was end. Link in admin-site: " +
-            "<a href=\"http://\">Admin-site</a>"
+//    private final val START_MESSAGE = "Hello in Quiz-bot! "
+//    private final val START_REG_MES = "If you are a channel's admin - resend here a channel's post. \n " +
+//            "Else - push \"Ready\""
+//    private final val CANNEL_REG_MES = "If you want add others channels - resend here a channel's post. \n " +
+//            "Else - push \"Ready\""
+//    private final val FINISH_REGISTRATION_MESSAGE = "Registration you as creator quiz was end. Link in admin-site: " +
+//            "<a href=\"http://\">Admin-site</a>"
 
     override fun registration(user: User, sender: MessageServicesSender) {
         val person = getPerson(user.id.toString())
@@ -39,7 +43,7 @@ class PersonServicesImpl @Autowired constructor(
         }
         sender.sendMenu(
             MenuMessage(user.id.toString(),
-            START_MESSAGE+user.firstName, listOf(Commands.CREATOR.getCommand())
+            messageSource.getMessage("message.start",null, Locale.of(user.languageCode)) + user.firstName, listOf(Commands.CREATOR.getCommand())
             )
         )
         //temporary
@@ -57,7 +61,7 @@ class PersonServicesImpl @Autowired constructor(
             person.state = PersonState.REGISTRATION_CREATOR
             personRepo.save(person)
             sender.sendTextAndInlineButton(
-                TextMessage(person.id, START_REG_MES, null),
+                TextMessage(person.id, messageSource.getMessage("message.reg.start",null,Locale.of(person.languageCode)), null),
                 listOf(InlineButton("Ready!", "ready"))
             )
         }
@@ -69,7 +73,7 @@ class PersonServicesImpl @Autowired constructor(
             admin.channelsIdAdmin!!.add(channelIdMessage.channelId)
             channelServices.saveChannel(channelIdMessage.channel)
             sender.sendTextAndInlineButton(
-                TextMessage(admin.id, CANNEL_REG_MES, null),
+                TextMessage(admin.id, messageSource.getMessage("message.reg.channel",null,Locale.of(admin.languageCode)), null),
                 listOf(InlineButton("Ready!", "ready"))
             )
         }
@@ -78,7 +82,7 @@ class PersonServicesImpl @Autowired constructor(
             personRepo.save(person)
             deleteInlineKeyboard(person.id,
                 responseDataMessage.callbackQuery.message.messageId.toString(), sender)
-            sendRegistrationFinishMessage(person.id, sender)
+            sendRegistrationFinishMessage(person.id, Locale.of(person.languageCode), sender)
             sendFreeMessage(person.id, sender)
         }
     }
@@ -130,8 +134,8 @@ class PersonServicesImpl @Autowired constructor(
         )
     }
 
-    private fun sendRegistrationFinishMessage(userId: String, sender: MessageServicesSender) {
-        sender.sendText(TextMessage(userId, FINISH_REGISTRATION_MESSAGE, null))
+    private fun sendRegistrationFinishMessage(userId: String,lang:Locale, sender: MessageServicesSender) {
+        sender.sendText(TextMessage(userId, messageSource.getMessage("message.reg.finish",null, lang), null))
     }
 
     private fun checkUserAsChannelMember(channelId: String, userId: String, sender: MessageServicesSender):Boolean? {
