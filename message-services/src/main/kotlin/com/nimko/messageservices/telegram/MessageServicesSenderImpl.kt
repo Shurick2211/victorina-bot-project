@@ -83,7 +83,7 @@ class MessageServicesSenderImpl(
         buttons.forEach{
             val button = InlineKeyboardButton()
             button.text = it.name
-            button.callbackData = it.responseData
+            button.callbackData = it.responseData.toString()
 
             buttonsRow.add(button)
 

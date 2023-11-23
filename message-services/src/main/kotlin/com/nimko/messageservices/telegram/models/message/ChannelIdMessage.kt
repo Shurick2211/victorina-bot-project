@@ -8,4 +8,12 @@ data class ChannelIdMessage (
     val channelId:String,
     val channel:Chat,
     val user: User
-)
+){
+    override fun equals(other: Any?): Boolean {
+        return other != null && other is ChannelIdMessage && channelId == other.channelId
+    }
+
+    override fun hashCode(): Int {
+        return channelId.hashCode()
+    }
+}

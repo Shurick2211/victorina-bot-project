@@ -2,6 +2,7 @@ package com.nimko.bot.services
 
 import com.nimko.bot.models.Person
 import com.nimko.bot.repositories.PersonRepo
+import com.nimko.messageservices.telegram.utils.CallbackData
 import com.nimko.bot.utils.PersonState
 import com.nimko.messageservices.services.MessageServicesSender
 import com.nimko.messageservices.telegram.models.message.*
@@ -16,7 +17,6 @@ import java.util.*
 @Component
 class PersonServicesImpl @Autowired constructor(
     val personRepo:PersonRepo,
-    val channelServices: ChannelServices,
     val messageSource: MessageSource
 ):PersonServices{
 
@@ -42,9 +42,8 @@ class PersonServicesImpl @Autowired constructor(
                 )
             )
         )
-        //temporary
-        sendFreeMessage(user.id.toString(), Locale.forLanguageTag(user.languageCode) ,sender)
 
+        sendFreeMessage(user.id.toString(), Locale.forLanguageTag(user.languageCode) ,sender)
     }
 
     override fun registrationCreator(
@@ -65,25 +64,20 @@ class PersonServicesImpl @Autowired constructor(
                 listOf(InlineButton(
                     messageSource.getMessage("button.ready",null,
                         Locale.forLanguageTag(user.languageCode))
-                    , "ready"))
+                    , CallbackData.READY))
             )
         }
         if(user == null && responseDataMessage == null && channelIdMessage != null){
-            val admin = getPerson(channelIdMessage.adminId)!!
-            if (admin.channelsIdAdmin == null){
-                admin.channelsIdAdmin = ArrayList()
-            }
-            admin.channelsIdAdmin!!.add(channelIdMessage.channelId)
-            channelServices.saveChannel(channelIdMessage.channel)
-            //need save admina
+            saveChannelForAdmin(channelIdMessage)
+
             sender.sendTextAndInlineButton(
-                TextMessage(admin.id,
+                TextMessage(channelIdMessage.adminId,
                     messageSource.getMessage("message.reg.channel",
                         null,Locale.forLanguageTag(channelIdMessage.user.languageCode))
                     , null),
                 listOf(InlineButton(messageSource.getMessage("button.ready",null,
                     Locale.forLanguageTag(channelIdMessage.user.languageCode))
-                    , "ready"))
+                    , CallbackData.READY))
             )
         }
         if(user != null && responseDataMessage != null && channelIdMessage == null){
@@ -98,7 +92,16 @@ class PersonServicesImpl @Autowired constructor(
         }
     }
 
-
+    private fun saveChannelForAdmin(channelIdMessage: ChannelIdMessage) {
+        val admin = getPerson(channelIdMessage.adminId)!!
+        if (admin.channelsAdmin == null){
+            admin.channelsAdmin = ArrayList()
+        }
+        if (admin.channelsAdmin!!.indexOf(channelIdMessage) == -1){
+            admin.channelsAdmin!!.add(channelIdMessage)
+            personRepo.save(admin)
+        }
+    }
 
 
     override fun onQuiz(user: User?,
@@ -107,19 +110,24 @@ class PersonServicesImpl @Autowired constructor(
                         sender: MessageServicesSender
     ) {
         responseDataMessage?.let {
-            if(responseDataMessage.callbackQuery.data == "start") {
-                deleteInlineKeyboard(responseDataMessage.chatId,
-                    responseDataMessage.callbackQuery.message.messageId.toString(), sender)
-                //temporary
-                sender.sendOnePoll(
-                    PollMessage(
-                        responseDataMessage.chatId,
-                        "Are you stupid",
-                        listOf("yes", "no", "maybe", "a little"),
-                        2, "Hi-hi-hi!"
+            when(responseDataMessage.callbackQuery.data){
+                CallbackData.START.toString() ->{
+                    deleteInlineKeyboard(responseDataMessage.chatId,
+                        responseDataMessage.callbackQuery.message.messageId.toString(), sender)
+                    //temporary
+                    sender.sendOnePoll(
+                        PollMessage(
+                            responseDataMessage.chatId,
+                            "Are you stupid",
+                            listOf("yes", "no", "maybe", "a little"),
+                            2, "Hi-hi-hi!"
+                        )
                     )
-                )
+                }
+
+
             }
+
         }
 
     }
@@ -141,9 +149,9 @@ class PersonServicesImpl @Autowired constructor(
                 null),
             listOf(
                 InlineButton( messageSource.getMessage("button.start",
-                    null,lang), "start"),
+                    null,lang), CallbackData.START),
                 InlineButton(messageSource.getMessage("button.not.yet",
-                    null,lang), "free")
+                    null,lang), CallbackData.FREE)
             )
         )
     }
