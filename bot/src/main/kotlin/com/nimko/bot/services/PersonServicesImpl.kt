@@ -110,24 +110,25 @@ class PersonServicesImpl @Autowired constructor(
                         sender: MessageServicesSender
     ) {
         responseDataMessage?.let {
-            when(responseDataMessage.callbackQuery.data){
-                CallbackData.START.toString() ->{
-                    deleteInlineKeyboard(responseDataMessage.chatId,
-                        responseDataMessage.callbackQuery.message.messageId.toString(), sender)
-                    //temporary
-                    sender.sendOnePoll(
-                        PollMessage(
-                            responseDataMessage.chatId,
-                            "Are you stupid",
-                            listOf("yes", "no", "maybe", "a little"),
-                            2, "Hi-hi-hi!"
-                        )
+           if(pollAnswer != null){
+               println(pollAnswer)
+           }
+
+
+
+            if(responseDataMessage.callbackQuery.data == CallbackData.START.toString()) {
+                deleteInlineKeyboard(responseDataMessage.chatId,
+                    responseDataMessage.callbackQuery.message.messageId.toString(), sender)
+                //temporary
+                sender.sendOnePoll(
+                    PollMessage(
+                        responseDataMessage.chatId,
+                        "Are you stupid",
+                        listOf("yes", "no", "maybe", "a little"),
+                        2, "Hi-hi-hi!"
                     )
-                }
-
-
+                )
             }
-
         }
 
     }
