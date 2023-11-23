@@ -7,11 +7,14 @@ import com.nimko.messageservices.telegram.models.message.*
 import com.nimko.messageservices.telegram.utils.Commands
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.support.ResourceBundleMessageSource
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class MessageServicesListenerImpl @Autowired constructor(
-    val personServices: PersonServices
+    val personServices: PersonServices,
+    val messageSource: ResourceBundleMessageSource
 ):MessageServicesListener {
 
     lateinit var sender: MessageServicesSender
@@ -23,9 +26,10 @@ class MessageServicesListenerImpl @Autowired constructor(
             Commands.START.getCommand() -> {
                 personServices.registration(textMessage.user!!,sender)
             }
-            Commands.CREATOR.getCommand() -> {
+            messageSource.getMessage("button.for.creator",null,
+                Locale.forLanguageTag(textMessage.user!!.languageCode)) -> {
                 personServices.registrationCreator(
-                    personServices.getPerson(textMessage.userId),
+                    textMessage.user,
                     null,null, sender
                 )
             }
@@ -36,13 +40,14 @@ class MessageServicesListenerImpl @Autowired constructor(
     }
 
     override fun getDataMessage(responseDataMessage: ResponseDataMessage) {
-        val person = personServices.getPerson(responseDataMessage.chatId)!!
+        val person = personServices.getPerson(responseDataMessage.callbackQuery.from.id.toString())!!
 
         if (person.state == PersonState.REGISTRATION_CREATOR)
             personServices.registrationCreator(
-                person = person,responseDataMessage,null,sender)
+                responseDataMessage.callbackQuery.from,responseDataMessage,null,sender)
         else
-            personServices.onQuiz(person,responseDataMessage,null, sender)
+            personServices.onQuiz(responseDataMessage.callbackQuery.from,
+                responseDataMessage,null, sender)
 
     }
 

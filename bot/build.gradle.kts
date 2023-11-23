@@ -34,8 +34,6 @@ dependencies {
     implementation(project(":message-services","default"))
 
 
-    implementation("javax.validation:validation-api:2.0.1.Final")
-    implementation("org.hibernate:hibernate-core:6.3.1.Final")
 }
 
 tasks{

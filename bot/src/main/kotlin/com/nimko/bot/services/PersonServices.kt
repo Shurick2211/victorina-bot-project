@@ -12,17 +12,17 @@ interface PersonServices {
 
     fun registration(user:User, sender: MessageServicesSender)
 
-    fun registrationCreator(person: Person?,
+    fun registrationCreator(user: User?,
                             responseDataMessage: ResponseDataMessage?,
                             channelIdMessage: ChannelIdMessage?,
                             sender: MessageServicesSender)
 
-    fun onQuiz(person: Person?,
+    fun onQuiz(user: User?,
                responseDataMessage: ResponseDataMessage?,
                pollAnswer: PollAnswer?,
                sender: MessageServicesSender)
 
     fun forFree(textMessage: TextMessage, sender: MessageServicesSender)
 
-    fun getPerson(userId:String): Person?
+    fun getPerson(userId: String): Person?
 }

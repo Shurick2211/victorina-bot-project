@@ -6,13 +6,12 @@ import com.nimko.bot.utils.PersonState
 import com.nimko.messageservices.services.MessageServicesSender
 import com.nimko.messageservices.telegram.models.message.*
 import com.nimko.messageservices.telegram.models.others.InlineButton
-import com.nimko.messageservices.telegram.utils.Commands
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.objects.User
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException
-import java.util.Locale
+import java.util.*
 
 @Component
 class PersonServicesImpl @Autowired constructor(
@@ -21,76 +20,88 @@ class PersonServicesImpl @Autowired constructor(
     val messageSource: MessageSource
 ):PersonServices{
 
-//    private final val START_MESSAGE = "Hello in Quiz-bot! "
-//    private final val START_REG_MES = "If you are a channel's admin - resend here a channel's post. \n " +
-//            "Else - push \"Ready\""
-//    private final val CANNEL_REG_MES = "If you want add others channels - resend here a channel's post. \n " +
-//            "Else - push \"Ready\""
-//    private final val FINISH_REGISTRATION_MESSAGE = "Registration you as creator quiz was end. Link in admin-site: " +
-//            "<a href=\"http://\">Admin-site</a>"
-
     override fun registration(user: User, sender: MessageServicesSender) {
-        val person = getPerson(user.id.toString())
+        var person = getPerson(user.id.toString())
         if (person == null) {
+            person = Person(
+                user.id.toString(),
+                user.firstName, user.lastName, user.userName,
+                user.languageCode, null, null,
+                PersonState.FREE
+            )
             personRepo.save(
-                Person(
-                    user.id.toString(),
-                    user.firstName, user.lastName, user.userName,
-                    user.languageCode, null, null,
-                    PersonState.FREE
-                )
+                person
             )
         }
         sender.sendMenu(
             MenuMessage(user.id.toString(),
-            messageSource.getMessage("message.start",null, Locale.of(user.languageCode)) + user.firstName, listOf(Commands.CREATOR.getCommand())
+            messageSource.getMessage("message.start",null,
+                Locale.forLanguageTag(user.languageCode)) + user.firstName,
+                listOf(messageSource.getMessage("button.for.creator",null,
+                    Locale.forLanguageTag(user.languageCode))
+                )
             )
         )
         //temporary
-        sendFreeMessage(user.id.toString(), sender)
+        sendFreeMessage(user.id.toString(), Locale.forLanguageTag(user.languageCode) ,sender)
 
     }
 
     override fun registrationCreator(
-        person: Person?,
+        user: User?,
         responseDataMessage: ResponseDataMessage?,
         channelIdMessage: ChannelIdMessage?,
         sender: MessageServicesSender
     ) {
-        if(person != null && responseDataMessage == null && channelIdMessage == null){
+        if(user != null && responseDataMessage == null && channelIdMessage == null){
+            val person = personRepo.findById(user.id.toString()).get()
             person.state = PersonState.REGISTRATION_CREATOR
             personRepo.save(person)
             sender.sendTextAndInlineButton(
-                TextMessage(person.id, messageSource.getMessage("message.reg.start",null,Locale.of(person.languageCode)), null),
-                listOf(InlineButton("Ready!", "ready"))
+                TextMessage(person.id,
+                    messageSource.getMessage("message.reg.start",
+                        null,Locale.forLanguageTag(user.languageCode)),
+                    null),
+                listOf(InlineButton(
+                    messageSource.getMessage("button.ready",null,
+                        Locale.forLanguageTag(user.languageCode))
+                    , "ready"))
             )
         }
-        if(person == null && responseDataMessage == null && channelIdMessage != null){
+        if(user == null && responseDataMessage == null && channelIdMessage != null){
             val admin = getPerson(channelIdMessage.adminId)!!
             if (admin.channelsIdAdmin == null){
                 admin.channelsIdAdmin = ArrayList()
             }
             admin.channelsIdAdmin!!.add(channelIdMessage.channelId)
             channelServices.saveChannel(channelIdMessage.channel)
+            //need save admina
             sender.sendTextAndInlineButton(
-                TextMessage(admin.id, messageSource.getMessage("message.reg.channel",null,Locale.of(admin.languageCode)), null),
-                listOf(InlineButton("Ready!", "ready"))
+                TextMessage(admin.id,
+                    messageSource.getMessage("message.reg.channel",
+                        null,Locale.forLanguageTag(channelIdMessage.user.languageCode))
+                    , null),
+                listOf(InlineButton(messageSource.getMessage("button.ready",null,
+                    Locale.forLanguageTag(channelIdMessage.user.languageCode))
+                    , "ready"))
             )
         }
-        if(person != null && responseDataMessage != null && channelIdMessage == null){
+        if(user != null && responseDataMessage != null && channelIdMessage == null){
+            val person = personRepo.findById(user.id.toString()).get()
             person.state = PersonState.FREE
             personRepo.save(person)
-            deleteInlineKeyboard(person.id,
+            deleteInlineKeyboard(user.id.toString(),
                 responseDataMessage.callbackQuery.message.messageId.toString(), sender)
-            sendRegistrationFinishMessage(person.id, Locale.of(person.languageCode), sender)
-            sendFreeMessage(person.id, sender)
+            sendRegistrationFinishMessage(person.id,
+                Locale.forLanguageTag(user.languageCode), sender)
+            sendFreeMessage(user.id.toString(), Locale.forLanguageTag(user.languageCode) ,sender)
         }
     }
 
 
 
 
-    override fun onQuiz(person: Person?,
+    override fun onQuiz(user: User?,
                         responseDataMessage: ResponseDataMessage?,
                         pollAnswer: PollAnswer?,
                         sender: MessageServicesSender
@@ -117,19 +128,22 @@ class PersonServicesImpl @Autowired constructor(
         println(textMessage)
     }
 
-    override fun getPerson(userId: String): Person? = personRepo.findById(userId).orElse(null)
+    override fun getPerson(userId:String): Person? = personRepo.findById(userId).orElse(null)
 
     private fun deleteInlineKeyboard(chatId:String, messageId:String, sender: MessageServicesSender) {
         sender.sendChangeInlineButton(ChangeInlineMessage(chatId, messageId, emptyList()))
     }
 
-    private fun sendFreeMessage(userId: String, sender: MessageServicesSender) {
+    private fun sendFreeMessage(userId: String, lang:Locale, sender: MessageServicesSender) {
         sender.sendTextAndInlineButton(
             TextMessage(userId,
-                "Have victorina press start or no!", null),
+                messageSource.getMessage("message.invite", null, lang),
+                null),
             listOf(
-                InlineButton("Start", "start"),
-                InlineButton("No", "free")
+                InlineButton( messageSource.getMessage("button.start",
+                    null,lang), "start"),
+                InlineButton(messageSource.getMessage("button.not.yet",
+                    null,lang), "free")
             )
         )
     }
@@ -141,8 +155,7 @@ class PersonServicesImpl @Autowired constructor(
     private fun checkUserAsChannelMember(channelId: String, userId: String, sender: MessageServicesSender):Boolean? {
         return try{
             val status = sender.checkIsUserOfChannel(channelId, userId).status
-            if(status == "kicked" || status == "left") false
-            else true
+            !(status == "kicked" || status == "left")
         } catch (e:TelegramApiRequestException){
             null
         }
