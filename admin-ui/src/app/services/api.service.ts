@@ -7,7 +7,7 @@ import {Observable} from "rxjs";
   providedIn: 'root'
 })
 export class ApiService {
-  private api = 'http://localhost:5000/victorinas';
+  private api = 'http://127.0.0.1:5000/victorinas';
 
   constructor(private http: HttpClient) { }
 

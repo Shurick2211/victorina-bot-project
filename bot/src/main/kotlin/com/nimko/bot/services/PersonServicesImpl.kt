@@ -8,6 +8,7 @@ import com.nimko.messageservices.services.MessageServicesSender
 import com.nimko.messageservices.telegram.models.message.*
 import com.nimko.messageservices.telegram.models.others.InlineButton
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.MessageSource
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.objects.User
@@ -86,7 +87,7 @@ class PersonServicesImpl @Autowired constructor(
             personRepo.save(person)
             deleteInlineKeyboard(user.id.toString(),
                 responseDataMessage.callbackQuery.message.messageId.toString(), sender)
-            sendRegistrationFinishMessage(person.id,
+            sendRegistrationFinishMessage(user.id.toString(),
                 Locale.forLanguageTag(user.languageCode), sender)
             sendFreeMessage(user.id.toString(), Locale.forLanguageTag(user.languageCode) ,sender)
         }
@@ -157,8 +158,15 @@ class PersonServicesImpl @Autowired constructor(
         )
     }
 
+    @Value("\${my.address}") private lateinit var url:String
+    @Value("\${server.port}") private lateinit var port:String
     private fun sendRegistrationFinishMessage(userId: String,lang:Locale, sender: MessageServicesSender) {
-        sender.sendText(TextMessage(userId, messageSource.getMessage("message.reg.finish",null, lang), null))
+        sender.sendTextAndInlineButton(TextMessage(userId,
+            messageSource.getMessage("message.reg.finish",null, lang), null),
+            listOf(InlineButton(messageSource.getMessage("button.link",null, lang),
+                CallbackData.LINK, url="${url}:${port}?user=${userId}")
+                )
+        )
     }
 
     private fun checkUserAsChannelMember(channelId: String, userId: String, sender: MessageServicesSender):Boolean? {

@@ -26,17 +26,17 @@ class MessageServicesSenderImpl(
         bot.execute(createMessage(message.userId, message.textMessage))
     }
 
-    override fun sendTextAndInlineButton(textMessage: TextMessage, buttons: List<InlineButton>) {
+    override fun sendTextAndInlineButton(textMessage: TextMessage, buttons: List<InlineButton>, buttonRows: Int) {
         val sendMessage = createMessage(textMessage.userId, textMessage.textMessage)
-        sendMessage.replyMarkup = createInlineButton(buttons)
+        sendMessage.replyMarkup = createInlineButton(buttons, buttonRows)
         bot.execute(sendMessage)
     }
 
-    override fun sendChangeInlineButton(message: ChangeInlineMessage) {
+    override fun sendChangeInlineButton(message: ChangeInlineMessage, buttonRows: Int) {
         val answer = EditMessageReplyMarkup()
         answer.chatId = message.userId
         answer.messageId = message.messageId.toInt()
-        answer.replyMarkup = createInlineButton(message.buttons)
+        answer.replyMarkup = createInlineButton(message.buttons, buttonRows)
         bot.execute(answer)
     }
 
@@ -76,27 +76,28 @@ class MessageServicesSenderImpl(
         return pollMessage
     }
 
-    private fun createInlineButton(buttons: List<InlineButton>):InlineKeyboardMarkup{
-        val BUTTONS_ON_ROW = 2
+    private fun createInlineButton(buttons: List<InlineButton>, buttonRows:Int):InlineKeyboardMarkup{
+
         val keyboard = ArrayList<MutableList<InlineKeyboardButton>>()
-        var buttonsRow:MutableList<InlineKeyboardButton> = ArrayList(BUTTONS_ON_ROW)
+        var buttonsRow:MutableList<InlineKeyboardButton> = ArrayList(buttonRows)
         buttons.forEach{
             val button = InlineKeyboardButton()
             button.text = it.name
             button.callbackData = it.responseData.toString()
+            it.url?.let { url -> button.url = url }
 
             buttonsRow.add(button)
 
-            if(buttonsRow.size == BUTTONS_ON_ROW) {
+            if(buttonsRow.size == buttonRows) {
                 keyboard.add(buttonsRow)
-                buttonsRow = ArrayList(BUTTONS_ON_ROW)
+                buttonsRow = ArrayList(buttonRows)
             }
 
         }
-        if (!buttonsRow.isEmpty()) keyboard.add(buttonsRow)
+        if (buttonsRow.isNotEmpty()) keyboard.add(buttonsRow)
         val inlineKeyboardMarkup = InlineKeyboardMarkup()
         inlineKeyboardMarkup.keyboard = keyboard
-        return inlineKeyboardMarkup;
+        return inlineKeyboardMarkup
     }
 
     private fun createMenuButton(buttons:List<String>):ReplyKeyboardMarkup{

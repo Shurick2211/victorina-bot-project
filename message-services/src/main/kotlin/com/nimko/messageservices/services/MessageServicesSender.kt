@@ -8,12 +8,11 @@ import com.nimko.messageservices.telegram.models.others.InlineButton
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember
 
 interface MessageServicesSender {
-
     fun sendText(message: TextMessage)
 
-    fun sendTextAndInlineButton(textMessage: TextMessage, buttons:List<InlineButton>)
+    fun sendTextAndInlineButton(textMessage: TextMessage, buttons:List<InlineButton>, buttonRows:Int = 2)
 
-    fun sendChangeInlineButton(message: ChangeInlineMessage)
+    fun sendChangeInlineButton(message: ChangeInlineMessage, buttonRows:Int = 2)
 
     fun sendMenu(menu: MenuMessage)
 
