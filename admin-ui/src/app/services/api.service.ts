@@ -8,8 +8,9 @@ import {Person} from "../dto/person";
   providedIn: 'root'
 })
 export class ApiService {
-  private apiVictorina = 'http://127.0.0.1:5000/victorinas';
-  private apiPerson = 'http://127.0.0.1:5000/persons';
+  private url = 'http://127.0.0.1:5000'
+  private apiVictorina = `${this.url}/victorinas`;
+  private apiPerson = `${this.url}/persons`;
 
   constructor(private http: HttpClient) { }
 
