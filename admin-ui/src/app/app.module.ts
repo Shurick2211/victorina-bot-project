@@ -18,7 +18,7 @@ import { StartComponent } from './components/start/start.component';
 
 
 const appRoutes: Routes = [
-  {path: 'start/:user', component: StartComponent},
+  {path: 'start', component: StartComponent},
   {path: 'create', component: CreateVictorinaComponent},
   {path: 'list', component: ListVictorinasComponent},
   {path: 'edit/:id', component: CreateVictorinaComponent},

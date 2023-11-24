@@ -13,7 +13,7 @@ export class ListVictorinasComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.storage.refresh()
+    this.storage.refreshVictorins()
   }
 
 

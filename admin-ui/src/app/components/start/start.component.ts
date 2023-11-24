@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
-import {ApiService} from "../../services/api.service";
 import {Person} from "../../dto/person";
+import {StorageService} from "../../services/storage.service";
 
 @Component({
   selector: 'app-start',
@@ -9,25 +8,14 @@ import {Person} from "../../dto/person";
   styleUrls: ['./start.component.css']
 })
 export class StartComponent implements OnInit{
-  userId:any = null
 
-  person: Person | null = null
-  constructor(private api:ApiService, private activeRoute:ActivatedRoute) {
 
+  constructor(public storage:StorageService) {
+    storage.refreshPerson()
   }
 
 
   ngOnInit(): void {
-
-    this.activeRoute.params.subscribe(param => {
-      this.userId = param['user']
-    })
-
-    this.api.getPerson(this.userId).subscribe(response => {
-        this.person = response.body
-        console.log(this.person?.userName)
-    })
-
 
   }
 }

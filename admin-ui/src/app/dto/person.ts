@@ -1,4 +1,5 @@
 import {Quiz} from "./quiz";
+import {PersonRole} from "../utils/person-role";
 
 
 export class Person {
@@ -10,6 +11,7 @@ export class Person {
     public languageCode:string,
     public channelsAdmin:Array<String>,
     public quizes:Array<Quiz>,
+    public role:PersonRole,
     public password:String
   ) {
 

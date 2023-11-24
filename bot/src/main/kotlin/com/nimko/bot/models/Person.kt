@@ -1,5 +1,6 @@
 package com.nimko.bot.models
 
+import com.nimko.bot.utils.PersonRole
 import com.nimko.bot.utils.PersonState
 import com.nimko.messageservices.telegram.models.message.ChannelIdMessage
 import org.springframework.data.annotation.Id
@@ -16,6 +17,7 @@ data class Person(
     var channelsAdmin:MutableList<ChannelIdMessage>?,
     val quizes:MutableList<Quiz>?,
     var state:PersonState,
+    var role:PersonRole,
     var password:String? = null
 ){
     fun toDto() = PersonDto(
@@ -26,6 +28,7 @@ data class Person(
         this.languageCode,
         this.channelsAdmin?.map{ch -> ch.channel.title}?.toTypedArray(),
         this.quizes?.toTypedArray(),
+        this.role,
         this.password
     )
 }

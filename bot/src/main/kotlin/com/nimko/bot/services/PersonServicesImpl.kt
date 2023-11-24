@@ -2,6 +2,7 @@ package com.nimko.bot.services
 
 import com.nimko.bot.models.Person
 import com.nimko.bot.repositories.PersonRepo
+import com.nimko.bot.utils.PersonRole
 import com.nimko.messageservices.telegram.utils.CallbackData
 import com.nimko.bot.utils.PersonState
 import com.nimko.messageservices.services.MessageServicesSender
@@ -28,7 +29,8 @@ class PersonServicesImpl @Autowired constructor(
                 user.id.toString(),
                 user.firstName, user.lastName, user.userName,
                 user.languageCode, null, null,
-                PersonState.FREE
+                PersonState.FREE,
+                PersonRole.USER
             )
             personRepo.save(
                 person
@@ -84,6 +86,7 @@ class PersonServicesImpl @Autowired constructor(
         if(user != null && responseDataMessage != null && channelIdMessage == null){
             val person = personRepo.findById(user.id.toString()).get()
             person.state = PersonState.FREE
+            if(person.role == PersonRole.USER) person.role = PersonRole.QUIZ_CREATOR
             personRepo.save(person)
             deleteInlineKeyboard(user.id.toString(),
                 responseDataMessage.callbackQuery.message.messageId.toString(), sender)
