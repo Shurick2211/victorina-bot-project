@@ -15,5 +15,17 @@ data class Person(
     var languageCode:String,
     var channelsAdmin:MutableList<ChannelIdMessage>?,
     val quizes:MutableList<Quiz>?,
-    var state:PersonState
-)
+    var state:PersonState,
+    var password:String? = null
+){
+    fun toDto() = PersonDto(
+        this.id,
+        this.firstName,
+        this.lastName,
+        this.userName,
+        this.languageCode,
+        this.channelsAdmin?.map{ch -> ch.channel.title}?.toTypedArray(),
+        this.quizes?.toTypedArray(),
+        this.password
+    )
+}

@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
+import {ApiService} from "../../services/api.service";
+import {Person} from "../../dto/person";
 
 @Component({
   selector: 'app-start',
@@ -7,18 +9,25 @@ import {ActivatedRoute} from "@angular/router";
   styleUrls: ['./start.component.css']
 })
 export class StartComponent implements OnInit{
-  userId:any
+  userId:any = null
 
-
-  constructor(private activeRoute:ActivatedRoute) {
+  person: Person | null = null
+  constructor(private api:ApiService, private activeRoute:ActivatedRoute) {
 
   }
 
 
   ngOnInit(): void {
+
     this.activeRoute.params.subscribe(param => {
       this.userId = param['user']
     })
+
+    this.api.getPerson(this.userId).subscribe(response => {
+        this.person = response.body
+        console.log(this.person?.userName)
+    })
+
 
   }
 }

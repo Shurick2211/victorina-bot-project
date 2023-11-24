@@ -28,8 +28,8 @@ Info(
         url = "https://github.com/Shurick2211/victorina-bot-project.git")
 )
 )
-@Tag(name = "REST Controller",description = "My Victorina-bot Controller")
-class MainController @Autowired constructor(val service:FrontRequestService){
+@Tag(name = "REST Controller",description = "My Victorina Controller")
+class VictorinaController @Autowired constructor(val service:FrontRequestService){
 
     @GetMapping
     @Operation(
