@@ -11,18 +11,17 @@ import {StorageService} from "./services/storage.service";
 
 export class AppComponent implements OnInit {
   title = 'admin-ui';
-  isUser = false
-  constructor(@Inject(DOCUMENT) private document: Document, private router:Router, private  storage:StorageService) {}
+  constructor(@Inject(DOCUMENT) private document: Document, private router:Router, protected  storage:StorageService) {}
 
   ngOnInit(): void {
     // Accessing query parameters directly from the URL
     const queryParams = new URLSearchParams(this.document.location.search);
     const paramId = queryParams.get('user');
-    this.isUser = (paramId !==null) && (paramId.length > 0)
+    let isUser = (paramId !==null) && (paramId.length > 0)
     // Use paramId as needed
     console.log('Query Param Value:', paramId);
 
-    if (this.isUser) {
+    if (isUser) {
       this.storage.userId = paramId
     }
 

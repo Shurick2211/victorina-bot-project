@@ -30,7 +30,8 @@ class PersonServicesImpl @Autowired constructor(
                 user.firstName, user.lastName, user.userName,
                 user.languageCode, null, null,
                 PersonState.FREE,
-                PersonRole.USER
+                PersonRole.USER,
+                null
             )
             personRepo.save(
                 person

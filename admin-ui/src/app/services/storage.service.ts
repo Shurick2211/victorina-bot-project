@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {Victorina} from "../dto/victorina";
 import {ApiService} from "./api.service";
 import {Person} from "../dto/person";
+import {HttpStatusCode} from "@angular/common/http";
 
 
 @Injectable({
@@ -14,6 +15,8 @@ export class StorageService {
   public userId:string | null = null
 
   public person:Person | null = null
+
+  public isAuth = false
 
   constructor(private api:ApiService) {
     this.victorinas = new Array<Victorina>()
@@ -48,6 +51,11 @@ export class StorageService {
     this.refreshVictorins()
   }
 
-
+  savePerson(){
+    this.api.savePassFromPerson(this.person!.id, this.person!.password).subscribe(response => {
+      console.log(response)
+      if(response.status == HttpStatusCode.Ok) this.isAuth = true
+    })
+  }
 
 }

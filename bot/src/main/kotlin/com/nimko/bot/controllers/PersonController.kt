@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
+import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/persons")
@@ -21,7 +22,7 @@ class PersonController @Autowired constructor(val service: FrontRequestService) 
     @Operation(
         summary = "Save person's password"
     )
-    fun putPasswordForPerson(@RequestParam("id") id:String, @RequestBody pass:String) =
-        service.putPasswordForPerson(id,pass)
+    fun putPasswordForPerson (@RequestBody pass:String, request:HttpServletRequest) =
+        service.putPasswordForPerson(request.getHeader("id"),pass)
 
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpParams, HttpResponse} from "@angular/common/http";
+import {HttpClient, HttpHeaders, HttpParams, HttpResponse} from "@angular/common/http";
 import {Victorina} from "../dto/victorina";
 import {Observable} from "rxjs";
 import {Person} from "../dto/person";
@@ -31,8 +31,7 @@ export class ApiService {
   }
 
   savePassFromPerson(id:string, pass:String):Observable<any>{
-    let param = new HttpParams()
-    param.append("id", id)
-    return this.http.post<any>(this.apiPerson,pass,{observe:'response', params:param})
+    let header = new HttpHeaders().set("id", id)
+    return this.http.put<any>(this.apiPerson,pass,{observe:'response', headers:header})
   }
 }

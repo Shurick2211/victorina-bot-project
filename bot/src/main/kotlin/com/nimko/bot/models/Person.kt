@@ -18,7 +18,7 @@ data class Person(
     val quizes:MutableList<Quiz>?,
     var state:PersonState,
     var role:PersonRole,
-    var password:String? = null
+    var password:String?
 ){
     fun toDto() = PersonDto(
         this.id,
