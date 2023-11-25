@@ -3,6 +3,11 @@ import {Victorina} from "../../dto/victorina";
 import {Question} from "../../dto/question";
 import {StorageService} from "../../services/storage.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {FormControl, FormGroup} from "@angular/forms";
+import {NgLocaleLocalization} from "@angular/common";
+import {range} from "rxjs";
+
+
 
 
 @Component({
@@ -19,7 +24,17 @@ export class CreateVictorinaComponent implements OnInit{
   q:Question ;
   isNotReady = false;
   num = undefined;
+
+
+  today = new Date()
+  month = this.today.getMonth();
+  year = this.today.getFullYear();
+
+
   constructor(private storage:StorageService, private activeRoute:ActivatedRoute, private router:Router) {
+    console.log(`${this.month} : ${this.year}`)
+
+
     this.num = activeRoute.snapshot.params['id']
     if (!this.num) {
       this.victorina = new Victorina(null,'','', new Array<Question>(), '','');
@@ -63,6 +78,13 @@ export class CreateVictorinaComponent implements OnInit{
     } else this.isNotReady = true
 
   }
+
+
+  campaignOne = new FormGroup({
+    start: new FormControl(new Date(this.year, this.month, this.today.getDay())),
+    end: new FormControl(new Date(this.year, this.month, this.today.getDay() + 2)),
+  });
+
 
 
 }

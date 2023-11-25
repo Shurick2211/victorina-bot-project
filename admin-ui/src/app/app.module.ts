@@ -5,7 +5,7 @@ import { AppComponent } from './app.component';
 import { RouterModule, RouterOutlet, Routes} from "@angular/router";
 import { CreateVictorinaComponent } from './components/create-victorina/create-victorina.component';
 import { ListVictorinasComponent } from './components/list-victorinas/list-victorinas.component';
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { QuestionComponent } from './components/question/question.component';
 import {MatCardModule} from '@angular/material/card';
 import {MatButtonModule} from "@angular/material/button";
@@ -13,6 +13,10 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import {ApiService} from "./services/api.service";
 import {HttpClientModule} from "@angular/common/http";
 import { StartComponent } from './components/start/start.component';
+import { MatDatepickerModule} from "@angular/material/datepicker";
+import {MatInputModule} from "@angular/material/input";
+import {MatNativeDateModule} from "@angular/material/core";
+import {MatFormFieldModule} from "@angular/material/form-field";
 
 
 
@@ -25,6 +29,7 @@ const appRoutes: Routes = [
 
 
 ]
+
 
 @NgModule({
   declarations: [
@@ -43,9 +48,16 @@ const appRoutes: Routes = [
     MatCardModule,
     MatButtonModule,
     MatCheckboxModule,
-    HttpClientModule
+    HttpClientModule,
+    MatDatepickerModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    MatNativeDateModule,
+    MatFormFieldModule
+
   ],
-  providers: [ApiService],
+  providers: [ApiService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

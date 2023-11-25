@@ -19,3 +19,7 @@ textarea{
   color: red;
   font-size: large;
 }
+
+.example-form-field {
+  margin: 10px 8px 16px 0;
+}
