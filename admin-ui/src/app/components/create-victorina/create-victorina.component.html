@@ -1,7 +1,7 @@
 <div class="pad">
   <h3>{{title}}</h3>
   <div>
-    <span>Name:</span>
+    <span>Name: </span>
     <input style="margin-left: 10px" size="100" type="text" name="victorina-name" [(ngModel)]="victorina.name">
     <button name = "save" class="btn btn-info" style="margin-left: 10px" (click)="save()" >Save Victorina!</button>
     <div *ngIf="isNotReady">
@@ -10,37 +10,24 @@
     </div>
   </div>
   <div>
-    <span style="alignment-baseline: central">Title:</span>
+    <span style="margin-top: 5px">Title: </span>
     <textarea  name="victorina-title" style=" margin-left: 10px"
               rows="3" [(ngModel)]="victorina.title"></textarea>
   </div>
-  <div>
 
-<!--    <mat-form-field class="example-form-field">-->
-<!--      <mat-label>Period date</mat-label>-->
-<!--      <mat-date-range-input-->
-<!--        [formGroup]="campaignOne"-->
-<!--        [rangePicker]="campaignOnePicker"-->
-<!--        [comparisonStart]="campaignTwo.value.start"-->
-<!--        [comparisonEnd]="campaignTwo.value.end">-->
-<!--        <input matStartDate placeholder="Start date" formControlName="start">-->
-<!--        <input matEndDate placeholder="End date" formControlName="end">-->
-<!--      </mat-date-range-input>-->
-<!--      <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>-->
-<!--      <mat-datepicker-toggle matIconSuffix [for]="campaignOnePicker"></mat-datepicker-toggle>-->
-<!--      <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>-->
-<!--    </mat-form-field>-->
-
-    <mat-form-field class="example-form-field">
+  <div class="mat-typography" >
+    <span >Date period: </span>
+    <mat-form-field>
       <mat-label>Enter a date range</mat-label>
-      <mat-date-range-input [formGroup]="campaignOne" [rangePicker]="picker">
-        <input matStartDate formControlName="start" placeholder="Start date">
-        <input matEndDate formControlName="end" placeholder="End date">
+      <mat-date-range-input [rangePicker]="picker" [formGroup]="range" [(ngModel)]="range">
+        <input  matStartDate placeholder="Start date">
+        <input  matEndDate placeholder="End date" >
       </mat-date-range-input>
       <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
       <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-date-range-picker #picker></mat-date-range-picker>
     </mat-form-field>
+
 
   </div>
 

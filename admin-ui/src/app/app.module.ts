@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {importProvidersFrom, NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
@@ -11,12 +11,13 @@ import {MatCardModule} from '@angular/material/card';
 import {MatButtonModule} from "@angular/material/button";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {ApiService} from "./services/api.service";
-import {HttpClientModule} from "@angular/common/http";
+import {HttpClientModule, provideHttpClient} from "@angular/common/http";
 import { StartComponent } from './components/start/start.component';
 import { MatDatepickerModule} from "@angular/material/datepicker";
 import {MatInputModule} from "@angular/material/input";
 import {MatNativeDateModule} from "@angular/material/core";
 import {MatFormFieldModule} from "@angular/material/form-field";
+import {provideAnimations, BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 
 
@@ -53,10 +54,14 @@ const appRoutes: Routes = [
     MatInputModule,
     ReactiveFormsModule,
     MatNativeDateModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    BrowserAnimationsModule
 
   ],
-  providers: [ApiService
+  providers: [ApiService,
+    provideAnimations(),
+    provideHttpClient(),
+    importProvidersFrom(MatNativeDateModule)
   ],
   bootstrap: [AppComponent]
 })

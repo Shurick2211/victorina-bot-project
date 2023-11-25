@@ -4,7 +4,7 @@ import {StorageService} from "../../services/storage.service";
 @Component({
   selector: 'app-list-victorinas',
   templateUrl: './list-victorinas.component.html',
-  styleUrls: ['./list-victorinas.component.css']
+  styleUrls: ['./list-victorinas.component.scss']
 })
 export class ListVictorinasComponent implements OnInit{
 
