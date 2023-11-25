@@ -4,10 +4,6 @@ import {Question} from "../../dto/question";
 import {StorageService} from "../../services/storage.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormControl, FormGroup} from "@angular/forms";
-import {NgLocaleLocalization} from "@angular/common";
-import {range} from "rxjs";
-
-
 
 
 @Component({
