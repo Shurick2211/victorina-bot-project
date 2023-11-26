@@ -2,6 +2,7 @@ package com.nimko.bot.models
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
+import java.time.LocalDateTime
 
 @Document("victorinas")
 data class VictorinaDto(
@@ -12,8 +13,21 @@ data class VictorinaDto(
     val questions:Array<Question>,
     val ownerId:String,
     val chanelName:String?,
-    val winnerId:String?,
-    val startDate:String?,
-    val endDate:String?
+    var winnerId:String?,
+    val startDate:String,
+    val endDate:String
 ) {
+    fun toVictorina():Victorina{
+        return Victorina(
+            id=id,
+            name = name,
+            title = title,
+            questions = questions,
+            ownerId = ownerId,
+            chanelName = chanelName,
+            startDate = LocalDateTime.parse(startDate),
+            endDate = LocalDateTime.parse(endDate)
+        )
+    }
+
 }
