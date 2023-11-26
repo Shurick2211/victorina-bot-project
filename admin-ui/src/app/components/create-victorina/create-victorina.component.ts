@@ -40,7 +40,7 @@ export class CreateVictorinaComponent implements OnInit{
         if (this.victorina.endDate !== null) this.endDate = new Date(this.victorina.endDate)
       this.title = 'Edit victorina!'
     }
-    this.q = new Question('',['',''],-1)
+    this.q = new Question('',['',''],Array.of<number>(-1))
   }
 
   ngOnInit(): void {
@@ -52,7 +52,7 @@ export class CreateVictorinaComponent implements OnInit{
 
   addToInfo(q:Question){
     this.victorina.questions.push(q)
-    this.q = new Question('',new Array<string>(q.answers.length), -1)
+    this.q = new Question('',new Array<string>(q.answers.length), Array.of<number>(-1))
   }
 
   editToInfo(q: Question, i: number){

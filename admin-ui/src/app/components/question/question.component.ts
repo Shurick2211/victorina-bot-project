@@ -26,8 +26,10 @@ export class QuestionComponent implements OnInit{
 
   notReady = false;
 
+  isManyAnswer=false
+
   constructor() {
-    this.question = new Question('', new Array<string>(2), 0)
+    this.question = new Question('', new Array<string>(2), new Array<number>(1))
     this.checkeds = new Array<boolean>(this.question.answers.length)
     this.checkeds.forEach(value => value = false)
   }
@@ -54,14 +56,17 @@ export class QuestionComponent implements OnInit{
   }
 
   clickNum(i: number) {
-    for (let j = 0; j<this.checkeds.length; j++)
-      if((i==j) && this.checkeds[j]) this.question.rightAnswer = i;
+    if (this.isManyAnswer) {
+      if(this.checkeds[i]) this.question.rightAnswer.push(i)
+      else this.question.rightAnswer = this.question.rightAnswer.filter((item => item !== i))
+    }else
+      for (let j = 0; j<this.checkeds.length; j++)
+      if((i==j) && this.checkeds[j]) this.question.rightAnswer[0] = i;
       else this.checkeds[j] = false;
-    // console.log(`${i} ${this.checkeds.toString()}`)
   }
 
   save(){
-    if(this.question.text !== '' && this.question.rightAnswer > -1
+    if(this.question.text !== '' && this.question.rightAnswer[0] > -1
         && this.question.answers[0] !=='' && this.question.answers[1] !=='') {
       this.notReady = false
       this.quest.emit(this.question)
@@ -77,10 +82,20 @@ export class QuestionComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.checkeds[this.question.rightAnswer] = true
+    this.question.rightAnswer.forEach (value =>
+      this.checkeds[value] = true)
+
   }
 
   deleteQuestion(){
     this.deleteQ.emit(true)
+  }
+
+  clickManyAnswers() {
+    this.checkeds = new Array<boolean>(this.question.answers.length)
+    if(this.isManyAnswer)
+      this.question.rightAnswer = new Array<number>()
+    else
+      this.question.rightAnswer = Array.of<number>(-1)
   }
 }
