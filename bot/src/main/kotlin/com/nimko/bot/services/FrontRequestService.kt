@@ -1,7 +1,6 @@
 package com.nimko.bot.services
 
-import com.nimko.bot.controllers.PersonController
-import com.nimko.bot.models.Victorina
+import com.nimko.bot.models.VictorinaDto
 import com.nimko.bot.repositories.PersonRepo
 import com.nimko.bot.repositories.VictorinaRepo
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,12 +15,12 @@ class FrontRequestService  @Autowired constructor(
 
 
     fun getRequest():ResponseEntity<Any>{
-        val list:List<Victorina> = victorinasDb.findAll()
+        val list:List<VictorinaDto> = victorinasDb.findAll()
         return ResponseEntity.ok(list)
     }
 
-    fun createVictorina(victorina:Victorina):ResponseEntity<Any>{
-        victorinasDb.save(victorina)
+    fun createVictorina(victorinaDto:VictorinaDto):ResponseEntity<Any>{
+        victorinasDb.save(victorinaDto)
         return ResponseEntity.ok().build()
     }
 

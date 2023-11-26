@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {StorageService} from "../../services/storage.service";
 
 @Component({
@@ -8,14 +8,11 @@ import {StorageService} from "../../services/storage.service";
 })
 export class ListVictorinasComponent implements OnInit{
 
-
   constructor(public storage:StorageService) {
   }
 
   ngOnInit(): void {
     this.storage.refreshVictorins()
   }
-
-
 
 }

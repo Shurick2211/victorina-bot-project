@@ -19,6 +19,9 @@ import {MatNativeDateModule} from "@angular/material/core";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {provideAnimations, BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {MatSelectModule} from "@angular/material/select";
+import {MatTableModule} from "@angular/material/table";
+import {MatSortModule} from "@angular/material/sort";
 
 
 
@@ -41,25 +44,28 @@ const appRoutes: Routes = [
     QuestionComponent,
     StartComponent
   ],
-    imports: [
-        BrowserModule,
-        RouterOutlet,
-        FormsModule,
-        RouterModule.forRoot(appRoutes),
-        FormsModule,
-        MatCardModule,
-        MatButtonModule,
-        MatCheckboxModule,
-        HttpClientModule,
-        MatDatepickerModule,
-        MatInputModule,
-        ReactiveFormsModule,
-        MatNativeDateModule,
-        MatFormFieldModule,
-        BrowserAnimationsModule,
-        MatSlideToggleModule
+  imports: [
+    BrowserModule,
+    RouterOutlet,
+    FormsModule,
+    RouterModule.forRoot(appRoutes),
+    FormsModule,
+    MatCardModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    HttpClientModule,
+    MatDatepickerModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    MatNativeDateModule,
+    MatFormFieldModule,
+    BrowserAnimationsModule,
+    MatSlideToggleModule,
+    MatSelectModule,
+    MatTableModule,
+    MatSortModule
 
-    ],
+  ],
   providers: [ApiService,
     provideAnimations(),
     provideHttpClient(),

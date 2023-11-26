@@ -1,6 +1,6 @@
 package com.nimko.bot.controllers
 
-import com.nimko.bot.models.Victorina
+import com.nimko.bot.models.VictorinaDto
 import com.nimko.bot.services.FrontRequestService
 import io.swagger.v3.oas.annotations.OpenAPIDefinition
 import io.swagger.v3.oas.annotations.Operation
@@ -41,7 +41,7 @@ class VictorinaController @Autowired constructor(val service:FrontRequestService
     @Operation(
         summary = "Create victorina"
     )
-    fun createVictorina(@RequestBody victorina:Victorina ) = service.createVictorina(victorina)
+    fun createVictorina(@RequestBody victorinaDto:VictorinaDto ) = service.createVictorina(victorinaDto)
 
     @DeleteMapping
     @Operation(

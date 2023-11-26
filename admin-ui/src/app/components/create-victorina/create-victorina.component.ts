@@ -3,8 +3,6 @@ import {Victorina} from "../../dto/victorina";
 import {Question} from "../../dto/question";
 import {StorageService} from "../../services/storage.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {FormControl, FormGroup} from "@angular/forms";
-import {range} from "rxjs";
 
 
 @Component({
@@ -27,12 +25,12 @@ export class CreateVictorinaComponent implements OnInit{
  startDate: Date | null = null
 
 
-  constructor(private storage:StorageService, private activeRoute:ActivatedRoute, private router:Router) {
+  constructor(protected storage:StorageService, private activeRoute:ActivatedRoute, private router:Router) {
     this.num = activeRoute.snapshot.params['id']
     if (!this.num) {
       this.victorina = new Victorina(null,'','',
-          new Array<Question>(), '','',
-          null, null);
+          new Array<Question>(), storage.person!.id,null,
+          null, null, null);
       this.title = 'Create new victorina!'
     } else {
       this.victorina = storage.victorinas[this.num]
@@ -76,9 +74,9 @@ export class CreateVictorinaComponent implements OnInit{
       this.isNotReady = false
       console.log(this.victorina.toString())
       this.storage.save(this.victorina)
-      this.victorina = new Victorina(null, '', '',
-          new Array<Question>(), '', '',
-          null,null);
+      this.victorina = new Victorina(null,'','',
+        new Array<Question>(), this.storage.person!.id,null,
+        null, null, null);
       this.router.navigateByUrl('/create')
     } else this.isNotReady = true
 
