@@ -11,6 +11,8 @@ data class Victorina(
     val title:String,
     val questions:Array<Question>,
     val ownerId:String?,
-    val winnerId:String?
+    val winnerId:String?,
+    val startDate:String?,
+    val endDate:String?
 ) {
 }

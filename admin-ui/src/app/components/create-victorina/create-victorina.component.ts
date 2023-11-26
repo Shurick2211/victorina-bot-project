@@ -23,19 +23,21 @@ export class CreateVictorinaComponent implements OnInit{
   num = undefined;
 
 
-
+ endDate:Date | null = null
+ startDate: Date | null = null
 
 
   constructor(private storage:StorageService, private activeRoute:ActivatedRoute, private router:Router) {
-
-
-
     this.num = activeRoute.snapshot.params['id']
     if (!this.num) {
-      this.victorina = new Victorina(null,'','', new Array<Question>(), '','');
+      this.victorina = new Victorina(null,'','',
+          new Array<Question>(), '','',
+          null, null);
       this.title = 'Create new victorina!'
     } else {
       this.victorina = storage.victorinas[this.num]
+        if (this.victorina.startDate !== null) this.startDate = new Date(this.victorina.startDate)
+        if (this.victorina.endDate !== null) this.endDate = new Date(this.victorina.endDate)
       this.title = 'Edit victorina!'
     }
     this.q = new Question('',['',''],-1)
@@ -64,25 +66,21 @@ export class CreateVictorinaComponent implements OnInit{
   }
 
   save() {
-    console.log(this.range.value.start)
-    console.log(this.range.value.end)
-
-    if (this.victorina.questions.length > 0 && this.victorina.name.length > 0) {
+    if (this.victorina.questions.length > 0 && this.victorina.name.length > 0 &&
+        this.startDate !== null && this.endDate !== null
+    ) {
+      this.victorina.startDate = this.startDate.toISOString()
+      let end = new Date(this.endDate)
+          end.setDate(this.endDate.getDate() + 1)
+      this.victorina.endDate = end.toISOString()
       this.isNotReady = false
       console.log(this.victorina.toString())
       this.storage.save(this.victorina)
-      this.victorina = new Victorina(null,'','', new Array<Question>(), '','');
+      this.victorina = new Victorina(null, '', '',
+          new Array<Question>(), '', '',
+          null,null);
       this.router.navigateByUrl('/create')
     } else this.isNotReady = true
 
   }
-
-
-  range = new FormGroup({
-    start: new FormControl(new Date().toISOString()),
-    end: new FormControl(new Date().toISOString()),
-  });
-
-
-
 }
