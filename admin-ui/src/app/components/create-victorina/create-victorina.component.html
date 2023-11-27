@@ -30,8 +30,8 @@
 
     <mat-form-field *ngIf="storage.person?.channelsAdmin !== num" style="margin-left: 30px">
       <mat-label>For channel</mat-label>
-      <mat-select [(ngModel)]="victorina.chanelName">
-        <mat-option *ngFor="let channel of storage.person?.channelsAdmin" [value]="channel">{{channel}}</mat-option>
+      <mat-select [(ngModel)]="victorina.channel">
+        <mat-option *ngFor="let channel of storage.person?.channelsAdmin" [value]="channel">{{channel.channelName}}</mat-option>
       </mat-select>
     </mat-form-field>
 

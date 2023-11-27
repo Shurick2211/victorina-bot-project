@@ -29,8 +29,8 @@ export class CreateVictorinaComponent implements OnInit{
     this.num = activeRoute.snapshot.params['id']
     if (!this.num) {
       this.victorina = new Victorina(null,'','',
-          new Array<Question>(), storage.person!.id,null,
-          null, null, null, null);
+          new Array<Question>(), storage.person!.id,null, null,
+          null, null, null);
       this.title = 'Create new victorina!'
     } else {
       this.victorina = storage.victorinas[this.num]
@@ -76,7 +76,7 @@ export class CreateVictorinaComponent implements OnInit{
       this.storage.save(this.victorina)
       this.victorina = new Victorina(null,'','',
         new Array<Question>(), this.storage.person!.id,null,
-        null, null, null, null);
+        null, null, null,null);
       this.router.navigateByUrl('/create')
     } else this.isNotReady = true
 

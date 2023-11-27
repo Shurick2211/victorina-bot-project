@@ -9,7 +9,7 @@ data class Victorina(
     val title:String,
     val questions:Array<Question>,
     val ownerId:String,
-    val chanelName:String?,
+    val channel:Channel?,
     val startDate:LocalDateTime,
     val endDate:LocalDateTime
 ) {

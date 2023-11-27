@@ -15,7 +15,7 @@ data class VictorinaDto(
     val title:String,
     val questions:Array<Question>,
     val ownerId:String,
-    val chanelName:String?,
+    val channel:Channel?,
     var winnerId:String?,
     var rightsAnsweredUserId: MutableList<String>?,
     val startDate:String,
@@ -28,7 +28,7 @@ data class VictorinaDto(
             title = title,
             questions = questions,
             ownerId = ownerId,
-            chanelName = chanelName,
+            channel = channel,
             startDate = LocalDateTime.ofInstant(
                 Instant.from( DateTimeFormatter.ISO_INSTANT.parse(startDate)), ZoneId.systemDefault()),
             endDate = LocalDateTime.ofInstant(

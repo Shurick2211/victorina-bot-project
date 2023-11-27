@@ -4,5 +4,6 @@ enum class CallbackData {
     START,
     READY,
     FREE,
-    LINK
+    LINK,
+    QUIZ
 }

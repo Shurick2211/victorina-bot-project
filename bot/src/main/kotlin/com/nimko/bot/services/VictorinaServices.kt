@@ -9,4 +9,6 @@ interface VictorinaServices {
     fun saveRightAnsweredUserId(userId:String, victorinaId:String)
 
     fun saveWinner(userId:String, victorinaId:String)
+
+    fun getVictorinaById(id:String):Victorina
 }

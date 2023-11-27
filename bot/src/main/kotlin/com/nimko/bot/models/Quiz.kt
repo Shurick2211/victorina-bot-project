@@ -2,6 +2,6 @@ package com.nimko.bot.models
 
 data class Quiz(
     val victorinaId:String,
-    val userAnswers:MutableList<Array<Int>>,
-    var isRightAnswered:Boolean?
+    val userAnswers:MutableList<List<Int>>,
+    var isRightAnswered:Boolean? = null
 )

@@ -9,7 +9,7 @@ data class PersonDto(
     val lastName:String?,
     val userName:String,
     val languageCode:String,
-    val channelsAdmin:Array<String>?,
+    val channelsAdmin:Array<Channel>?,
     val quizes: Array<Quiz>?,
     var role: PersonRole,
     val password:String?

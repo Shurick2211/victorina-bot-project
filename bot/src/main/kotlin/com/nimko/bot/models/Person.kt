@@ -15,7 +15,7 @@ data class Person(
     val userName:String,
     var languageCode:String,
     var channelsAdmin:MutableList<ChannelIdMessage>?,
-    val quizes:MutableList<Quiz>?,
+    var quizes:MutableList<Quiz>?,
     var state:PersonState,
     var role:PersonRole,
     var password:String?
@@ -26,7 +26,7 @@ data class Person(
         this.lastName,
         this.userName,
         this.languageCode,
-        this.channelsAdmin?.map{ch -> ch.channel.title}?.toTypedArray(),
+        this.channelsAdmin?.map{ch -> Channel(ch.channelId, ch.channel.title)}?.toTypedArray(),
         this.quizes?.toTypedArray(),
         this.role,
         this.password
