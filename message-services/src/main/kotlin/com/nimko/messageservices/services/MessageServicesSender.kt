@@ -5,6 +5,7 @@ import com.nimko.messageservices.telegram.models.message.MenuMessage
 import com.nimko.messageservices.telegram.models.message.PollMessage
 import com.nimko.messageservices.telegram.models.message.TextMessage
 import com.nimko.messageservices.telegram.models.others.InlineButton
+import org.telegram.telegrambots.meta.api.objects.ChatInviteLink
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember
 
 interface MessageServicesSender {
@@ -19,4 +20,6 @@ interface MessageServicesSender {
     fun sendOnePoll(poll: PollMessage)
 
     fun checkIsUserOfChannel(chatId:String, userId:String): ChatMember
+
+    fun getInviteChannelLink(channelId: String):ChatInviteLink
 }

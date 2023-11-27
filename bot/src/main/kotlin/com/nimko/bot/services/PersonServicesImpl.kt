@@ -87,7 +87,7 @@ class PersonServicesImpl @Autowired constructor(
                             null,Locale.forLanguageTag(channelIdMessage.user.languageCode))
                         , null)
                 else {
-                    saveChannelForAdmin(channelIdMessage)
+                    saveChannelForAdmin(channelIdMessage, sender)
                     TextMessage(channelIdMessage.adminId,
                         messageSource.getMessage("message.reg.channel",
                             null,Locale.forLanguageTag(channelIdMessage.user.languageCode))
@@ -114,12 +114,16 @@ class PersonServicesImpl @Autowired constructor(
         }
     }
 
-    private fun saveChannelForAdmin(channelIdMessage: ChannelIdMessage) {
+    private fun saveChannelForAdmin(channelIdMessage: ChannelIdMessage, sender: MessageServicesSender) {
         val admin = getPerson(channelIdMessage.adminId)!!
         if (admin.channelsAdmin == null){
             admin.channelsAdmin = ArrayList()
         }
         if (admin.channelsAdmin!!.indexOf(channelIdMessage) == -1){
+            if(channelIdMessage.channel.inviteLink == null) {
+                channelIdMessage.channel.inviteLink =
+                sender.getInviteChannelLink(channelIdMessage.channelId).inviteLink
+            }
             admin.channelsAdmin!!.add(channelIdMessage)
             personRepo.save(admin)
         }
@@ -137,14 +141,44 @@ class PersonServicesImpl @Autowired constructor(
                println(pollAnswer)
            }
 
-
             //start quiz
             if(responseDataMessage.callbackQuery.data != null) {
-                deleteInlineKeyboard(responseDataMessage.chatId,
-                    responseDataMessage.callbackQuery.message.messageId.toString(), sender)
-                val victorina = victorinaServices.getVictorinaById(responseDataMessage.callbackQuery.data)
-                val person = getPerson(responseDataMessage.chatId)!!
-                sendStartVictorinaMessage(person, victorina, sender)
+                when{
+                    responseDataMessage.callbackQuery.data.startsWith(CallbackData.FREE.toString()) -> {
+                        val userFree = responseDataMessage.callbackQuery.from
+                        sendFreeMessage(userFree.id.toString(), userFree.userName,
+                            Locale.forLanguageTag(userFree.languageCode), sender)
+                    }
+                    responseDataMessage.callbackQuery.data.startsWith(CallbackData.SUBSCRIBE.toString()) -> {
+                        sender.sendChangeInlineButton(
+                            ChangeInlineMessage(
+                                responseDataMessage.callbackQuery.from.id.toString(),
+                                responseDataMessage.callbackQuery.message.messageId.toString(),
+                                listOf(InlineButton(messageSource.getMessage("button.ready",null,
+                                    Locale.forLanguageTag(responseDataMessage.callbackQuery.from.languageCode)),
+                                    "${CallbackData.QUIZ}#${responseDataMessage.callbackQuery.data.split("#")[1]}"),
+                                    InlineButton(messageSource.getMessage("button.for.cancel", null ,
+                                        Locale.forLanguageTag(responseDataMessage.callbackQuery.from.languageCode)),
+                                        CallbackData.FREE.toString()
+                                    )
+                                )
+                            ))
+                    }
+                    else -> {
+                        val victorinaId =
+                            if(responseDataMessage.callbackQuery.data.startsWith(CallbackData.QUIZ.toString())){
+                                responseDataMessage.callbackQuery.data.split("#")[1]
+                            }
+                            else{
+                                deleteInlineKeyboard(responseDataMessage.chatId,
+                                    responseDataMessage.callbackQuery.message.messageId.toString(), sender)
+                                responseDataMessage.callbackQuery.data
+                            }
+                        val victorina = victorinaServices.getVictorinaById(victorinaId)
+                        val person = getPerson(responseDataMessage.chatId)!!
+                        sendStartVictorinaMessage(person, victorina, sender)
+                    }
+                }
             }
         }
     }
@@ -172,9 +206,9 @@ class PersonServicesImpl @Autowired constructor(
             sender.sendTextAndInlineButton(TextMessage(person.id,
                 messageSource.getMessage("message.subscribe", null, Locale.forLanguageTag(person.languageCode))
                 , null),
-                listOf(InlineButton(victorina.channel!!.channelName, CallbackData.SUBSCRIBE.toString(), url = victorina.channel!!.url))
+                listOf(InlineButton(victorina.channel!!.channelName,
+                    "${CallbackData.SUBSCRIBE}#${victorina.id}", url = victorina.channel!!.url))
             )
-           // sendFreeMessage(person.id, person.userName, Locale.forLanguageTag(person.languageCode), sender)
         }
 
     }

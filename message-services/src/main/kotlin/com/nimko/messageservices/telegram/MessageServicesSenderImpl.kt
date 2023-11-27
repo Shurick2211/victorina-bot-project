@@ -7,10 +7,12 @@ import com.nimko.messageservices.telegram.models.message.TextMessage
 import com.nimko.messageservices.telegram.models.others.InlineButton
 import com.nimko.messageservices.services.MessageServicesSender
 import com.nimko.messageservices.telegram.utils.PollType
+import org.telegram.telegrambots.meta.api.methods.groupadministration.CreateChatInviteLink
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember
 import org.telegram.telegrambots.meta.api.methods.polls.SendPoll
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup
+import org.telegram.telegrambots.meta.api.objects.ChatInviteLink
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup
@@ -53,6 +55,10 @@ class MessageServicesSenderImpl(
 
     override fun checkIsUserOfChannel(chatId: String, userId: String):ChatMember {
        return bot.execute(GetChatMember(chatId,userId.toLong()))
+    }
+
+    override fun getInviteChannelLink(channelId: String):ChatInviteLink {
+       return bot.execute(CreateChatInviteLink(channelId))
     }
 
     private fun createMessage(userId:String, text:String): SendMessage{
