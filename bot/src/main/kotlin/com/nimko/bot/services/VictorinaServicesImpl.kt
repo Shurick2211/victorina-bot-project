@@ -11,11 +11,13 @@ import java.time.LocalDateTime
 class VictorinaServicesImpl @Autowired constructor(
     val victorinaRepo: VictorinaRepo
 ):VictorinaServices {
+
+    var date:LocalDateTime? = null
+    lateinit var listActiveVictorins: List<Victorina>
     override fun getActiveVictorin(): List<Victorina> {
-        val date = LocalDateTime.now()
-        return victorinaRepo.findAll().map {it.toVictorina()}.filter {
-            it.endDate.isAfter(date)
-        }.toList()
+        val today = LocalDateTime.now()
+        if (date == null || today.isAfter(date)) getActiveVictorinsFromDb()
+        return listActiveVictorins
     }
 
     override fun saveRightAnsweredUserId(userId: String, victorinaId:String) {
@@ -32,5 +34,15 @@ class VictorinaServicesImpl @Autowired constructor(
         victorinaRepo.save(victorina)
     }
 
+    private fun getActiveVictorinsFromDb() {
+       val now = LocalDateTime.now()
+       now.withHour(0)
+       now.withMinute(0)
+       now.withSecond(0)
+       date = now.plusDays(1)
+       listActiveVictorins = victorinaRepo.findAll().map {it.toVictorina()}.filter {
+            it.endDate.isAfter(date)
+        }.toList()
+    }
 
 }

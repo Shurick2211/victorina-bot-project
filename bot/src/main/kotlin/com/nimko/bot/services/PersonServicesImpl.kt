@@ -15,11 +15,13 @@ import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.objects.User
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException
 import java.util.*
+import kotlin.collections.ArrayList
 
 @Component
 class PersonServicesImpl @Autowired constructor(
     val personRepo:PersonRepo,
-    val messageSource: MessageSource
+    val messageSource: MessageSource,
+    val victorinaServices: VictorinaServices
 ):PersonServices{
 
     override fun registration(user: User, sender: MessageServicesSender) {
@@ -68,7 +70,7 @@ class PersonServicesImpl @Autowired constructor(
                 listOf(InlineButton(
                     messageSource.getMessage("button.ready",null,
                         Locale.forLanguageTag(user.languageCode))
-                    , CallbackData.READY))
+                    , CallbackData.READY.toString()))
             )
         }
         if(user == null && responseDataMessage == null && channelIdMessage != null){
@@ -81,7 +83,7 @@ class PersonServicesImpl @Autowired constructor(
                     , null),
                 listOf(InlineButton(messageSource.getMessage("button.ready",null,
                     Locale.forLanguageTag(channelIdMessage.user.languageCode))
-                    , CallbackData.READY))
+                    , CallbackData.READY.toString()))
             )
         }
         if(user != null && responseDataMessage != null && channelIdMessage == null){
@@ -150,16 +152,22 @@ class PersonServicesImpl @Autowired constructor(
     }
 
     private fun sendFreeMessage(userId: String, lang:Locale, sender: MessageServicesSender) {
+        val listButton = ArrayList<InlineButton>()
+        victorinaServices.getActiveVictorin().forEach {
+            //need to will  write
+            val name = it.name
+            val button = InlineButton(name, it.id!!)
+            listButton.add(button)
+        }
+
+
+
+
         sender.sendTextAndInlineButton(
             TextMessage(userId,
                 messageSource.getMessage("message.invite", null, lang),
                 null),
-            listOf(
-                InlineButton( messageSource.getMessage("button.start",
-                    null,lang), CallbackData.START),
-                InlineButton(messageSource.getMessage("button.not.yet",
-                    null,lang), CallbackData.FREE)
-            )
+            listButton, 1
         )
     }
 
@@ -169,7 +177,7 @@ class PersonServicesImpl @Autowired constructor(
         sender.sendTextAndInlineButton(TextMessage(userId,
             messageSource.getMessage("message.reg.finish",null, lang), null),
             listOf(InlineButton(messageSource.getMessage("button.link",null, lang),
-                CallbackData.LINK, url="${url}:${port}?user=${userId}")
+                CallbackData.LINK.toString(), url="${url}:${port}?user=${userId}")
                 )
         )
     }

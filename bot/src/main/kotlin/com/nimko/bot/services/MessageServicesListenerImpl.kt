@@ -1,10 +1,12 @@
 package com.nimko.bot.services
 
-import com.nimko.bot.repositories.VictorinaRepo
 import com.nimko.bot.utils.PersonState
 import com.nimko.messageservices.services.MessageServicesListener
 import com.nimko.messageservices.services.MessageServicesSender
-import com.nimko.messageservices.telegram.models.message.*
+import com.nimko.messageservices.telegram.models.message.ChannelIdMessage
+import com.nimko.messageservices.telegram.models.message.PollAnswer
+import com.nimko.messageservices.telegram.models.message.ResponseDataMessage
+import com.nimko.messageservices.telegram.models.message.TextMessage
 import com.nimko.messageservices.telegram.utils.Commands
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,8 +17,7 @@ import java.util.*
 @Service
 class MessageServicesListenerImpl @Autowired constructor(
     val personServices: PersonServices,
-    val messageSource: ResourceBundleMessageSource,
-    val victorinaServices: VictorinaServices
+    val messageSource: ResourceBundleMessageSource
 ):MessageServicesListener {
 
     lateinit var sender: MessageServicesSender

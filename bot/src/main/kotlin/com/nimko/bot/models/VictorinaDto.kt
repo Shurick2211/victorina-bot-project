@@ -2,7 +2,10 @@ package com.nimko.bot.models
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
+import java.time.Instant
 import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @Document("victorinas")
 data class VictorinaDto(
@@ -26,8 +29,10 @@ data class VictorinaDto(
             questions = questions,
             ownerId = ownerId,
             chanelName = chanelName,
-            startDate = LocalDateTime.parse(startDate),
-            endDate = LocalDateTime.parse(endDate)
+            startDate = LocalDateTime.ofInstant(
+                Instant.from( DateTimeFormatter.ISO_INSTANT.parse(startDate)), ZoneId.systemDefault()),
+            endDate = LocalDateTime.ofInstant(
+                Instant.from( DateTimeFormatter.ISO_INSTANT.parse(endDate)), ZoneId.systemDefault())
         )
     }
 
