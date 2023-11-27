@@ -153,16 +153,14 @@ class PersonServicesImpl @Autowired constructor(
 
     private fun sendFreeMessage(userId: String, lang:Locale, sender: MessageServicesSender) {
         val listButton = ArrayList<InlineButton>()
+        val user = personRepo.findById(userId).get()
         victorinaServices.getActiveVictorin().forEach {
-            //need to will  write
-            val name = it.name
+            var name = "${it.name} ${messageSource.getMessage("message.from",null, 
+                Locale.forLanguageTag(user.languageCode))} - "
+            if (it.chanelName !== null) name += it.chanelName
             val button = InlineButton(name, it.id!!)
             listButton.add(button)
         }
-
-
-
-
         sender.sendTextAndInlineButton(
             TextMessage(userId,
                 messageSource.getMessage("message.invite", null, lang),
