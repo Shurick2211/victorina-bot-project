@@ -68,8 +68,8 @@ class MessageServicesSenderImpl(
         val pollMessage = SendPoll()
         pollMessage.chatId = poll.chatId
         pollMessage.question = poll.question
-        pollMessage.options = poll.options
-        pollMessage.correctOptionId = poll.correctOption
+        pollMessage.options = poll.options.toList()
+        pollMessage.correctOptionId = poll.correctOption[0]
         pollMessage.allowMultipleAnswers = false
         pollMessage.type=poll.type
         pollMessage.allowMultipleAnswers = poll.type == PollType.REGULAR.getType()

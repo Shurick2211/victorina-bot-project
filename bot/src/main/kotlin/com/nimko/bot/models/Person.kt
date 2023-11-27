@@ -26,7 +26,7 @@ data class Person(
         this.lastName,
         this.userName,
         this.languageCode,
-        this.channelsAdmin?.map{ch -> Channel(ch.channelId, ch.channel.title)}?.toTypedArray(),
+        this.channelsAdmin?.map{ch -> Channel(ch.channelId, ch.channel.title, "https://t.me/${ch.channel.userName}")}?.toTypedArray(),
         this.quizes?.toTypedArray(),
         this.role,
         this.password

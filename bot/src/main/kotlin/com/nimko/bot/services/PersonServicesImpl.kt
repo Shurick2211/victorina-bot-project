@@ -10,6 +10,7 @@ import com.nimko.bot.utils.PersonState
 import com.nimko.messageservices.services.MessageServicesSender
 import com.nimko.messageservices.telegram.models.message.*
 import com.nimko.messageservices.telegram.models.others.InlineButton
+import com.nimko.messageservices.telegram.utils.PollType
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.MessageSource
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.objects.User
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException
 import java.util.*
+import javax.print.attribute.standard.JobOriginatingUserName
 import kotlin.collections.ArrayList
 
 @Component
@@ -51,7 +53,7 @@ class PersonServicesImpl @Autowired constructor(
             )
         )
 
-        sendFreeMessage(user, Locale.forLanguageTag(user.languageCode) ,sender)
+        sendFreeMessage(user.id.toString(), user.userName, Locale.forLanguageTag(user.languageCode) ,sender)
     }
 
     override fun registrationCreator(
@@ -108,7 +110,7 @@ class PersonServicesImpl @Autowired constructor(
                 responseDataMessage.callbackQuery.message.messageId.toString(), sender)
             sendRegistrationFinishMessage(user.id.toString(),
                 Locale.forLanguageTag(user.languageCode), sender)
-            sendFreeMessage(user, Locale.forLanguageTag(user.languageCode) ,sender)
+            sendFreeMessage(user.id.toString(), user.userName, Locale.forLanguageTag(user.languageCode) ,sender)
         }
     }
 
@@ -142,23 +144,39 @@ class PersonServicesImpl @Autowired constructor(
                     responseDataMessage.callbackQuery.message.messageId.toString(), sender)
                 val victorina = victorinaServices.getVictorinaById(responseDataMessage.callbackQuery.data)
                 val person = getPerson(responseDataMessage.chatId)!!
-                person.state = PersonState.IN_VICTORINA
-                if (person.quizes == null) person.quizes = ArrayList()
-                val quiz = Quiz(victorina.id!!, ArrayList())
-                person.quizes!!.add(quiz)
-                personRepo.save(person)
                 sendStartVictorinaMessage(person, victorina, sender)
             }
         }
     }
 
     private fun sendStartVictorinaMessage(person: Person, victorina: Victorina, sender: MessageServicesSender) {
-        var isChannelUser:Boolean? = false
-        victorina.channel?.let {
-            isChannelUser = checkUserAsChannelMember(victorina.channel.channelId, person.id, sender)
-
+        val mess = TextMessage(person.id, victorina.title,null)
+        val isChannelUser =
+            if (victorina.channel != null) checkUserAsChannelMember(victorina.channel.channelId, person.id, sender)
+            else true
+        if (isChannelUser == true) {
+            if (person.quizes == null) person.quizes = ArrayList()
+            val quiz = Quiz(victorina.id!!, ArrayList())
+            person.quizes!!.add(quiz)
+            person.state = PersonState.IN_VICTORINA
+            personRepo.save(person)
+            sender.sendText(mess)
+            val type = if (victorina.questions[0].rightAnswer.size > 1)
+                PollType.REGULAR else PollType.QUIZ
+            sender.sendOnePoll(
+                PollMessage(
+                person.id, victorina.questions[0].text, victorina.questions[0].answers,
+                    victorina.questions[0].rightAnswer, null, type = type.getType()
+            ))
+        } else {
+            sender.sendTextAndInlineButton(TextMessage(person.id,
+                messageSource.getMessage("message.subscribe", null, Locale.forLanguageTag(person.languageCode))
+                , null),
+                listOf(InlineButton(victorina.channel!!.channelName, CallbackData.SUBSCRIBE.toString(), url = victorina.channel!!.url))
+            )
+           // sendFreeMessage(person.id, person.userName, Locale.forLanguageTag(person.languageCode), sender)
         }
-        sender.sendText(TextMessage(person.id,"",null))
+
     }
 
     override fun forFree(textMessage: TextMessage, sender: MessageServicesSender) {
@@ -171,18 +189,18 @@ class PersonServicesImpl @Autowired constructor(
         sender.sendChangeInlineButton(ChangeInlineMessage(chatId, messageId, emptyList()))
     }
 
-    private fun sendFreeMessage(user: User, lang:Locale, sender: MessageServicesSender) {
+    private fun sendFreeMessage(userId: String, userName: String, lang:Locale, sender: MessageServicesSender) {
         val listButton = ArrayList<InlineButton>()
         victorinaServices.getActiveVictorin().forEach {
             var name = "${it.name} ${messageSource.getMessage("message.from",null, 
-                Locale.forLanguageTag(user.languageCode))} - "
+                lang)} - "
             name += if (it.channel !== null) it.channel.channelName
-            else user.userName
+            else userName
             val button = InlineButton(name, it.id!!)
             listButton.add(button)
         }
         sender.sendTextAndInlineButton(
-            TextMessage(user.id.toString(),
+            TextMessage(userId,
                 messageSource.getMessage("message.invite", null, lang),
                 null),
             listButton, 1
