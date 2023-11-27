@@ -18,7 +18,6 @@ import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.objects.User
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException
 import java.util.*
-import javax.print.attribute.standard.JobOriginatingUserName
 import kotlin.collections.ArrayList
 
 @Component
@@ -122,7 +121,7 @@ class PersonServicesImpl @Autowired constructor(
         if (admin.channelsAdmin!!.indexOf(channelIdMessage) == -1){
             if(channelIdMessage.channel.inviteLink == null) {
                 channelIdMessage.channel.inviteLink =
-                sender.getInviteChannelLink(channelIdMessage.channelId).inviteLink
+                sender.getInviteLink(channelIdMessage.channelId)
             }
             admin.channelsAdmin!!.add(channelIdMessage)
             personRepo.save(admin)

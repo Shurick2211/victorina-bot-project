@@ -21,5 +21,7 @@ interface MessageServicesSender {
 
     fun checkIsUserOfChannel(chatId:String, userId:String): ChatMember
 
-    fun getInviteChannelLink(channelId: String):ChatInviteLink
+    fun createInviteChannelLink(channelId: String):ChatInviteLink
+
+    fun getInviteLink(chanelId:String):String
 }

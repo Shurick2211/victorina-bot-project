@@ -8,6 +8,7 @@ import com.nimko.messageservices.telegram.models.others.InlineButton
 import com.nimko.messageservices.services.MessageServicesSender
 import com.nimko.messageservices.telegram.utils.PollType
 import org.telegram.telegrambots.meta.api.methods.groupadministration.CreateChatInviteLink
+import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChat
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember
 import org.telegram.telegrambots.meta.api.methods.polls.SendPoll
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
@@ -57,8 +58,12 @@ class MessageServicesSenderImpl(
        return bot.execute(GetChatMember(chatId,userId.toLong()))
     }
 
-    override fun getInviteChannelLink(channelId: String):ChatInviteLink {
+    override fun createInviteChannelLink(channelId: String):ChatInviteLink {
        return bot.execute(CreateChatInviteLink(channelId))
+    }
+
+    override fun getInviteLink(chanelId: String): String {
+        return bot.execute(GetChat(chanelId)).inviteLink
     }
 
     private fun createMessage(userId:String, text:String): SendMessage{
