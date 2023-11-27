@@ -14,6 +14,7 @@ data class VictorinaDto(
     val ownerId:String,
     val chanelName:String?,
     var winnerId:String?,
+    var rightsAnsweredUserId: MutableList<String>?,
     val startDate:String,
     val endDate:String
 ) {

@@ -1,5 +1,6 @@
 package com.nimko.bot.services
 
+import com.nimko.bot.repositories.VictorinaRepo
 import com.nimko.bot.utils.PersonState
 import com.nimko.messageservices.services.MessageServicesListener
 import com.nimko.messageservices.services.MessageServicesSender
@@ -14,14 +15,15 @@ import java.util.*
 @Service
 class MessageServicesListenerImpl @Autowired constructor(
     val personServices: PersonServices,
-    val messageSource: ResourceBundleMessageSource
+    val messageSource: ResourceBundleMessageSource,
+    val victorinaServices: VictorinaServices
 ):MessageServicesListener {
 
     lateinit var sender: MessageServicesSender
 
     val log = LoggerFactory.getLogger("MSG_SERV")
 
-    override fun getTextMessage(textMessage: TextMessage) {
+    override fun onTextMessage(textMessage: TextMessage) {
         when(textMessage.textMessage){
             Commands.START.getCommand() -> {
                 personServices.registration(textMessage.user!!,sender)
@@ -39,7 +41,7 @@ class MessageServicesListenerImpl @Autowired constructor(
         }
     }
 
-    override fun getDataMessage(responseDataMessage: ResponseDataMessage) {
+    override fun onDataMessage(responseDataMessage: ResponseDataMessage) {
         val person = personServices.getPerson(responseDataMessage.callbackQuery.from.id.toString())!!
 
         if (person.state == PersonState.REGISTRATION_CREATOR)
@@ -51,7 +53,7 @@ class MessageServicesListenerImpl @Autowired constructor(
 
     }
 
-    override fun getChannelId(channelIdMessage: ChannelIdMessage) {
+    override fun onChannelId(channelIdMessage: ChannelIdMessage) {
         personServices.registrationCreator(null,null
             ,channelIdMessage,sender)
     }
@@ -60,11 +62,8 @@ class MessageServicesListenerImpl @Autowired constructor(
         this.sender = sender
     }
 
-    override fun getPoll(pollMessage: PollMessage) {
-        sender.sendOnePoll(pollMessage)
-    }
 
-    override fun getPollAnswer(pollAnswer: PollAnswer) {
+    override fun onPollAnswer(pollAnswer: PollAnswer) {
         personServices.onQuiz(null,null,pollAnswer,sender)
     }
 }

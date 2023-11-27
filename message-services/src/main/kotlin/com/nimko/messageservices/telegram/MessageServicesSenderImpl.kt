@@ -6,6 +6,7 @@ import com.nimko.messageservices.telegram.models.message.PollMessage
 import com.nimko.messageservices.telegram.models.message.TextMessage
 import com.nimko.messageservices.telegram.models.others.InlineButton
 import com.nimko.messageservices.services.MessageServicesSender
+import com.nimko.messageservices.telegram.utils.PollType
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember
 import org.telegram.telegrambots.meta.api.methods.polls.SendPoll
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
@@ -70,7 +71,8 @@ class MessageServicesSenderImpl(
         pollMessage.options = poll.options
         pollMessage.correctOptionId = poll.correctOption
         pollMessage.allowMultipleAnswers = false
-        pollMessage.type="quiz"
+        pollMessage.type=poll.type
+        pollMessage.allowMultipleAnswers = poll.type == PollType.REGULAR.getType()
         pollMessage.isAnonymous = false
         poll.explanation?.let { pollMessage.explanation = it }
         return pollMessage

@@ -21,9 +21,9 @@ class TelegramListenerImpl(
                 val text = update.message.text
                 val user = update.message.from
                 if (update.message.forwardFromChat == null) {
-                   messageListener.getTextMessage(TextMessage(chatId,text,user))
+                   messageListener.onTextMessage(TextMessage(chatId,text,user))
                 } else {
-                    messageListener.getChannelId(
+                    messageListener.onChannelId(
                         ChannelIdMessage(chatId,
                         update.message.forwardFromChat.id.toString(),
                         update.message.forwardFromChat, user)
@@ -31,12 +31,12 @@ class TelegramListenerImpl(
                 }
             }
             update.hasCallbackQuery() -> {
-                messageListener.getDataMessage(
+                messageListener.onDataMessage(
                     ResponseDataMessage(update.callbackQuery.from.id.toString(),update.callbackQuery)
                 )
             }
             update.hasPollAnswer() -> {
-                messageListener.getPollAnswer(
+                messageListener.onPollAnswer(
                     PollAnswer(update.pollAnswer.user.id.toString(), update.pollAnswer.optionIds[0])
                 )
             }

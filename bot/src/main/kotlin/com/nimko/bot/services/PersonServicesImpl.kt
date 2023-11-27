@@ -115,12 +115,13 @@ class PersonServicesImpl @Autowired constructor(
                         sender: MessageServicesSender
     ) {
         responseDataMessage?.let {
+            //on quiz
            if(pollAnswer != null){
                println(pollAnswer)
            }
 
 
-
+            //start quiz
             if(responseDataMessage.callbackQuery.data == CallbackData.START.toString()) {
                 deleteInlineKeyboard(responseDataMessage.chatId,
                     responseDataMessage.callbackQuery.message.messageId.toString(), sender)
