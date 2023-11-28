@@ -230,12 +230,15 @@ class PersonServicesImpl @Autowired constructor(
     private fun sendFreeMessage(userId: String, userName: String, lang:Locale, sender: MessageServicesSender) {
         val listButton = ArrayList<InlineButton>()
         victorinaServices.getActiveVictorin().forEach {
-            var name = "${it.name} ${messageSource.getMessage("message.from",null, 
-                lang)} - "
-            name += if (it.channel !== null) it.channel.channelName
-            else userName
-            val button = InlineButton(name, it.id!!)
-            listButton.add(button)
+            if(!isEndedVictorinaByUser(userId, it.id!!)) {
+                var name = "${it.name} ${
+                    messageSource.getMessage("message.from", null, lang)
+                } - "
+                name += if (it.channel !== null) it.channel.channelName
+                else userName
+                val button = InlineButton(name, it.id!!)
+                listButton.add(button)
+            }
         }
         if (listButton.isNotEmpty())
         sender.sendTextAndInlineButton(
@@ -253,6 +256,13 @@ class PersonServicesImpl @Autowired constructor(
                 CallbackData.FREE.toString())
             )
         )
+    }
+
+    private fun isEndedVictorinaByUser(userId: String, victorinaId: String):Boolean{
+        val person = getPerson(userId)!!
+        return if (person.quizes != null) {
+            person.quizes!!.map { it.victorinaId }.contains(victorinaId)
+        } else  false
     }
 
     @Value("\${my.address}") private lateinit var url:String
