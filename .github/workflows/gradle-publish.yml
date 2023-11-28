@@ -13,7 +13,6 @@ jobs:
     permissions:
       contents: read
       packages: write
-
    
     
     steps:
@@ -30,15 +29,7 @@ jobs:
 
     - name: Angular install
       working-directory: admin-ui
-      run: npm install -g @angular/cli   
-
-    - name: Angular build
-      working-directory: admin-ui
-      run: npm run build
-
-    - name: Angular-dep install
-      working-directory: admin-ui
-      run: npm install @angular-devkit/build-angular:browser --force
+      run: npm install -g @angular/cli
 
     - uses: actions/checkout@v3
     - name: Set up JDK 17
