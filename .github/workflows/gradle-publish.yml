@@ -33,7 +33,7 @@ jobs:
 
     - name: Angular-dep install
       working-directory: admin-ui
-      run: npm install --save-dev @angular-devkit/build-angular
+      run: npm install --save-dev @angular-devkit/build-angular --force
 
     - uses: actions/checkout@v3
     - name: Set up JDK 17
