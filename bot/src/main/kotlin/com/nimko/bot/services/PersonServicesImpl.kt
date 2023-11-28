@@ -154,6 +154,7 @@ class PersonServicesImpl @Autowired constructor(
         //start quiz
         responseDataMessage?.let {
             when{
+
                 responseDataMessage.callbackQuery.data.startsWith(CallbackData.FREE.toString()) -> {
                     val userFree = responseDataMessage.callbackQuery.from
                     sendFreeMessage(userFree.id.toString(), userFree.userName,
@@ -237,11 +238,21 @@ class PersonServicesImpl @Autowired constructor(
             val button = InlineButton(name, it.id!!)
             listButton.add(button)
         }
+        if (listButton.isNotEmpty())
         sender.sendTextAndInlineButton(
             TextMessage(userId,
                 messageSource.getMessage("message.invite", null, lang),
                 null),
             listButton, 1
+        )
+        else sender.sendTextAndInlineButton(
+            TextMessage(userId,
+                messageSource.getMessage("message.invite.none", null, lang),
+                null),
+            listOf(InlineButton(
+                messageSource.getMessage("button.try.again", null, lang),
+                CallbackData.FREE.toString())
+            )
         )
     }
 
