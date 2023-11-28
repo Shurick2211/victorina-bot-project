@@ -50,7 +50,7 @@ jobs:
     - name: Build with Gradle  
       uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
       with:
-        arguments: build -Ptgtok={0} -Pmongo_uri={1}, secrets.TELEGA_TOKEN, secrets.MONGO_URI
+        arguments: build -Ptgtok=${{secrets.TELEGA_TOKEN}} -Pmongo_uri=${{secrets.MONGO_URI}}
      # run: ./gradlew build -Ptgtok=${{secrets.TELEGA_TOKEN}} -Pmongo_uri=${{secrets.MONGO_URI}}
 
     # The USERNAME and TOKEN need to correspond to the credentials environment variables used in
