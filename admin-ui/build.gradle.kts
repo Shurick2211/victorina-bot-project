@@ -29,7 +29,7 @@ node{
 
 
 tasks{
-    findByName("jar")?.dependsOn("ngBuild")
+//   findByName("jar")?.dependsOn("ngBuild")
 //    findByName("ngBuild")?.dependsOn("npmInst")
 //
 //    register<Exec>("npmInst"){
@@ -41,14 +41,14 @@ tasks{
 //      commandLine(command)
 //    }
 
-    register<Exec>("ngBuild"){
-        val command = if (System.getProperty("os.name").toUpperCase().contains("WINDOWS")) {
-            listOf("npm.cmd", "run","build")
-        } else {
-            listOf("npm","run","build")
-        }
-        commandLine(command)
-    }
+//    register<Exec>("ngBuild"){
+//        val command = if (System.getProperty("os.name").toUpperCase().contains("WINDOWS")) {
+//            listOf("npm.cmd", "run","build")
+//        } else {
+//            listOf("npm","run","build")
+//        }
+//        commandLine(command)
+//    }
 
   jar{
       from("build/admin-ui"){
