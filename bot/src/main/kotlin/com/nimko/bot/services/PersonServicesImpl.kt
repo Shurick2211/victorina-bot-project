@@ -136,6 +136,19 @@ class PersonServicesImpl @Autowired constructor(
             //on quiz
            if(pollAnswer != null){
                println(pollAnswer)
+               val person = getPerson(pollAnswer.userId)!!
+               val currentQuiz = person.quizes!![person.quizes!!.size - 1]
+               val victorina = victorinaServices.getVictorinaById(
+                   currentQuiz.victorinaId)
+               currentQuiz.userAnswers.add(pollAnswer.answers)
+               if(currentQuiz.userAnswers.size == victorina.questions.size) {
+                   person.state = PersonState.FREE
+                   sendFreeMessage(person.id, person.userName, Locale.forLanguageTag(person.languageCode), sender)
+                    // need check result
+               } else {
+                   sendQuestion(person,victorina,currentQuiz.userAnswers.size, sender)
+               }
+               personRepo.save(person)
            }
 
             //start quiz
@@ -178,13 +191,7 @@ class PersonServicesImpl @Autowired constructor(
             person.state = PersonState.IN_VICTORINA
             personRepo.save(person)
             sender.sendText(mess)
-            val type = if (victorina.questions[0].rightAnswer.size > 1)
-                PollType.REGULAR else PollType.QUIZ
-            sender.sendOnePoll(
-                PollMessage(
-                person.id, victorina.questions[0].text, victorina.questions[0].answers,
-                    victorina.questions[0].rightAnswer, null, type = type.getType()
-            ))
+            sendQuestion(person, victorina, 0, sender)
         } else {
             sender.sendTextAndInlineButton(TextMessage(person.id,
                 messageSource.getMessage("message.subscribe", null, Locale.forLanguageTag(person.languageCode))
@@ -198,6 +205,16 @@ class PersonServicesImpl @Autowired constructor(
             )
         }
 
+    }
+
+    private fun  sendQuestion(person: Person, victorina:Victorina, numQuestion:Int, sender: MessageServicesSender){
+        val type = if (victorina.questions[numQuestion].rightAnswer.size < 2)
+            PollType.QUIZ else PollType.REGULAR
+        sender.sendOnePoll(
+            PollMessage(
+                person.id, victorina.questions[numQuestion].text, victorina.questions[numQuestion].answers,
+                victorina.questions[numQuestion].rightAnswer, null, type = type.getType()
+            ))
     }
 
     override fun forFree(textMessage: TextMessage, sender: MessageServicesSender) {

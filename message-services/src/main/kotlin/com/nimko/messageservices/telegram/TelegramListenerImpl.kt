@@ -37,7 +37,7 @@ class TelegramListenerImpl(
             }
             update.hasPollAnswer() -> {
                 messageListener.onPollAnswer(
-                    PollAnswer(update.pollAnswer.user.id.toString(), update.pollAnswer.optionIds[0])
+                    PollAnswer(update.pollAnswer.user.id.toString(), update.pollAnswer.pollId ,update.pollAnswer.optionIds)
                 )
             }
 
