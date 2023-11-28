@@ -140,7 +140,6 @@ class PersonServicesImpl @Autowired constructor(
             val victorina = victorinaServices.getVictorinaById(
                 currentQuiz.victorinaId)
             currentQuiz.userAnswers.add(pollAnswer.answers)
-            println("Quiz = ${currentQuiz.userAnswers.size} victorina = ${victorina.questions.size}")
             if(currentQuiz.userAnswers.size == victorina.questions.size) {
                 person.state = PersonState.FREE
                 sendFreeMessage(person.id, person.userName, Locale.forLanguageTag(person.languageCode), sender)
