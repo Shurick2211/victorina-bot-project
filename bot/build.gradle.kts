@@ -5,6 +5,7 @@ plugins {
     id("io.spring.dependency-management") version "1.0.15.RELEASE"
     kotlin("jvm") version "1.6.21"
     kotlin("plugin.spring") version "1.6.21"
+    `maven-publish`
 }
 
 
@@ -20,6 +21,26 @@ repositories {
 
 springBoot {
     buildInfo()
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+        }
+    }
+
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/owner/repo") // Replace with your GitHub repository URL
+
+            credentials {
+                username = project.findProperty("gpr.user")?.toString() ?: System.getenv("USERNAME_GITHUB_PACKAGES")
+                password = project.findProperty("gpr.token")?.toString() ?: System.getenv("TOKEN_GITHUB_PACKAGES")
+            }
+        }
+    }
 }
 
 
