@@ -5,6 +5,7 @@ import com.nimko.messageservices.telegram.models.message.MenuMessage
 import com.nimko.messageservices.telegram.models.message.PollMessage
 import com.nimko.messageservices.telegram.models.message.TextMessage
 import com.nimko.messageservices.telegram.models.others.InlineButton
+import org.telegram.telegrambots.meta.api.objects.Chat
 import org.telegram.telegrambots.meta.api.objects.ChatInviteLink
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember
 
@@ -23,5 +24,5 @@ interface MessageServicesSender {
 
     fun createInviteChannelLink(channelId: String):ChatInviteLink
 
-    fun getInviteLink(chanelId:String):String
+    fun getChat(chanelId:String):Chat
 }

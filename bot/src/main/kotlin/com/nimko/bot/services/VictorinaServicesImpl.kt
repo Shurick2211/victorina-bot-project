@@ -16,7 +16,7 @@ class VictorinaServicesImpl @Autowired constructor(
     override fun getActiveVictorin(): List<Victorina> {
         val today = LocalDateTime.now()
         list = victorinaRepo.findAll().map {it.toVictorina()}.filter {
-            it.endDate.isAfter(today)
+            it.endDate.isAfter(today) && it.startDate.isBefore(today)
         }.toList()
         return list
     }

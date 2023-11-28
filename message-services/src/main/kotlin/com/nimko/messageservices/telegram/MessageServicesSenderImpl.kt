@@ -13,6 +13,7 @@ import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMem
 import org.telegram.telegrambots.meta.api.methods.polls.SendPoll
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup
+import org.telegram.telegrambots.meta.api.objects.Chat
 import org.telegram.telegrambots.meta.api.objects.ChatInviteLink
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
@@ -62,8 +63,8 @@ class MessageServicesSenderImpl(
        return bot.execute(CreateChatInviteLink(channelId))
     }
 
-    override fun getInviteLink(chanelId: String): String {
-        return bot.execute(GetChat(chanelId)).inviteLink
+    override fun getChat(chanelId: String): Chat {
+        return bot.execute(GetChat(chanelId))
     }
 
     private fun createMessage(userId:String, text:String): SendMessage{

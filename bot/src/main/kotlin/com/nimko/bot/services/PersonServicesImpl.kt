@@ -119,10 +119,8 @@ class PersonServicesImpl @Autowired constructor(
             admin.channelsAdmin = ArrayList()
         }
         if (admin.channelsAdmin!!.indexOf(channelIdMessage) == -1){
-            if(channelIdMessage.channel.inviteLink == null) {
-                channelIdMessage.channel.inviteLink =
-                sender.getInviteLink(channelIdMessage.channelId)
-            }
+            channelIdMessage.channel.inviteLink =
+                sender.getChat(channelIdMessage.channelId).inviteLink
             admin.channelsAdmin!!.add(channelIdMessage)
             personRepo.save(admin)
         }
@@ -148,21 +146,7 @@ class PersonServicesImpl @Autowired constructor(
                         sendFreeMessage(userFree.id.toString(), userFree.userName,
                             Locale.forLanguageTag(userFree.languageCode), sender)
                     }
-                    responseDataMessage.callbackQuery.data.startsWith(CallbackData.SUBSCRIBE.toString()) -> {
-                        sender.sendChangeInlineButton(
-                            ChangeInlineMessage(
-                                responseDataMessage.callbackQuery.from.id.toString(),
-                                responseDataMessage.callbackQuery.message.messageId.toString(),
-                                listOf(InlineButton(messageSource.getMessage("button.ready",null,
-                                    Locale.forLanguageTag(responseDataMessage.callbackQuery.from.languageCode)),
-                                    "${CallbackData.QUIZ}#${responseDataMessage.callbackQuery.data.split("#")[1]}"),
-                                    InlineButton(messageSource.getMessage("button.for.cancel", null ,
-                                        Locale.forLanguageTag(responseDataMessage.callbackQuery.from.languageCode)),
-                                        CallbackData.FREE.toString()
-                                    )
-                                )
-                            ))
-                    }
+
                     else -> {
                         val victorinaId =
                             if(responseDataMessage.callbackQuery.data.startsWith(CallbackData.QUIZ.toString())){
@@ -206,7 +190,11 @@ class PersonServicesImpl @Autowired constructor(
                 messageSource.getMessage("message.subscribe", null, Locale.forLanguageTag(person.languageCode))
                 , null),
                 listOf(InlineButton(victorina.channel!!.channelName,
-                    "${CallbackData.SUBSCRIBE}#${victorina.id}", url = victorina.channel!!.url))
+                    "${CallbackData.SUBSCRIBE}#${victorina.id}", url = victorina.channel!!.url),
+                    InlineButton(messageSource.getMessage("button.ready",null,
+                        Locale.forLanguageTag(person.languageCode)),
+                        "${CallbackData.QUIZ}#${victorina.id}"),
+                    ), 1
             )
         }
 
