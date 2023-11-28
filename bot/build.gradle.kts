@@ -33,7 +33,7 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/owner/repo") // Replace with your GitHub repository URL
+            url = uri("https://maven.pkg.github.com/Shurick2211/victorina-bot-project") // Replace with your GitHub repository URL
 
             credentials {
                 username =  System.getenv("USERNAME_GITHUB_PACKAGES")
