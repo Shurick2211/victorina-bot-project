@@ -132,50 +132,50 @@ class PersonServicesImpl @Autowired constructor(
                         pollAnswer: PollAnswer?,
                         sender: MessageServicesSender
     ) {
+        //on quiz
+        pollAnswer?.let{
+            println(pollAnswer)
+            val person = getPerson(pollAnswer.userId)!!
+            val currentQuiz = person.quizes!![person.quizes!!.size - 1]
+            val victorina = victorinaServices.getVictorinaById(
+                currentQuiz.victorinaId)
+            currentQuiz.userAnswers.add(pollAnswer.answers)
+            println("Quiz = ${currentQuiz.userAnswers.size} victorina = ${victorina.questions.size}")
+            if(currentQuiz.userAnswers.size == victorina.questions.size) {
+                person.state = PersonState.FREE
+                sendFreeMessage(person.id, person.userName, Locale.forLanguageTag(person.languageCode), sender)
+                // need check result
+            } else {
+                sendQuestion(person,victorina,currentQuiz.userAnswers.size, sender)
+            }
+            personRepo.save(person)
+        }
+
+        //start quiz
         responseDataMessage?.let {
-            //on quiz
-           if(pollAnswer != null){
-               println(pollAnswer)
-               val person = getPerson(pollAnswer.userId)!!
-               val currentQuiz = person.quizes!![person.quizes!!.size - 1]
-               val victorina = victorinaServices.getVictorinaById(
-                   currentQuiz.victorinaId)
-               currentQuiz.userAnswers.add(pollAnswer.answers)
-               if(currentQuiz.userAnswers.size == victorina.questions.size) {
-                   person.state = PersonState.FREE
-                   sendFreeMessage(person.id, person.userName, Locale.forLanguageTag(person.languageCode), sender)
-                    // need check result
-               } else {
-                   sendQuestion(person,victorina,currentQuiz.userAnswers.size, sender)
-               }
-               personRepo.save(person)
-           }
+            when{
+                responseDataMessage.callbackQuery.data.startsWith(CallbackData.FREE.toString()) -> {
+                    val userFree = responseDataMessage.callbackQuery.from
+                    sendFreeMessage(userFree.id.toString(), userFree.userName,
+                        Locale.forLanguageTag(userFree.languageCode), sender)
+                }
 
-            //start quiz
-            if(responseDataMessage.callbackQuery.data != null) {
-                when{
-                    responseDataMessage.callbackQuery.data.startsWith(CallbackData.FREE.toString()) -> {
-                        val userFree = responseDataMessage.callbackQuery.from
-                        sendFreeMessage(userFree.id.toString(), userFree.userName,
-                            Locale.forLanguageTag(userFree.languageCode), sender)
-                    }
-
-                    else -> {
-                        val victorinaId =
-                            if(responseDataMessage.callbackQuery.data.startsWith(CallbackData.QUIZ.toString())){
-                                responseDataMessage.callbackQuery.data.split("#")[1]
-                            }
-                            else{
-                                deleteInlineKeyboard(responseDataMessage.chatId,
-                                    responseDataMessage.callbackQuery.message.messageId.toString(), sender)
-                                responseDataMessage.callbackQuery.data
-                            }
-                        val victorina = victorinaServices.getVictorinaById(victorinaId)
-                        val person = getPerson(responseDataMessage.chatId)!!
-                        sendStartVictorinaMessage(person, victorina, sender)
-                    }
+                else -> {
+                    val victorinaId =
+                        if(responseDataMessage.callbackQuery.data.startsWith(CallbackData.QUIZ.toString())){
+                            responseDataMessage.callbackQuery.data.split("#")[1]
+                        }
+                        else{
+                            deleteInlineKeyboard(responseDataMessage.chatId,
+                                responseDataMessage.callbackQuery.message.messageId.toString(), sender)
+                            responseDataMessage.callbackQuery.data
+                        }
+                    val victorina = victorinaServices.getVictorinaById(victorinaId)
+                    val person = getPerson(responseDataMessage.chatId)!!
+                    sendStartVictorinaMessage(person, victorina, sender)
                 }
             }
+
         }
     }
 
