@@ -1,34 +1,28 @@
 package com.nimko.bot.services
 
 import com.nimko.bot.models.Person
-import com.nimko.bot.models.Quiz
-import com.nimko.bot.models.Victorina
-import com.nimko.bot.repositories.PersonRepo
 import com.nimko.bot.utils.PersonRole
-import com.nimko.messageservices.telegram.utils.CallbackData
 import com.nimko.bot.utils.PersonState
+import com.nimko.bot.utils.PersonUtils
 import com.nimko.messageservices.services.MessageServicesSender
 import com.nimko.messageservices.telegram.models.message.*
 import com.nimko.messageservices.telegram.models.others.InlineButton
-import com.nimko.messageservices.telegram.utils.PollType
+import com.nimko.messageservices.telegram.utils.CallbackData
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.MessageSource
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.objects.User
-import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException
 import java.util.*
-import kotlin.collections.ArrayList
 
 @Component
 class PersonServicesImpl @Autowired constructor(
-    val personRepo:PersonRepo,
-    val messageSource: MessageSource,
-    val victorinaServices: VictorinaServices
+    private val messageSource: MessageSource,
+    private val victorinaServices: VictorinaServices,
+    private val personUtils: PersonUtils
 ):PersonServices{
 
     override fun registration(user: User, sender: MessageServicesSender) {
-        var person = getPerson(user.id.toString())
+        var person = personUtils.getPerson(user.id.toString())
         if (person == null) {
             person = Person(
                 user.id.toString(),
@@ -38,9 +32,7 @@ class PersonServicesImpl @Autowired constructor(
                 PersonRole.USER,
                 null
             )
-            personRepo.save(
-                person
-            )
+            personUtils.savePerson(person)
         }
         sender.sendMenu(
             MenuMessage(user.id.toString(),
@@ -52,7 +44,7 @@ class PersonServicesImpl @Autowired constructor(
             )
         )
 
-        sendFreeMessage(user.id.toString(), user.userName, Locale.forLanguageTag(user.languageCode) ,sender)
+        personUtils.sendFreeMessage(user.id.toString(), user.userName, Locale.forLanguageTag(user.languageCode) ,sender)
     }
 
     override fun registrationCreator(
@@ -63,9 +55,9 @@ class PersonServicesImpl @Autowired constructor(
     ) {
         //start registration
         if(user != null && responseDataMessage == null && channelIdMessage == null){
-            val person = personRepo.findById(user.id.toString()).get()
+            val person = personUtils.getPerson(user.id.toString())!!
             person.state = PersonState.REGISTRATION_CREATOR
-            personRepo.save(person)
+            personUtils.savePerson(person)
             sender.sendTextAndInlineButton(
                 TextMessage(person.id,
                     messageSource.getMessage("message.reg.start",
@@ -80,13 +72,13 @@ class PersonServicesImpl @Autowired constructor(
         //add channel for creators
         if(user == null && responseDataMessage == null && channelIdMessage != null){
             val mess =
-                if (checkUserAsChannelMember(channelIdMessage.channelId,channelIdMessage.adminId,sender) == null)
+                if (personUtils.checkUserAsChannelMember(channelIdMessage.channelId,channelIdMessage.adminId,sender) == null)
                     TextMessage(channelIdMessage.adminId,
                         messageSource.getMessage("message.no.admin.channel",
                             null,Locale.forLanguageTag(channelIdMessage.user.languageCode))
                         , null)
                 else {
-                    saveChannelForAdmin(channelIdMessage, sender)
+                    personUtils.saveChannelForAdmin(channelIdMessage, sender)
                     TextMessage(channelIdMessage.adminId,
                         messageSource.getMessage("message.reg.channel",
                             null,Locale.forLanguageTag(channelIdMessage.user.languageCode))
@@ -101,31 +93,17 @@ class PersonServicesImpl @Autowired constructor(
         }
         //end of registration
         if(user != null && responseDataMessage != null && channelIdMessage == null){
-            val person = personRepo.findById(user.id.toString()).get()
+            val person = personUtils.getPerson(user.id.toString())!!
             person.state = PersonState.FREE
             if(person.role == PersonRole.USER) person.role = PersonRole.QUIZ_CREATOR
-            personRepo.save(person)
-            deleteInlineKeyboard(user.id.toString(),
+            personUtils.savePerson(person)
+            personUtils.deleteInlineKeyboard(user.id.toString(),
                 responseDataMessage.callbackQuery.message.messageId.toString(), sender)
-            sendRegistrationFinishMessage(user.id.toString(),
+            personUtils.sendRegistrationFinishMessage(user.id.toString(),
                 Locale.forLanguageTag(user.languageCode), sender)
-            sendFreeMessage(user.id.toString(), user.userName, Locale.forLanguageTag(user.languageCode) ,sender)
+            personUtils.sendFreeMessage(user.id.toString(), user.userName, Locale.forLanguageTag(user.languageCode) ,sender)
         }
     }
-
-    private fun saveChannelForAdmin(channelIdMessage: ChannelIdMessage, sender: MessageServicesSender) {
-        val admin = getPerson(channelIdMessage.adminId)!!
-        if (admin.channelsAdmin == null){
-            admin.channelsAdmin = ArrayList()
-        }
-        if (admin.channelsAdmin!!.indexOf(channelIdMessage) == -1){
-            channelIdMessage.channel.inviteLink =
-                sender.getChat(channelIdMessage.channelId).inviteLink
-            admin.channelsAdmin!!.add(channelIdMessage)
-            personRepo.save(admin)
-        }
-    }
-
 
     override fun onQuiz(user: User?,
                         responseDataMessage: ResponseDataMessage?,
@@ -135,19 +113,25 @@ class PersonServicesImpl @Autowired constructor(
         //on quiz
         pollAnswer?.let{
             println(pollAnswer)
-            val person = getPerson(pollAnswer.userId)!!
+            val person = personUtils.getPerson(pollAnswer.userId)!!
             val currentQuiz = person.quizes!![person.quizes!!.size - 1]
             val victorina = victorinaServices.getVictorinaById(
                 currentQuiz.victorinaId)
             currentQuiz.userAnswers.add(pollAnswer.answers)
             if(currentQuiz.userAnswers.size == victorina.questions.size) {
                 person.state = PersonState.FREE
-                sendFreeMessage(person.id, person.userName, Locale.forLanguageTag(person.languageCode), sender)
-                // need check result
+                person.quizes!![person.quizes!!.size - 1] = personUtils.checkVictorinaResult(currentQuiz,victorina)
+                if (currentQuiz.isRightAnswered!!) victorinaServices.saveRightAnsweredUserId(person.id, victorina.id!!)
+                sender.sendText(
+                    TextMessage(person.id,
+                    "${messageSource.getMessage("message.end", null, Locale.forLanguageTag(person.languageCode))} " +
+                            "${currentQuiz.percentRightAnswer}%"
+                    ,null))
+                personUtils.sendFreeMessage(person.id, person.userName, Locale.forLanguageTag(person.languageCode), sender)
             } else {
-                sendQuestion(person,victorina,currentQuiz.userAnswers.size, sender)
+                personUtils.sendQuestion(person,victorina,currentQuiz.userAnswers.size, sender)
             }
-            personRepo.save(person)
+            personUtils.savePerson(person)
         }
 
         //start quiz
@@ -156,7 +140,7 @@ class PersonServicesImpl @Autowired constructor(
 
                 responseDataMessage.callbackQuery.data.startsWith(CallbackData.FREE.toString()) -> {
                     val userFree = responseDataMessage.callbackQuery.from
-                    sendFreeMessage(userFree.id.toString(), userFree.userName,
+                    personUtils.sendFreeMessage(userFree.id.toString(), userFree.userName,
                         Locale.forLanguageTag(userFree.languageCode), sender)
                 }
 
@@ -166,124 +150,25 @@ class PersonServicesImpl @Autowired constructor(
                             responseDataMessage.callbackQuery.data.split("#")[1]
                         }
                         else{
-                            deleteInlineKeyboard(responseDataMessage.chatId,
+                            personUtils.deleteInlineKeyboard(responseDataMessage.chatId,
                                 responseDataMessage.callbackQuery.message.messageId.toString(), sender)
                             responseDataMessage.callbackQuery.data
                         }
                     val victorina = victorinaServices.getVictorinaById(victorinaId)
-                    val person = getPerson(responseDataMessage.chatId)!!
-                    sendStartVictorinaMessage(person, victorina, sender)
+                    val person = personUtils.getPerson(responseDataMessage.chatId)!!
+                    personUtils.sendStartVictorinaMessage(person, victorina, sender)
                 }
             }
 
         }
     }
 
-    private fun sendStartVictorinaMessage(person: Person, victorina: Victorina, sender: MessageServicesSender) {
-        val mess = TextMessage(person.id, victorina.title,null)
-        val isChannelUser =
-            if (victorina.channel != null) checkUserAsChannelMember(victorina.channel.channelId, person.id, sender)
-            else true
-        if (isChannelUser == true) {
-            if (person.quizes == null) person.quizes = ArrayList()
-            val quiz = Quiz(victorina.id!!, ArrayList())
-            person.quizes!!.add(quiz)
-            person.state = PersonState.IN_VICTORINA
-            personRepo.save(person)
-            sender.sendText(mess)
-            sendQuestion(person, victorina, 0, sender)
-        } else {
-            sender.sendTextAndInlineButton(TextMessage(person.id,
-                messageSource.getMessage("message.subscribe", null, Locale.forLanguageTag(person.languageCode))
-                , null),
-                listOf(InlineButton(victorina.channel!!.channelName,
-                    "${CallbackData.SUBSCRIBE}#${victorina.id}", url = victorina.channel!!.url),
-                    InlineButton(messageSource.getMessage("button.ready",null,
-                        Locale.forLanguageTag(person.languageCode)),
-                        "${CallbackData.QUIZ}#${victorina.id}"),
-                    ), 1
-            )
-        }
-
-    }
-
-    private fun  sendQuestion(person: Person, victorina:Victorina, numQuestion:Int, sender: MessageServicesSender){
-        val type = if (victorina.questions[numQuestion].rightAnswer.size < 2)
-            PollType.QUIZ else PollType.REGULAR
-        sender.sendOnePoll(
-            PollMessage(
-                person.id, victorina.questions[numQuestion].text, victorina.questions[numQuestion].answers,
-                victorina.questions[numQuestion].rightAnswer, null, type = type.getType()
-            ))
-    }
-
     override fun forFree(textMessage: TextMessage, sender: MessageServicesSender) {
         println(textMessage)
     }
 
-    override fun getPerson(userId:String): Person? = personRepo.findById(userId).orElse(null)
-
-    private fun deleteInlineKeyboard(chatId:String, messageId:String, sender: MessageServicesSender) {
-        sender.sendChangeInlineButton(ChangeInlineMessage(chatId, messageId, emptyList()))
+    override fun getUtils(): PersonUtils {
+        return personUtils
     }
-
-    private fun sendFreeMessage(userId: String, userName: String, lang:Locale, sender: MessageServicesSender) {
-        val listButton = ArrayList<InlineButton>()
-        victorinaServices.getActiveVictorin().forEach {
-            if(!isEndedVictorinaByUser(userId, it.id!!)) {
-                var name = "${it.name} ${
-                    messageSource.getMessage("message.from", null, lang)
-                } - "
-                name += if (it.channel !== null) it.channel.channelName
-                else userName
-                val button = InlineButton(name, it.id!!)
-                listButton.add(button)
-            }
-        }
-        if (listButton.isNotEmpty())
-        sender.sendTextAndInlineButton(
-            TextMessage(userId,
-                messageSource.getMessage("message.invite", null, lang),
-                null),
-            listButton, 1
-        )
-        else sender.sendTextAndInlineButton(
-            TextMessage(userId,
-                messageSource.getMessage("message.invite.none", null, lang),
-                null),
-            listOf(InlineButton(
-                messageSource.getMessage("button.try.again", null, lang),
-                CallbackData.FREE.toString())
-            )
-        )
-    }
-
-    private fun isEndedVictorinaByUser(userId: String, victorinaId: String):Boolean{
-        val person = getPerson(userId)!!
-        return if (person.quizes != null) {
-            person.quizes!!.map { it.victorinaId }.contains(victorinaId)
-        } else  false
-    }
-
-    @Value("\${my.address}") private lateinit var url:String
-    @Value("\${server.port}") private lateinit var port:String
-    private fun sendRegistrationFinishMessage(userId: String,lang:Locale, sender: MessageServicesSender) {
-        sender.sendTextAndInlineButton(TextMessage(userId,
-            messageSource.getMessage("message.reg.finish",null, lang), null),
-            listOf(InlineButton(messageSource.getMessage("button.link",null, lang),
-                CallbackData.LINK.toString(), url="${url}:${port}?user=${userId}")
-                )
-        )
-    }
-
-    private fun checkUserAsChannelMember(channelId: String, userId: String, sender: MessageServicesSender):Boolean? {
-        return try{
-            val status = sender.checkIsUserOfChannel(channelId, userId).status
-            !(status == "kicked" || status == "left")
-        } catch (e:TelegramApiRequestException){
-            null
-        }
-    }
-
 
 }

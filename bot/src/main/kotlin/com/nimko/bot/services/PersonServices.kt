@@ -1,6 +1,7 @@
 package com.nimko.bot.services
 
 import com.nimko.bot.models.Person
+import com.nimko.bot.utils.PersonUtils
 import com.nimko.messageservices.telegram.models.message.ChannelIdMessage
 import com.nimko.messageservices.telegram.models.message.PollAnswer
 import com.nimko.messageservices.telegram.models.message.ResponseDataMessage
@@ -24,5 +25,6 @@ interface PersonServices {
 
     fun forFree(textMessage: TextMessage, sender: MessageServicesSender)
 
-    fun getPerson(userId: String): Person?
+    fun getUtils():PersonUtils
+
 }

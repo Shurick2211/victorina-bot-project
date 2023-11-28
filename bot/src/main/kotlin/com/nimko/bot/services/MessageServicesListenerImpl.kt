@@ -43,7 +43,7 @@ class MessageServicesListenerImpl @Autowired constructor(
     }
 
     override fun onDataMessage(responseDataMessage: ResponseDataMessage) {
-        val person = personServices.getPerson(responseDataMessage.callbackQuery.from.id.toString())!!
+        val person = personServices.getUtils().getPerson(responseDataMessage.callbackQuery.from.id.toString())!!
 
         if (person.state == PersonState.REGISTRATION_CREATOR)
             personServices.registrationCreator(
