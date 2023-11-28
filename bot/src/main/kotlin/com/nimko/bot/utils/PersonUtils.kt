@@ -153,7 +153,6 @@ class PersonUtils @Autowired constructor(
             if(quiz.userAnswers[i].equals(victorina.questions[i].rightAnswer.toList())) rA++
         }
         quiz.isRightAnswered = rA == quiz.userAnswers.size
-        println("Quiz = ${quiz.isRightAnswered} rA=${rA}")
         val res = rA.toDouble().div(quiz.userAnswers.size.toDouble()).times(100.0)
         quiz.percentRightAnswer = if (quiz.isRightAnswered!!) 100 else res.toInt()
         return quiz
