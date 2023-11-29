@@ -62,7 +62,7 @@ jobs:
         use_existing_version_if_available: false
         application_name: bot-victorin
         environment_name: Bot-victorin-env
-        version_label: ${{ github.sha }}-test
+        version_label: ${{ github.sha }}
         region: eu-central-1
         deployment_package: bot/build/libs/bot.jar
 
