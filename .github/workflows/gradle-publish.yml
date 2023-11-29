@@ -47,17 +47,25 @@ jobs:
     - name: Run chmod to make gradlew executable
       run: chmod +x ./gradlew
   
-    - name: Build with Gradle  
-      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
-      with:
-        arguments: build -Ptgtok=${{ secrets.MY_BOT }} -Pmongo_uri=${{ secrets.MY_DB }}
+    - name: Build with Gradle
+      run: ./gradlew build -Ptgtok=${{ secrets.MY_BOT }} -Pmongo_uri=${{ secrets.MY_DB }}
 
+      # uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
+     # with:
+    #   arguments: build -Ptgtok=${{ secrets.MY_BOT }} -Pmongo_uri=${{ secrets.MY_DB }}
 
-    - name: Upload JAR
-      uses: actions/upload-artifact@v2
+    - name: Deploy to EB
+      uses: einaregilsson/beanstalk-deploy@v13
       with:
-        name: artifact
-        path: bot/build/lib/bot.jar
+        aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        use_existing_version_if_available: false
+        application_name: victorina-bot
+        environment_name: Victorina-bot-env
+        version_label: ${{ github.sha }}-test
+        region: eu-central-1
+        deployment_package: bot.jar
+
 
 
     # The USERNAME and TOKEN need to correspond to the credentials environment variables used in
@@ -70,24 +78,5 @@ jobs:
 #        USERNAME: ${{ github.actor }}
 #        TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  deploy:
-    needs: build
-    name: Deploy
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download JAR
-        uses: actions/download-artifact@v2
-        with:
-          name: artifact
 
-      - name: Deploy to EB
-        uses: einaregilsson/beanstalk-deploy@v13
-        with:
-          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          use_existing_version_if_available: false
-          application_name: victorina-bot
-          environment_name: Victorina-bot-env
-          version_label: ${{ github.sha }}-test
-          region: eu-central-1
-          deployment_package: bot.jar
+
