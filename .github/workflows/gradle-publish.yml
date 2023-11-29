@@ -64,7 +64,7 @@ jobs:
         environment_name: Victorina-bot-env
         version_label: ${{ github.sha }}-test
         region: eu-central-1
-        deployment_package: bot.jar
+        deployment_package: bot/build/libs/bot.jar
 
 
 
