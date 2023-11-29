@@ -55,7 +55,7 @@ tasks{
         val command = if (System.getProperty("os.name").toUpperCase().contains("WINDOWS")) {
             listOf("npm.cmd", "run","build")
         } else {
-            listOf("npm","run","build")
+            listOf("npm","run","build","--stacktrace")
         }
         commandLine(command)
     }
