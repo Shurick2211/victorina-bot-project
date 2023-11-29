@@ -40,7 +40,7 @@ jobs:
      # run: ./gradlew build -Ptgtok=${{ secrets.MY_BOT }} -Pmongo_uri=${{ secrets.MY_DB }}
       uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
       with:
-       arguments: build -Ptgtok=${{ secrets.MY_BOT }} -Pmongo_uri=${{ secrets.MY_DB }}
+       arguments: build -Ptgtok=${{ secrets.MY_BOT }} -Pmongo_uri=${{ secrets.MY_DB }} -Ptgbotname=${{ secrets.BOT_NAME }}
 
     - name: Deploy to EB
       uses: einaregilsson/beanstalk-deploy@v13

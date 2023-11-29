@@ -124,10 +124,10 @@ class PersonServicesImpl @Autowired constructor(
                 if (currentQuiz.isRightAnswered!!) victorinaServices.saveRightAnsweredUserId(person.id, victorina.id!!)
                 sender.sendText(
                     TextMessage(person.id,
-                    "${messageSource.getMessage("message.end", null, Locale.forLanguageTag(person.languageCode))} " +
+                    "${messageSource.getMessage("message.end", null, Locale.forLanguageTag(pollAnswer.userLang))} " +
                             "${currentQuiz.percentRightAnswer}%"
                     ,null))
-                personUtils.sendFreeMessage(person.id, person.userName, Locale.forLanguageTag(person.languageCode), sender)
+                personUtils.sendFreeMessage(person.id, person.userName, Locale.forLanguageTag(pollAnswer.userLang), sender)
             } else {
                 personUtils.sendQuestion(person,victorina,currentQuiz.userAnswers.size, sender)
             }
