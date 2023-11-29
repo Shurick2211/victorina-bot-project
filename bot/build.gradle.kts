@@ -5,7 +5,7 @@ plugins {
     id("io.spring.dependency-management") version "1.0.15.RELEASE"
     kotlin("jvm") version "1.6.21"
     kotlin("plugin.spring") version "1.6.21"
-    `maven-publish`
+    //`maven-publish`
 }
 
 
@@ -22,26 +22,26 @@ repositories {
 springBoot {
     buildInfo()
 }
-
-publishing {
-    publications {
-        create<MavenPublication>("mavenJava") {
-            from(components["java"])
-        }
-    }
-
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/Shurick2211/victorina-bot-project") // Replace with your GitHub repository URL
-
-            credentials {
-                username =  System.getenv("USERNAME")
-                password =  System.getenv("TOKEN")
-            }
-        }
-    }
-}
+//
+//publishing {
+//    publications {
+//        create<MavenPublication>("mavenJava") {
+//            from(components["java"])
+//        }
+//    }
+//
+//    repositories {
+//        maven {
+//            name = "GitHubPackages"
+//            url = uri("https://maven.pkg.github.com/Shurick2211/victorina-bot-project") // Replace with your GitHub repository URL
+//
+//            credentials {
+//                username =  System.getenv("USERNAME")
+//                password =  System.getenv("TOKEN")
+//            }
+//        }
+//    }
+//}
 
 
 dependencies {
