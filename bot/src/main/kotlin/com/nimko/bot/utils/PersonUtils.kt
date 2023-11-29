@@ -29,12 +29,12 @@ class PersonUtils @Autowired constructor(
 ){
 
     @Value("\${my.address}") private lateinit var url:String
-    @Value("\${server.port}") private lateinit var port:String
+   // @Value("\${server.port}") private lateinit var port:String
     fun sendRegistrationFinishMessage(userId: String,lang:Locale, sender: MessageServicesSender) {
         sender.sendTextAndInlineButton(TextMessage(userId,
             messageSource.getMessage("message.reg.finish",null, lang), null),
             listOf(InlineButton(messageSource.getMessage("button.link",null, lang),
-                CallbackData.LINK.toString(), url="${url}:${port}?user=${userId}")
+                CallbackData.LINK.toString(), url="${url}?user=${userId}")
             )
         )
     }
