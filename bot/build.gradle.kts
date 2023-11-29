@@ -36,8 +36,8 @@ publishing {
             url = uri("https://maven.pkg.github.com/Shurick2211/victorina-bot-project") // Replace with your GitHub repository URL
 
             credentials {
-                username =  System.getenv("USERNAME_GITHUB_PACKAGES")
-                password =  System.getenv("TOKEN_GITHUB_PACKAGES")
+                username =  System.getenv("USERNAME")
+                password =  System.getenv("TOKEN")
             }
         }
     }
