@@ -22,7 +22,7 @@ buildscript {
 apply(plugin = "com.moowork.node")
 
 node{
-    version = "20.x"
+    version = "20.9.0"
     npmVersion = "10.2.0"
     download = true
 }
