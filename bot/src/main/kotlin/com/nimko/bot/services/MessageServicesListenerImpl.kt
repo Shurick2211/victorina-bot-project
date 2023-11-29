@@ -32,8 +32,7 @@ class MessageServicesListenerImpl @Autowired constructor(
             messageSource.getMessage("button.for.creator",null,
                 Locale.forLanguageTag(textMessage.user!!.languageCode)) -> {
                 personServices.registrationCreator(
-                    textMessage.user,
-                    null,null, sender
+                    textMessage.user,null,null, sender
                 )
             }
             else -> {
