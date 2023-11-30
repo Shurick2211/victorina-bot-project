@@ -89,7 +89,7 @@ class PersonUtils @Autowired constructor(
         }
     }
 
-    fun sendFreeMessage(userId: String, userName: String, lang: Locale, sender: MessageServicesSender) {
+    fun sendFreeMessage(userId: String, lang: Locale, sender: MessageServicesSender) {
         val listButton = ArrayList<InlineButton>()
         victorinaServices.getActiveVictorin().forEach {
             if(!isEndedVictorinaByUser(userId, it.id!!)) {
@@ -97,7 +97,7 @@ class PersonUtils @Autowired constructor(
                     messageSource.getMessage("message.from", null, lang)
                 } - "
                 name += if (it.channel !== null) it.channel.channelName
-                else userName
+                else getPerson(it.ownerId)!!.userName
                 val button = InlineButton(name, it.id!!)
                 listButton.add(button)
             }

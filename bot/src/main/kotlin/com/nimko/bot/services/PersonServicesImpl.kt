@@ -44,7 +44,7 @@ class PersonServicesImpl @Autowired constructor(
             )
         )
 
-        personUtils.sendFreeMessage(user.id.toString(), user.userName, Locale.forLanguageTag(user.languageCode) ,sender)
+        personUtils.sendFreeMessage(user.id.toString(),  Locale.forLanguageTag(user.languageCode) ,sender)
     }
 
     override fun registrationCreator(
@@ -101,7 +101,7 @@ class PersonServicesImpl @Autowired constructor(
                 responseDataMessage.callbackQuery.message.messageId.toString(), sender)
             personUtils.sendRegistrationFinishMessage(user.id.toString(),
                 Locale.forLanguageTag(user.languageCode), sender)
-            personUtils.sendFreeMessage(user.id.toString(), user.userName, Locale.forLanguageTag(user.languageCode) ,sender)
+            personUtils.sendFreeMessage(user.id.toString(),  Locale.forLanguageTag(user.languageCode) ,sender)
         }
     }
 
@@ -127,7 +127,7 @@ class PersonServicesImpl @Autowired constructor(
                     "${messageSource.getMessage("message.end", null, Locale.forLanguageTag(pollAnswer.userLang))} " +
                             "${currentQuiz.percentRightAnswer}%"
                     ,null))
-                personUtils.sendFreeMessage(person.id, person.userName, Locale.forLanguageTag(pollAnswer.userLang), sender)
+                personUtils.sendFreeMessage(person.id,  Locale.forLanguageTag(pollAnswer.userLang), sender)
             } else {
                 personUtils.sendQuestion(person,victorina,currentQuiz.userAnswers.size, sender)
             }
@@ -140,7 +140,7 @@ class PersonServicesImpl @Autowired constructor(
 
                 responseDataMessage.callbackQuery.data.startsWith(CallbackData.FREE.toString()) -> {
                     val userFree = responseDataMessage.callbackQuery.from
-                    personUtils.sendFreeMessage(userFree.id.toString(), userFree.userName,
+                    personUtils.sendFreeMessage(userFree.id.toString(),
                         Locale.forLanguageTag(userFree.languageCode), sender)
                 }
 
