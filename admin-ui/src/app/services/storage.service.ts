@@ -16,7 +16,7 @@ export class StorageService {
 
   public person:Person | null = null
 
-  public isAuth = false
+  public isReg = false
 
   constructor(private api:ApiService) {
     this.victorinas = new Array<Victorina>()
@@ -54,7 +54,7 @@ export class StorageService {
   savePerson(){
     this.api.savePassFromPerson(this.person!.id, this.person!.password).subscribe(response => {
       console.log(response)
-      if(response.status == HttpStatusCode.Ok) this.isAuth = true
+      if(response.status == HttpStatusCode.Ok) this.isReg = true
     })
   }
 

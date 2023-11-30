@@ -8,7 +8,7 @@
 
   <mat-card-content>
     <textarea name="text" [disabled]="!isActive" rows="2" [(ngModel)] = "question.text"></textarea>
-    <mat-slide-toggle [(ngModel)]="isManyAnswer"  style="margin: 10px" (click)="clickManyAnswers()"> - Many Answers
+    <mat-slide-toggle *ngIf="isActive " [(ngModel)]="isManyAnswer"  style="margin: 10px" (click)="clickManyAnswers()"> - Many Answers
     </mat-slide-toggle>
       <p *ngFor="let q of question.answers; let i = index; trackBy:trackByFn ">
         <span>{{i+1}}</span>

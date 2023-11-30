@@ -8,7 +8,8 @@ import {Person} from "../dto/person";
   providedIn: 'root'
 })
 export class ApiService {
-  private url = 'http://victorina.eu-central-1.elasticbeanstalk.com'
+  //private url = 'http://victorina.eu-central-1.elasticbeanstalk.com'
+  private url = ''
   private apiVictorina = `${this.url}/victorinas`;
   private apiPerson = `${this.url}/persons`;
 

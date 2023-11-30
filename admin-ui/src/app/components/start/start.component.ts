@@ -7,7 +7,7 @@ import {StorageService} from "../../services/storage.service";
   styleUrls: ['./start.component.scss']
 })
 export class StartComponent implements OnInit{
-  protected password:string =""
+  protected password:string | null = null
 
   constructor(public storage:StorageService) {
     storage.refreshPerson()
@@ -19,12 +19,14 @@ export class StartComponent implements OnInit{
   }
 
   save() {
-    this.storage.person!.password = this.password
-    this.storage.savePerson()
+    if(this.password !== null) {
+      this.storage.person!.password = this.password
+      this.storage.savePerson()
+    }
   }
 
   signIn() {
     if (this.storage.person!.password == this.password)
-    this.storage.isAuth = true
+    this.storage.isReg = true
   }
 }

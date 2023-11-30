@@ -1,23 +1,29 @@
-<div>
-  <h1>Hello
-    <span *ngIf="storage.person !== null">{{storage.person.firstName}}</span>!!!
-  </h1>
+<div class="main">
+  <div class="header">
+    <h1>Hello
+      <span *ngIf="storage.person !== null">{{storage.person.firstName}}</span>!!!
+    </h1>
+  </div>
+
+  <div class="body" *ngIf="!storage.isReg && storage.person!=null">
+    <label *ngIf="storage.person?.password === null">Create password:</label>
+    <label *ngIf="storage.person?.password !== null">Enter password:</label>
+    <input name="pass" style="margin-left: 10px"  type="password"
+           [(ngModel)]="password">
+    <button name = "save" *ngIf="storage.person?.password === null" class="btn btn-info" style="margin-left: 10px" (click)="save()" >Save</button>
+    <button name = "signIn" *ngIf="storage.person?.password !== null" class="btn btn-success" style="margin-left: 10px" (click)="signIn()" >Sign In</button>
+  </div>
+
+
+  <div>
+    <br>
+    <hr>
+    <span *ngIf="storage.userId === null">You need registration: </span>
+    <a href="https://t.me/Frst_ex_bot" >Go to Victorina-bot!</a>
+  </div>
+
+
 </div>
 
-<div *ngIf="!storage.isAuth">
-  <label *ngIf="storage.person?.password === null">Create password:</label>
-  <label *ngIf="storage.person?.password !== null">Enter password:</label>
-  <input name="pass" style="margin-left: 10px" size="100" type="text"
-         [(ngModel)]="password">
-  <button name = "save" *ngIf="storage.person?.password === null" class="btn btn-info" style="margin-left: 10px" (click)="save()" >Save</button>
-  <button name = "signIn" *ngIf="storage.person?.password !== null" class="btn btn-success" style="margin-left: 10px" (click)="signIn()" >Sign In</button>
-</div>
 
-
-<div>
-  <br>
-  <hr>
-  <span *ngIf="storage.userId === null">You need registration: </span>
-  <a href="https://t.me/Frst_ex_bot" >Go to Victorina-bot!</a>
-</div>
 
