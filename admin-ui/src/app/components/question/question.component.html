@@ -27,8 +27,8 @@
   </mat-card-content>
   <hr>
   <mat-card-actions>
-    <button mat-button *ngIf="isActive" (click)="click()" >LIKE</button>
-    <button mat-button *ngIf="isActive" (click)="save()">Save</button>
+<!--    <button mat-button *ngIf="isActive" (click)="click()" >LIKE</button>-->
+    <button mat-button *ngIf="isActive" (click)="save()">Add to victorina!</button>
     <button mat-button *ngIf="!isActive" (click)="deleteQuestion()">Delete</button>
     <button mat-button *ngIf="!isActive" (click)="isActive=true; isEdit = true">Edit</button>
   </mat-card-actions>

@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Victorina} from "../dto/victorina";
 import {ApiService} from "./api.service";
 import {Person} from "../dto/person";
 import {HttpStatusCode} from "@angular/common/http";
+import {PersonRole} from "../utils/person-role";
 
 
 @Injectable({
@@ -31,10 +32,17 @@ export class StorageService {
   }
 
   refreshVictorins(){
-    this.api.getAllVictorinas().subscribe(response => {
-      this.victorinas = response
-      console.log(this.victorinas)
-    })
+    console.log(`Is admin = ${this.person!!.role === PersonRole.ADMIN}`)
+
+    if (this.person!!.role === PersonRole.ADMIN)
+      this.api.getAllVictorinas().subscribe(response => {
+        this.victorinas = response
+        console.log(this.victorinas)
+      })
+    else this.api.getAllUserVictorinas(this.person!!.id).subscribe(
+      response =>
+        this.victorinas = response
+    )
   }
 
   save(victorina: Victorina ){

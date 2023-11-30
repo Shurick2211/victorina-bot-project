@@ -8,6 +8,7 @@ import {StorageService} from "../../services/storage.service";
 })
 export class StartComponent implements OnInit{
   protected password:string | null = null
+  hide = true;
 
   constructor(public storage:StorageService) {
     storage.refreshPerson()

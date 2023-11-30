@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 
@@ -35,7 +36,7 @@ class VictorinaController @Autowired constructor(val service:FrontRequestService
     @Operation(
         summary = "Get All victorins from Db"
     )
-    fun allVictorins() = service.getRequest()
+    fun allVictorins(@RequestParam("id") id:String?) = service.getRequest(id)
 
     @PostMapping
     @Operation(

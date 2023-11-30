@@ -1,21 +1,46 @@
 <div class="main">
   <div class="header">
-    <h1>Hello
-      <span *ngIf="storage.person !== null">{{storage.person.firstName}}</span>!!!
+    <h1>Admin page!
     </h1>
   </div>
 
-  <div class="body" *ngIf="!storage.isReg && storage.person!=null">
-    <label *ngIf="storage.person?.password === null">Create password:</label>
-    <label *ngIf="storage.person?.password !== null">Enter password:</label>
-    <input name="pass" style="margin-left: 10px"  type="password"
-           [(ngModel)]="password">
-    <button name = "save" *ngIf="storage.person?.password === null" class="btn btn-info" style="margin-left: 10px" (click)="save()" >Save</button>
-    <button name = "signIn" *ngIf="storage.person?.password !== null" class="btn btn-success" style="margin-left: 10px" (click)="signIn()" >Sign In</button>
+  <div class="center-container">
+
+    <div *ngIf="!storage.isReg && storage.person===null" >
+      <h2>
+        Please enter here with telegram button-link!
+      </h2>
+    </div>
+
+    <mat-card style="background: bisque; width: fit-content" *ngIf="!storage.isReg && storage.person!==null">
+      <mat-card-header>
+        <h2>
+          Hello <span>{{storage.person.firstName}}</span>!!!
+        </h2>
+      </mat-card-header>
+      <mat-form-field style="margin: 15px;">
+        <mat-label *ngIf="storage.person.password === null">Create your password</mat-label>
+        <mat-label *ngIf="storage.person.password !== null">Enter your password</mat-label>
+        <input matInput [type]="hide ? 'password' : 'text'" [(ngModel)]="password">
+        <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+          <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+      </mat-form-field>
+      <mat-card-actions>
+        <button mat-raised-button name = "save" *ngIf="storage.person.password === null" class="btn btn-info" style="margin-left: 10px" (click)="save()" >Save</button>
+        <button mat-raised-button name = "signIn" *ngIf="storage.person.password !== null" class="btn btn-success" style="margin-left: 10px" (click)="signIn()" >Sign In</button>
+      </mat-card-actions>
+    </mat-card>
+
+    <div *ngIf="storage.isReg && storage.person!==null">
+      <h2>
+        It is admin page {{storage.person.firstName}} {{storage.person.lastName}}! Please create your victorins!
+      </h2>
+    </div>
+
   </div>
 
-
-  <div>
+  <div style="margin-left: 5%">
     <br>
     <hr>
     <span *ngIf="storage.userId === null">You need registration: </span>

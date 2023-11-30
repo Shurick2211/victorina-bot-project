@@ -23,6 +23,11 @@ export class ApiService {
     return this.http.get<Victorina[]>(this.apiVictorina)
   }
 
+  getAllUserVictorinas(id:string):Observable<Victorina[]>{
+    let param = new HttpParams().set("id", id)
+    return this.http.get<Victorina[]>(this.apiVictorina,{params:param})
+  }
+
   deleteVictorina(id: String):Observable<any>{
     return this.http.delete<any>(this.apiVictorina,{body: id, observe:'response'})
   }

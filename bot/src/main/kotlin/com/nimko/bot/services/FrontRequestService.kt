@@ -14,8 +14,11 @@ class FrontRequestService  @Autowired constructor(
     ) {
 
 
-    fun getRequest():ResponseEntity<Any>{
-        val list:List<VictorinaDto> = victorinasDb.findAll()
+    fun getRequest(id: String?):ResponseEntity<Any>{
+        val list:List<VictorinaDto> =
+            if(id.isNullOrBlank())
+                victorinasDb.findAll()
+            else victorinasDb.findAllByOwnerId(id)
         return ResponseEntity.ok(list)
     }
 

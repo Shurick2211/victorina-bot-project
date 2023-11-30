@@ -1,5 +1,5 @@
 export enum PersonRole {
-  ADMIN,
-  QUIZ_CREATOR,
-  USER
+  ADMIN = "ADMIN",
+  QUIZ_CREATOR = "QUIZ_CREATOR",
+  USER = "USER"
 }

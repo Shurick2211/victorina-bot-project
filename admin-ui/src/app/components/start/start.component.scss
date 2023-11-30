@@ -3,11 +3,15 @@
 }
 
 .header{
-  height: 40%;
+  height: 10vh;
   text-align: center;
 }
 
-.body{
-  height: 40%;
-}
 
+.center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  width: 100%;
+}
