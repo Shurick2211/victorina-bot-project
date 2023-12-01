@@ -8,8 +8,6 @@
 
   <mat-card-content>
     <textarea name="text" [disabled]="!isActive" rows="2" [(ngModel)] = "question.text"></textarea>
-    <mat-slide-toggle *ngIf="isActive " [(ngModel)]="isManyAnswer"  style="margin: 10px" (click)="clickManyAnswers()"> - Many Answers
-    </mat-slide-toggle>
       <p *ngFor="let q of question.answers; let i = index; trackBy:trackByFn ">
         <span>{{i+1}}</span>
         <input name="a-{{i}}" [disabled]="!isActive" style="margin-left: 10px" size="100" type="text"
@@ -27,8 +25,8 @@
   </mat-card-content>
   <hr>
   <mat-card-actions>
-<!--    <button mat-button *ngIf="isActive" (click)="click()" >LIKE</button>-->
-    <button mat-button *ngIf="isActive" (click)="save()">Add to victorina!</button>
+    <button mat-button *ngIf="isActive && !isEdit" (click)="save()">Add to victorina!</button>
+    <button mat-button *ngIf="isActive && isEdit" (click)="save()">Save question!</button>
     <button mat-button *ngIf="!isActive" (click)="deleteQuestion()">Delete</button>
     <button mat-button *ngIf="!isActive" (click)="isActive=true; isEdit = true">Edit</button>
   </mat-card-actions>

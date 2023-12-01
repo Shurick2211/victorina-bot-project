@@ -26,6 +26,7 @@ export class QuestionComponent implements OnInit{
 
   notReady = false;
 
+  @Input()
   isManyAnswer=false
 
   constructor() {
@@ -34,10 +35,6 @@ export class QuestionComponent implements OnInit{
     this.checkeds.forEach(value => value = false)
   }
 
-
-  click() {
-    console.log(this.question)
-  }
 
   clickAdd() {
     this.question.answers.push("")
@@ -84,18 +81,10 @@ export class QuestionComponent implements OnInit{
   ngOnInit(): void {
     this.question.rightAnswer.forEach (value =>
       this.checkeds[value] = true)
-
   }
 
   deleteQuestion(){
     this.deleteQ.emit(true)
   }
 
-  clickManyAnswers() {
-    this.checkeds = new Array<boolean>(this.question.answers.length)
-    if(this.isManyAnswer)
-      this.question.rightAnswer = new Array<number>()
-    else
-      this.question.rightAnswer = Array.of<number>(-1)
-  }
 }

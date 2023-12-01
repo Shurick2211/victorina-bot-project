@@ -23,6 +23,7 @@ export class CreateVictorinaComponent implements OnInit{
 
  endDate:Date | null = null
  startDate: Date | null = null
+ isManyAnswer = false
 
 
   constructor(protected storage:StorageService, private activeRoute:ActivatedRoute, private router:Router) {
@@ -37,6 +38,7 @@ export class CreateVictorinaComponent implements OnInit{
         if (this.victorina.startDate !== null) this.startDate = new Date(this.victorina.startDate)
         if (this.victorina.endDate !== null) this.endDate = new Date(this.victorina.endDate)
       this.title = 'Edit victorina!'
+      this.isManyAnswer = this.victorina.questions[0].rightAnswer.length > 1
     }
     this.q = new Question('',['',''],Array.of<number>(-1))
   }
@@ -51,6 +53,7 @@ export class CreateVictorinaComponent implements OnInit{
   addToInfo(q:Question){
     this.victorina.questions.push(q)
     this.q = new Question('',new Array<string>(q.answers.length), Array.of<number>(-1))
+    this.clicManyAnswers()
   }
 
   editToInfo(q: Question, i: number){
@@ -80,5 +83,11 @@ export class CreateVictorinaComponent implements OnInit{
       this.router.navigateByUrl('/create')
     } else this.isNotReady = true
 
+  }
+
+  clicManyAnswers(){
+    if (this.isManyAnswer)
+      this.q.rightAnswer = new Array<number>()
+    else  this.q.rightAnswer = Array.of<number>(-1)
   }
 }
