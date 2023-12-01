@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.objects.User
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import java.util.*
 
 @Component
@@ -39,7 +41,9 @@ class PersonServicesImpl @Autowired constructor(
             messageSource.getMessage("message.start",null,
                 Locale.forLanguageTag(user.languageCode)) + user.firstName,
                 listOf(messageSource.getMessage("button.for.creator",null,
-                    Locale.forLanguageTag(user.languageCode))
+                    Locale.forLanguageTag(user.languageCode)),
+                    messageSource.getMessage("button.free.message",null,
+                        Locale.forLanguageTag(user.languageCode))
                 )
             )
         )
@@ -101,7 +105,6 @@ class PersonServicesImpl @Autowired constructor(
                 responseDataMessage.callbackQuery.message.messageId.toString(), sender)
             personUtils.sendRegistrationFinishMessage(user.id.toString(),
                 Locale.forLanguageTag(user.languageCode), sender)
-            personUtils.sendFreeMessage(user.id.toString(),  Locale.forLanguageTag(user.languageCode) ,sender)
         }
     }
 
@@ -122,12 +125,14 @@ class PersonServicesImpl @Autowired constructor(
                 person.state = PersonState.FREE
                 person.quizes!![person.quizes!!.size - 1] = personUtils.checkVictorinaResult(currentQuiz,victorina)
                 if (currentQuiz.isRightAnswered!!) victorinaServices.saveRightAnsweredUserId(person.id, victorina.id!!)
+                val locale = Locale.forLanguageTag(pollAnswer.userLang)
                 sender.sendText(
                     TextMessage(person.id,
-                    "${messageSource.getMessage("message.end", null, Locale.forLanguageTag(pollAnswer.userLang))} " +
-                            "${currentQuiz.percentRightAnswer}%"
+                    "${messageSource.getMessage("message.end", null, locale)} " +
+                            "${currentQuiz.percentRightAnswer}% \n " +
+                            messageSource.getMessage("message.end.continuation", null, locale) +
+                            " - ${victorina.endDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).withLocale(locale))}"
                     ,null))
-                personUtils.sendFreeMessage(person.id,  Locale.forLanguageTag(pollAnswer.userLang), sender)
             } else {
                 personUtils.sendQuestion(person,victorina,currentQuiz.userAnswers.size, sender)
             }
@@ -164,7 +169,7 @@ class PersonServicesImpl @Autowired constructor(
     }
 
     override fun forFree(textMessage: TextMessage, sender: MessageServicesSender) {
-        println(textMessage)
+        personUtils.sendFreeMessage(textMessage.userId,  Locale.forLanguageTag(textMessage.user!!.languageCode) ,sender)
     }
 
     override fun getUtils(): PersonUtils {

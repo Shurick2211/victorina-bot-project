@@ -31,10 +31,14 @@ class MessageServicesListenerImpl @Autowired constructor(
             }
             messageSource.getMessage("button.for.creator",null,
                 Locale.forLanguageTag(textMessage.user!!.languageCode)) -> {
-                personServices.registrationCreator(
-                    textMessage.user,null,null, sender
-                )
-            }
+                    personServices.registrationCreator(
+                        textMessage.user,null,null, sender
+                    )
+                }
+            messageSource.getMessage("button.free.message",null,
+                Locale.forLanguageTag(textMessage.user!!.languageCode)) -> {
+                    personServices.forFree(textMessage, sender)
+                }
             else -> {
                 log.info(textMessage.toString())
             }
