@@ -12,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.objects.User
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 import java.util.*
 
 @Component
@@ -125,14 +123,7 @@ class PersonServicesImpl @Autowired constructor(
                 person.state = PersonState.FREE
                 person.quizes!![person.quizes!!.size - 1] = personUtils.checkVictorinaResult(currentQuiz,victorina)
                 if (currentQuiz.isRightAnswered!!) victorinaServices.saveRightAnsweredUserId(person.id, victorina.id!!)
-                val locale = Locale.forLanguageTag(pollAnswer.userLang)
-                sender.sendText(
-                    TextMessage(person.id,
-                    "${messageSource.getMessage("message.end", null, locale)} " +
-                            "${currentQuiz.percentRightAnswer}% \n " +
-                            messageSource.getMessage("message.end.continuation", null, locale) +
-                            " - ${victorina.endDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).withLocale(locale))}"
-                    ,null))
+                personUtils.sendFinishQuizMessage(pollAnswer, victorina, currentQuiz, sender)
             } else {
                 personUtils.sendQuestion(person,victorina,currentQuiz.userAnswers.size, sender)
             }

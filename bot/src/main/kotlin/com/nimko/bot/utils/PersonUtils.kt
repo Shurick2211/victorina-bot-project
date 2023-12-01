@@ -6,10 +6,7 @@ import com.nimko.bot.models.Victorina
 import com.nimko.bot.repositories.PersonRepo
 import com.nimko.bot.services.VictorinaServices
 import com.nimko.messageservices.services.MessageServicesSender
-import com.nimko.messageservices.telegram.models.message.ChangeInlineMessage
-import com.nimko.messageservices.telegram.models.message.ChannelIdMessage
-import com.nimko.messageservices.telegram.models.message.PollMessage
-import com.nimko.messageservices.telegram.models.message.TextMessage
+import com.nimko.messageservices.telegram.models.message.*
 import com.nimko.messageservices.telegram.models.others.InlineButton
 import com.nimko.messageservices.telegram.utils.CallbackData
 import com.nimko.messageservices.telegram.utils.PollType
@@ -18,6 +15,8 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.MessageSource
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -97,7 +96,7 @@ class PersonUtils @Autowired constructor(
                     messageSource.getMessage("message.from", null, lang)
                 } - "
                 name += if (it.channel !== null) it.channel.channelName
-                else getPerson(it.ownerId)!!.userName
+                else getPerson(it.ownerId)!!.firstName ?: getPerson(it.ownerId)!!.userName
                 val button = InlineButton(name, it.id!!)
                 listButton.add(button)
             }
@@ -156,5 +155,16 @@ class PersonUtils @Autowired constructor(
         val res = rA.toDouble().div(quiz.userAnswers.size.toDouble()).times(100.0)
         quiz.percentRightAnswer = if (quiz.isRightAnswered!!) 100 else res.toInt()
         return quiz
+    }
+
+    fun sendFinishQuizMessage(pollAnswer: PollAnswer, victorina: Victorina, currentQuiz:Quiz ,sender: MessageServicesSender){
+        val locale = Locale.forLanguageTag(pollAnswer.userLang)
+        sender.sendText(
+            TextMessage(pollAnswer.userId,
+                "${messageSource.getMessage("message.end", null, locale)} " +
+                        "${currentQuiz.percentRightAnswer}% \n " +
+                        messageSource.getMessage("message.end.continuation", null, locale) +
+                        " - ${victorina.endDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).withLocale(locale))}"
+                ,null))
     }
 }
