@@ -167,4 +167,12 @@ class PersonUtils @Autowired constructor(
                         " - ${victorina.endDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).withLocale(locale))}"
                 ,null))
     }
+
+    fun sendBusyMessage(userId: String, lang: Locale, sender: MessageServicesSender){
+        sender.sendText(
+            TextMessage(userId,
+                messageSource.getMessage("message.busy",null, lang)
+                ,null)
+        )
+    }
 }

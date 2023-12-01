@@ -25,17 +25,17 @@ class MessageServicesListenerImpl @Autowired constructor(
     val log = LoggerFactory.getLogger("MSG_SERV")
 
     override fun onTextMessage(textMessage: TextMessage) {
-        when(textMessage.textMessage){
-            Commands.START.getCommand() -> {
+        when{
+            textMessage.textMessage.startsWith(Commands.START.getCommand()) -> {
                 personServices.registration(textMessage.user!!,sender)
             }
-            messageSource.getMessage("button.for.creator",null,
+            textMessage.textMessage == messageSource.getMessage("button.for.creator",null,
                 Locale.forLanguageTag(textMessage.user!!.languageCode)) -> {
                     personServices.registrationCreator(
                         textMessage.user,null,null, sender
                     )
                 }
-            messageSource.getMessage("button.free.message",null,
+            textMessage.textMessage == messageSource.getMessage("button.free.message",null,
                 Locale.forLanguageTag(textMessage.user!!.languageCode)) -> {
                     personServices.forFree(textMessage, sender)
                 }

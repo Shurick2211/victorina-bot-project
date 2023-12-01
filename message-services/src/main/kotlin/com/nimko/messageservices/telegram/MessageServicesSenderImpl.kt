@@ -1,11 +1,11 @@
 package com.nimko.messageservices.telegram
 
+import com.nimko.messageservices.services.MessageServicesSender
 import com.nimko.messageservices.telegram.models.message.ChangeInlineMessage
 import com.nimko.messageservices.telegram.models.message.MenuMessage
 import com.nimko.messageservices.telegram.models.message.PollMessage
 import com.nimko.messageservices.telegram.models.message.TextMessage
 import com.nimko.messageservices.telegram.models.others.InlineButton
-import com.nimko.messageservices.services.MessageServicesSender
 import com.nimko.messageservices.telegram.utils.PollType
 import org.telegram.telegrambots.meta.api.methods.groupadministration.CreateChatInviteLink
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChat
@@ -97,7 +97,7 @@ class MessageServicesSenderImpl(
         buttons.forEach{
             val button = InlineKeyboardButton()
             button.text = it.name
-            button.callbackData = it.responseData.toString()
+            button.callbackData = it.responseData
             it.url?.let { url -> button.url = url }
 
             buttonsRow.add(button)

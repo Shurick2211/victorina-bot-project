@@ -32,21 +32,28 @@ class PersonServicesImpl @Autowired constructor(
                 PersonRole.USER,
                 null
             )
-            personUtils.savePerson(person)
-        }
+        } else person.languageCode = user.languageCode
+        personUtils.savePerson(person)
         sender.sendMenu(
-            MenuMessage(user.id.toString(),
-            messageSource.getMessage("message.start",null,
-                Locale.forLanguageTag(user.languageCode)) + user.firstName,
-                listOf(messageSource.getMessage("button.for.creator",null,
-                    Locale.forLanguageTag(user.languageCode)),
-                    messageSource.getMessage("button.free.message",null,
-                        Locale.forLanguageTag(user.languageCode))
+            MenuMessage(
+                user.id.toString(), user.firstName + "! "
+                        + messageSource.getMessage("message.start", null,
+                    Locale.forLanguageTag(user.languageCode)
+                ),
+                listOf(
+                    messageSource.getMessage("button.restart", null,
+                        Locale.forLanguageTag(user.languageCode)
+                    ),
+                    messageSource.getMessage("button.for.creator", null,
+                        Locale.forLanguageTag(user.languageCode)
+                    ),
+                    messageSource.getMessage("button.free.message", null,
+                        Locale.forLanguageTag(user.languageCode)
+                    )
                 )
             )
         )
-
-        personUtils.sendFreeMessage(user.id.toString(),  Locale.forLanguageTag(user.languageCode) ,sender)
+        forFree(TextMessage(user.id.toString()," ", user), sender)
     }
 
     override fun registrationCreator(
@@ -55,21 +62,24 @@ class PersonServicesImpl @Autowired constructor(
         channelIdMessage: ChannelIdMessage?,
         sender: MessageServicesSender
     ) {
+
         //start registration
         if(user != null && responseDataMessage == null && channelIdMessage == null){
             val person = personUtils.getPerson(user.id.toString())!!
-            person.state = PersonState.REGISTRATION_CREATOR
-            personUtils.savePerson(person)
-            sender.sendTextAndInlineButton(
-                TextMessage(person.id,
-                    messageSource.getMessage("message.reg.start",
-                        null,Locale.forLanguageTag(user.languageCode)),
-                    null),
-                listOf(InlineButton(
-                    messageSource.getMessage("button.ready",null,
-                        Locale.forLanguageTag(user.languageCode))
-                    , CallbackData.READY.toString()))
-            )
+            if (person.state == PersonState.FREE){
+                person.state = PersonState.REGISTRATION_CREATOR
+                personUtils.savePerson(person)
+                sender.sendTextAndInlineButton(
+                    TextMessage(person.id,
+                        messageSource.getMessage("message.reg.start",
+                            null,Locale.forLanguageTag(user.languageCode)),
+                        null),
+                    listOf(InlineButton(
+                        messageSource.getMessage("button.ready",null,
+                            Locale.forLanguageTag(user.languageCode))
+                        , CallbackData.READY.toString()))
+                )
+            } else personUtils.sendBusyMessage(user.id.toString(),Locale.forLanguageTag(user.languageCode), sender)
         }
         //add channel for creators
         if(user == null && responseDataMessage == null && channelIdMessage != null){
@@ -133,11 +143,9 @@ class PersonServicesImpl @Autowired constructor(
         //start quiz
         responseDataMessage?.let {
             when{
-
                 responseDataMessage.callbackQuery.data.startsWith(CallbackData.FREE.toString()) -> {
                     val userFree = responseDataMessage.callbackQuery.from
-                    personUtils.sendFreeMessage(userFree.id.toString(),
-                        Locale.forLanguageTag(userFree.languageCode), sender)
+                    forFree(TextMessage(userFree.id.toString(), " ", userFree),sender)
                 }
 
                 else -> {
@@ -160,7 +168,10 @@ class PersonServicesImpl @Autowired constructor(
     }
 
     override fun forFree(textMessage: TextMessage, sender: MessageServicesSender) {
-        personUtils.sendFreeMessage(textMessage.userId,  Locale.forLanguageTag(textMessage.user!!.languageCode) ,sender)
+        val person = personUtils.getPerson(textMessage.userId)!!
+        if (person.state == PersonState.FREE)
+            personUtils.sendFreeMessage(textMessage.userId,  Locale.forLanguageTag(textMessage.user!!.languageCode) ,sender)
+        else personUtils.sendBusyMessage(textMessage.userId, Locale.forLanguageTag(textMessage.user!!.languageCode), sender)
     }
 
     override fun getUtils(): PersonUtils {
