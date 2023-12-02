@@ -66,10 +66,10 @@ export class CreateVictorinaComponent implements OnInit{
     if (this.victorina.questions.length > 0 && this.victorina.name.length > 0 &&
         this.startDate !== null && this.endDate !== null
     ) {
-      this.victorina.startDate = this.startDate.toISOString()
+      this.victorina.startDate = this.startDate
       let end = new Date(this.endDate)
           end.setDate(this.endDate.getDate() + 1)
-      this.victorina.endDate = end.toISOString()
+      this.victorina.endDate = end
       this.isNotReady = false
       console.log(this.victorina.toString())
       this.storage.save(this.victorina)
