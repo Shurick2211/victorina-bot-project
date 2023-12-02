@@ -6,7 +6,6 @@ import com.nimko.bot.utils.PersonState
 import com.nimko.bot.utils.PersonUtils
 import com.nimko.messageservices.services.MessageServicesSender
 import com.nimko.messageservices.telegram.models.message.*
-import com.nimko.messageservices.telegram.models.others.InlineButton
 import com.nimko.messageservices.telegram.utils.CallbackData
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
@@ -34,25 +33,7 @@ class PersonServicesImpl @Autowired constructor(
             )
         } else person.languageCode = user.languageCode
         personUtils.savePerson(person)
-        sender.sendMenu(
-            MenuMessage(
-                user.id.toString(), user.firstName + "! "
-                        + messageSource.getMessage("message.start", null,
-                    Locale.forLanguageTag(user.languageCode)
-                ),
-                listOf(
-                    messageSource.getMessage("button.restart", null,
-                        Locale.forLanguageTag(user.languageCode)
-                    ),
-                    messageSource.getMessage("button.for.creator", null,
-                        Locale.forLanguageTag(user.languageCode)
-                    ),
-                    messageSource.getMessage("button.free.message", null,
-                        Locale.forLanguageTag(user.languageCode)
-                    )
-                )
-            )
-        )
+        if (person.state == PersonState.FREE) personUtils.sendStartMessage(user, sender)
         forFree(TextMessage(user.id.toString()," ", user), sender)
     }
 
@@ -69,16 +50,7 @@ class PersonServicesImpl @Autowired constructor(
             if (person.state == PersonState.FREE){
                 person.state = PersonState.REGISTRATION_CREATOR
                 personUtils.savePerson(person)
-                sender.sendTextAndInlineButton(
-                    TextMessage(person.id,
-                        messageSource.getMessage("message.reg.start",
-                            null,Locale.forLanguageTag(user.languageCode)),
-                        null),
-                    listOf(InlineButton(
-                        messageSource.getMessage("button.ready",null,
-                            Locale.forLanguageTag(user.languageCode))
-                        , CallbackData.READY.toString()))
-                )
+                personUtils.sendStartRegMessage(person.id, Locale.forLanguageTag(user.languageCode), sender)
             } else personUtils.sendBusyMessage(user.id.toString(),Locale.forLanguageTag(user.languageCode), sender)
         }
         //add channel for creators
@@ -87,22 +59,16 @@ class PersonServicesImpl @Autowired constructor(
                 if (personUtils.checkUserAsChannelMember(channelIdMessage.channelId,channelIdMessage.adminId,sender) == null)
                     TextMessage(channelIdMessage.adminId,
                         messageSource.getMessage("message.no.admin.channel",
-                            null,Locale.forLanguageTag(channelIdMessage.user.languageCode))
-                        , null)
+                            null,Locale.forLanguageTag(channelIdMessage.user.languageCode)), null)
                 else {
                     personUtils.saveChannelForAdmin(channelIdMessage, sender)
                     TextMessage(channelIdMessage.adminId,
                         messageSource.getMessage("message.reg.channel",
-                            null,Locale.forLanguageTag(channelIdMessage.user.languageCode))
-                        , null)
+                            null,Locale.forLanguageTag(channelIdMessage.user.languageCode)), null)
                 }
-
-            sender.sendTextAndInlineButton(mess,
-                listOf(InlineButton(messageSource.getMessage("button.ready",null,
-                    Locale.forLanguageTag(channelIdMessage.user.languageCode))
-                    , CallbackData.READY.toString()))
-            )
+            personUtils.sendReadyMessage(mess, Locale.forLanguageTag(channelIdMessage.user.languageCode), sender)
         }
+
         //end of registration
         if(user != null && responseDataMessage != null && channelIdMessage == null){
             val person = personUtils.getPerson(user.id.toString())!!
@@ -126,8 +92,7 @@ class PersonServicesImpl @Autowired constructor(
             println(pollAnswer)
             val person = personUtils.getPerson(pollAnswer.userId)!!
             val currentQuiz = person.quizes!![person.quizes!!.size - 1]
-            val victorina = victorinaServices.getVictorinaById(
-                currentQuiz.victorinaId)
+            val victorina = victorinaServices.getVictorinaById(currentQuiz.victorinaId)
             currentQuiz.userAnswers.add(pollAnswer.answers)
             if(currentQuiz.userAnswers.size == victorina.questions.size) {
                 person.state = PersonState.FREE
