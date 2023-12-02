@@ -37,7 +37,7 @@
     </mat-form-field>
 
 
-     <mat-slide-toggle style="margin-left: 30px" [(ngModel)]="isManyAnswer"  [disabled]="victorina.questions.length > 0"
+     <mat-slide-toggle style="margin-left: 30px" [(ngModel)]="victorina.isManyAnswer"  [disabled]="victorina.questions.length > 0"
                        (click)="clicManyAnswers()" > - Many Answers (Quiz(1-answer)/Poll(many-answers))
     </mat-slide-toggle>
   </div>
@@ -49,13 +49,13 @@
   <hr>
   <h4>New question:</h4>
   <div>
-    <app-question [question]="q" (quest)="addToInfo($event)" [isActive]="true" [isManyAnswer]="isManyAnswer"></app-question>
+    <app-question [question]="q" (quest)="addToInfo($event)" [isActive]="true" [isManyAnswer]="victorina.isManyAnswer"></app-question>
   </div>
   <hr>
   <h4>Saved question:</h4>
   <div *ngFor="let quest of victorina.questions; let i = index;">
     <app-question [question]="quest"  (deleteQ)="deleteQuestion(i)" [num]="i+1"
-                  (quest) = "editToInfo($event, i)" [isActive]="false" [isManyAnswer]="isManyAnswer"></app-question>
+                  (quest) = "editToInfo($event, i)" [isActive]="false" [isManyAnswer]="victorina.isManyAnswer"></app-question>
   </div>
 
 

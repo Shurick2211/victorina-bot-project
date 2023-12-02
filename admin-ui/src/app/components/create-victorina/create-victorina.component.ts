@@ -23,7 +23,7 @@ export class CreateVictorinaComponent implements OnInit{
 
  endDate:Date | null = null
  startDate: Date | null = null
- isManyAnswer = false
+
 
 
   constructor(protected storage:StorageService, private activeRoute:ActivatedRoute, private router:Router) {
@@ -31,14 +31,14 @@ export class CreateVictorinaComponent implements OnInit{
     if (!this.num) {
       this.victorina = new Victorina(null,'','',
           new Array<Question>(), storage.person!.id,null, null,
-          null, null, null);
+          null, false,null, null);
       this.title = 'Create new victorina!'
     } else {
       this.victorina = storage.victorinas[this.num]
         if (this.victorina.startDate !== null) this.startDate = new Date(this.victorina.startDate)
         if (this.victorina.endDate !== null) this.endDate = new Date(this.victorina.endDate)
       this.title = 'Edit victorina!'
-      this.isManyAnswer = this.victorina.questions[0].rightAnswer.length > 1
+      this.victorina.isManyAnswer = this.victorina.questions[0].rightAnswer.length > 1
     }
     this.q = new Question('',['',''],Array.of<number>(-1))
   }
@@ -79,14 +79,14 @@ export class CreateVictorinaComponent implements OnInit{
       this.storage.save(this.victorina)
       this.victorina = new Victorina(null,'','',
         new Array<Question>(), this.storage.person!.id,null,
-        null, null, null,null);
+        null, null, false,null,null);
       this.router.navigateByUrl('/create')
     } else this.isNotReady = true
 
   }
 
   clicManyAnswers(){
-    if (this.isManyAnswer)
+    if (this.victorina.isManyAnswer)
       this.q.rightAnswer = new Array<number>()
     else  this.q.rightAnswer = Array.of<number>(-1)
   }

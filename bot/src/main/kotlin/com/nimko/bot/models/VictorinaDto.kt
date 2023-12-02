@@ -18,6 +18,7 @@ data class VictorinaDto(
     val channel:Channel?,
     var winnerId:String?,
     var rightsAnsweredUserId: MutableList<String>?,
+    val isManyAnswer:Boolean,
     val startDate:String,
     val endDate:String
 ) {
@@ -29,6 +30,7 @@ data class VictorinaDto(
             questions = questions,
             ownerId = ownerId,
             channel = channel,
+            isManyAnswer = isManyAnswer,
             startDate = LocalDateTime.ofInstant(
                 Instant.from( DateTimeFormatter.ISO_INSTANT.parse(startDate)), ZoneId.systemDefault()),
             endDate = LocalDateTime.ofInstant(
