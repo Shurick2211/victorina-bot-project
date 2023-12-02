@@ -1,28 +1,54 @@
-<div >
+<div class="root-element">
   <table class="table table-bordered border-dark">
     <thead>
     <th>Name</th>
+    <th>Channel</th>
     <th>Title</th>
     <th>Questions</th>
     <th>Actions</th>
     </thead>
     <tbody>
-    <tr *ngFor="let victorina of storage.victorinas;let i = index;">
+    <tr *ngFor="let victorina of storage.victorinas | paginate: {itemsPerPage: iPerPage, currentPage: curPage} ;let i = index; ">
       <td> {{storage.victorinas[i].name}}</td>
+      <td> {{storage.victorinas[i].channel?.channelName}}</td>
       <td> {{storage.victorinas[i].title}}</td>
       <td>
-          <ul *ngFor="let question of storage.victorinas[i].questions; let in = index">
-            <li>
-              {{in+1}} {{storage.victorinas[i].questions[in].text}}
-            </li>
-          </ul>
+        <mat-accordion >
+        <mat-expansion-panel (opened)="panelOpenState = true"
+                             (closed)="panelOpenState = false">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Questions
+            </mat-panel-title>
+            <mat-panel-description>
+               {{panelOpenState ? 'open' : 'closed'}}
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+            <ul *ngFor="let question of storage.victorinas[i].questions; let in = index">
+              <li>
+                {{in+1}} {{storage.victorinas[i].questions[in].text}}
+              </li>
+            </ul>
+        </mat-expansion-panel>
+        </mat-accordion>
+
       </td>
       <td>
-        <button style="margin-bottom:10px;"  class="btn btn-secondary" name="edit" [routerLink]="['/edit',i]">Edit</button>
-        <br>
-        <button  class="btn btn-secondary" name="delete" (click)="storage.delete(i)">Delete</button>
+        <button mat-fab color="primary" aria-label="Edit" [routerLink]="['/edit',i]">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-fab color="primary" aria-label="Delete" (click)="storage.delete(i)">
+          <mat-icon>delete</mat-icon>
+        </button>
+
       </td>
     </tr>
     </tbody>
   </table>
+
+  <div style="text-align: end">
+    <pagination-controls  (pageChange) = "curPage=$event"></pagination-controls>
+  </div>
+
+
 </div>

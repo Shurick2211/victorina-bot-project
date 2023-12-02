@@ -36,12 +36,11 @@ export class StorageService {
 
     if (this.person!!.role === PersonRole.ADMIN)
       this.api.getAllVictorinas().subscribe(response => {
-        this.victorinas = response
-        console.log(this.victorinas)
+        this.victorinas = response.reverse()
       })
     else this.api.getAllUserVictorinas(this.person!!.id).subscribe(
       response =>
-        this.victorinas = response
+        this.victorinas = response.reverse()
     )
   }
 
