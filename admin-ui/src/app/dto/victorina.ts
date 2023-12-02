@@ -6,7 +6,7 @@ export class Victorina {
   constructor(public id: unknown, public name: string, public title: string,
               public questions: Question[], public ownerId: string, public channel: Channel | null,
               public winnerId: string | null,public rightsAnsweredUserId: Array<String>|null, public isManyAnswer:boolean,
-              public isActive:boolean, public startDate: string | null, public endDate: string | null) {
+              public isActive:boolean, public startDate: Date | null, public endDate: Date | null) {
 
   }
 

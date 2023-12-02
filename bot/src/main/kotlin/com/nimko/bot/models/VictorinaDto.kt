@@ -2,10 +2,7 @@ package com.nimko.bot.models
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
-import java.time.Instant
 import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 
 @Document("victorinas")
 data class VictorinaDto(
@@ -20,8 +17,8 @@ data class VictorinaDto(
     var rightsAnsweredUserId: MutableList<String>?,
     var isActive:Boolean,
     val isManyAnswer:Boolean,
-    val startDate:String,
-    val endDate:String
+    val startDate:LocalDateTime,
+    val endDate:LocalDateTime
 ) {
     fun toVictorina():Victorina{
         return Victorina(
@@ -33,10 +30,8 @@ data class VictorinaDto(
             channel = channel,
             isManyAnswer = isManyAnswer,
             isActive = isActive,
-            startDate = LocalDateTime.ofInstant(
-                Instant.from( DateTimeFormatter.ISO_INSTANT.parse(startDate)), ZoneId.systemDefault()),
-            endDate = LocalDateTime.ofInstant(
-                Instant.from( DateTimeFormatter.ISO_INSTANT.parse(endDate)), ZoneId.systemDefault())
+            startDate = startDate,
+            endDate = endDate
         )
     }
 
