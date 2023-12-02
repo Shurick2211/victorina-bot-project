@@ -128,8 +128,8 @@ class PersonUtils @Autowired constructor(
     }
 
     fun  sendQuestion(person: Person, victorina:Victorina, numQuestion:Int, sender: MessageServicesSender){
-        val type = if (victorina.questions[numQuestion].rightAnswer.size < 2)
-            PollType.QUIZ else PollType.REGULAR
+        val type = if (victorina.isManyAnswer) PollType.REGULAR
+             else  PollType.QUIZ
         sender.sendOnePoll(
             PollMessage(
                 person.id, victorina.questions[numQuestion].text, victorina.questions[numQuestion].answers,
