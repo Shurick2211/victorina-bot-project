@@ -11,27 +11,23 @@ import {ActivatedRoute, Router} from "@angular/router";
   styleUrls: ['./create-victorina.component.scss']
 })
 export class CreateVictorinaComponent implements OnInit{
+
   @Input()
   title=''
 
   @Input()
-  victorina: Victorina ;
+  victorina: Victorina;
   q:Question ;
   isNotReady = false;
   num = undefined;
 
-
  endDate:Date | null = null
  startDate: Date | null = null
 
-
-
-  constructor(protected storage:StorageService, private activeRoute:ActivatedRoute, private router:Router) {
+  constructor(protected storage:StorageService, activeRoute:ActivatedRoute, private router:Router) {
     this.num = activeRoute.snapshot.params['id']
     if (!this.num) {
-      this.victorina = new Victorina(null,'','',
-          new Array<Question>(), storage.person!.id,null, null,
-          null, false,null, null);
+      this.victorina = this.newVictorina()
       this.title = 'Create new victorina!'
     } else {
       this.victorina = storage.victorinas[this.num]
@@ -77,9 +73,7 @@ export class CreateVictorinaComponent implements OnInit{
       this.isNotReady = false
       console.log(this.victorina.toString())
       this.storage.save(this.victorina)
-      this.victorina = new Victorina(null,'','',
-        new Array<Question>(), this.storage.person!.id,null,
-        null, null, false,null,null);
+      this.victorina = this.newVictorina()
       this.router.navigateByUrl('/create')
     } else this.isNotReady = true
 
@@ -89,5 +83,11 @@ export class CreateVictorinaComponent implements OnInit{
     if (this.victorina.isManyAnswer)
       this.q.rightAnswer = new Array<number>()
     else  this.q.rightAnswer = Array.of<number>(-1)
+  }
+
+  newVictorina():Victorina{
+    return  new Victorina(null,'','',
+      new Array<Question>(), this.storage.person!.id,null,
+      null, null, false, false, null,null);
   }
 }

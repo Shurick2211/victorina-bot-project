@@ -18,19 +18,21 @@ data class VictorinaDto(
     val channel:Channel?,
     var winnerId:String?,
     var rightsAnsweredUserId: MutableList<String>?,
+    var isActive:Boolean,
     val isManyAnswer:Boolean,
     val startDate:String,
     val endDate:String
 ) {
     fun toVictorina():Victorina{
         return Victorina(
-            id=id,
+            id = id,
             name = name,
             title = title,
             questions = questions,
             ownerId = ownerId,
             channel = channel,
             isManyAnswer = isManyAnswer,
+            isActive = isActive,
             startDate = LocalDateTime.ofInstant(
                 Instant.from( DateTimeFormatter.ISO_INSTANT.parse(startDate)), ZoneId.systemDefault()),
             endDate = LocalDateTime.ofInstant(

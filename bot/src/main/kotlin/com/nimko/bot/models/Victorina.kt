@@ -11,6 +11,7 @@ data class Victorina(
     val ownerId:String,
     val channel:Channel?,
     val isManyAnswer:Boolean,
+    var isActive:Boolean,
     val startDate:LocalDateTime,
     val endDate:LocalDateTime
 ) {
