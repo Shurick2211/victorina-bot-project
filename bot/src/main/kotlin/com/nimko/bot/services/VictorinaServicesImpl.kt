@@ -1,6 +1,6 @@
 package com.nimko.bot.services
 
-import com.nimko.bot.models.Victorina
+import com.nimko.bot.models.VictorinaDto
 import com.nimko.bot.repositories.VictorinaRepo
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -14,12 +14,10 @@ class VictorinaServicesImpl @Autowired constructor(
     val victorinaRepo: VictorinaRepo
 ):VictorinaServices {
 
-    lateinit var list:List<Victorina>
-    override fun getActiveVictorin(): List<Victorina> {
+    lateinit var list:List<VictorinaDto>
+    override fun getActiveVictorin(): List<VictorinaDto> {
         val today = LocalDateTime.now()
-        list = victorinaRepo.findAll().map { it.toVictorina() }.filter {
-            it.endDate.isAfter(today) && it.startDate.isBefore(today)
-        }.toList()
+        list = victorinaRepo.findAllByEndDateAfter(today).filter { it.startDate.isBefore(today) }
         runBackgroundSaveState()
         return list
     }
@@ -40,9 +38,12 @@ class VictorinaServicesImpl @Autowired constructor(
 
 
 
-    override fun getVictorinaById(id: String): Victorina {
+    override fun getVictorinaById(id: String): VictorinaDto {
         return list.first{ it.id == id }
     }
+
+    override fun getEndedVictorinsMarcAsActive(): List<VictorinaDto> = victorinaRepo.findAllByIsActiveIsTrueAndEndDateBefore(
+        LocalDateTime.now())
 
 
     fun runBackgroundSaveState() = runBlocking {

@@ -2,7 +2,7 @@ package com.nimko.bot.utils
 
 import com.nimko.bot.models.Person
 import com.nimko.bot.models.Quiz
-import com.nimko.bot.models.Victorina
+import com.nimko.bot.models.VictorinaDto
 import com.nimko.bot.repositories.PersonRepo
 import com.nimko.bot.services.VictorinaServices
 import com.nimko.messageservices.services.MessageServicesSender
@@ -50,12 +50,12 @@ class PersonUtilsImpl @Autowired constructor(
         sender.sendChangeInlineButton(ChangeInlineMessage(chatId, messageId, emptyList()))
     }
 
-    private fun isChannelUser(person: Person, victorina: Victorina, sender: MessageServicesSender):Boolean?{
+    private fun isChannelUser(person: Person, victorina: VictorinaDto, sender: MessageServicesSender):Boolean?{
         return if (victorina.channel != null) checkUserAsChannelMember(victorina.channel.channelId, person.id, sender)
         else true
     }
 
-    override fun sendStartVictorinaMessage(person: Person, victorina: Victorina, sender: MessageServicesSender) {
+    override fun sendStartVictorinaMessage(person: Person, victorina: VictorinaDto, sender: MessageServicesSender) {
         val mess = TextMessage(person.id, victorina.title,null)
         if (isChannelUser(person, victorina, sender) == true) {
             if (person.quizes == null) person.quizes = ArrayList()
@@ -133,7 +133,7 @@ class PersonUtilsImpl @Autowired constructor(
         } else  false
     }
 
-    override fun  sendQuestion(person: Person, victorina:Victorina, numQuestion:Int, sender: MessageServicesSender){
+    override fun  sendQuestion(person: Person, victorina:VictorinaDto, numQuestion:Int, sender: MessageServicesSender){
         val type = if (victorina.isManyAnswer) PollType.REGULAR
              else  PollType.QUIZ
         sender.sendOnePoll(
@@ -152,7 +152,7 @@ class PersonUtilsImpl @Autowired constructor(
         }
     }
 
-    override fun checkVictorinaResult(quiz: Quiz, victorina: Victorina):Quiz {
+    override fun checkVictorinaResult(quiz: Quiz, victorina: VictorinaDto):Quiz {
         var rA = 0
         for (i in 0 until quiz.userAnswers.size){
             if(quiz.userAnswers[i].equals(victorina.questions[i].rightAnswer.toList())) rA++
@@ -163,7 +163,7 @@ class PersonUtilsImpl @Autowired constructor(
         return quiz
     }
 
-    override fun sendFinishQuizMessage(pollAnswer: PollAnswer, victorina: Victorina, currentQuiz:Quiz, sender: MessageServicesSender){
+    override fun sendFinishQuizMessage(pollAnswer: PollAnswer, victorina: VictorinaDto, currentQuiz:Quiz, sender: MessageServicesSender){
         val locale = Locale.forLanguageTag(pollAnswer.userLang)
         sender.sendText(
             TextMessage(pollAnswer.userId,

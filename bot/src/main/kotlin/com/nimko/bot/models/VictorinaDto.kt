@@ -20,19 +20,4 @@ data class VictorinaDto(
     val startDate:LocalDateTime,
     val endDate:LocalDateTime
 ) {
-    fun toVictorina():Victorina{
-        return Victorina(
-            id = id,
-            name = name,
-            title = title,
-            questions = questions,
-            ownerId = ownerId,
-            channel = channel,
-            isManyAnswer = isManyAnswer,
-            isActive = isActive,
-            startDate = startDate,
-            endDate = endDate
-        )
-    }
-
 }

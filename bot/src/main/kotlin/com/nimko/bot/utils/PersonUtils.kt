@@ -2,7 +2,7 @@ package com.nimko.bot.utils
 
 import com.nimko.bot.models.Person
 import com.nimko.bot.models.Quiz
-import com.nimko.bot.models.Victorina
+import com.nimko.bot.models.VictorinaDto
 import com.nimko.messageservices.services.MessageServicesSender
 import com.nimko.messageservices.telegram.models.message.ChannelIdMessage
 import com.nimko.messageservices.telegram.models.message.PollAnswer
@@ -21,19 +21,19 @@ interface PersonUtils {
 
     fun deleteInlineKeyboard(chatId:String, messageId:String, sender: MessageServicesSender)
 
-    fun sendStartVictorinaMessage(person: Person, victorina: Victorina, sender: MessageServicesSender)
+    fun sendStartVictorinaMessage(person: Person, victorina: VictorinaDto, sender: MessageServicesSender)
 
     fun saveChannelForAdmin(channelIdMessage: ChannelIdMessage, sender: MessageServicesSender)
 
     fun sendFreeMessage(userId: String, lang: Locale, sender: MessageServicesSender)
 
-    fun sendQuestion(person: Person, victorina:Victorina, numQuestion:Int, sender: MessageServicesSender)
+    fun sendQuestion(person: Person, victorina:VictorinaDto, numQuestion:Int, sender: MessageServicesSender)
 
     fun checkUserAsChannelMember(channelId: String, userId: String, sender: MessageServicesSender):Boolean?
 
-    fun checkVictorinaResult(quiz: Quiz, victorina: Victorina):Quiz
+    fun checkVictorinaResult(quiz: Quiz, victorina: VictorinaDto):Quiz
 
-    fun sendFinishQuizMessage(pollAnswer: PollAnswer, victorina: Victorina, currentQuiz:Quiz ,sender: MessageServicesSender)
+    fun sendFinishQuizMessage(pollAnswer: PollAnswer, victorina: VictorinaDto, currentQuiz:Quiz ,sender: MessageServicesSender)
 
     fun sendBusyMessage(userId: String, lang: Locale, sender: MessageServicesSender)
 
