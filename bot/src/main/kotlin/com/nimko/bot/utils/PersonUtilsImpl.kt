@@ -10,6 +10,7 @@ import com.nimko.messageservices.telegram.models.message.*
 import com.nimko.messageservices.telegram.models.others.InlineButton
 import com.nimko.messageservices.telegram.utils.CallbackData
 import com.nimko.messageservices.telegram.utils.PollType
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.MessageSource
@@ -30,7 +31,10 @@ class PersonUtilsImpl @Autowired constructor(
 
     @Value("\${my.address}") private lateinit var url:String
 
+    val log = LoggerFactory.getLogger("PERS_UTIL")
+
    override fun sendRegistrationFinishMessage(userId: String,lang:Locale, sender: MessageServicesSender) {
+
         sender.sendTextAndInlineButton(TextMessage(userId,
             messageSource.getMessage("message.reg.finish",null, lang), null),
             listOf(InlineButton(messageSource.getMessage("button.link",null, lang),
@@ -90,6 +94,7 @@ class PersonUtilsImpl @Autowired constructor(
     }
 
     override fun sendFreeMessage(userId: String, lang: Locale, sender: MessageServicesSender) {
+        log.info(lang.toString())
         val listButton = ArrayList<InlineButton>()
         victorinaServices.getActiveVictorin().forEach {
             if(!isEndedVictorinaByUser(userId, it.id!!)) {
