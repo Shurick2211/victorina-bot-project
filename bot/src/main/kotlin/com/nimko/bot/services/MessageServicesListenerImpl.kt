@@ -1,5 +1,6 @@
 package com.nimko.bot.services
 
+import com.nimko.bot.models.VictorinaDto
 import com.nimko.bot.utils.PersonState
 import com.nimko.messageservices.services.MessageServicesListener
 import com.nimko.messageservices.services.MessageServicesSender
@@ -7,18 +8,20 @@ import com.nimko.messageservices.telegram.models.message.ChannelIdMessage
 import com.nimko.messageservices.telegram.models.message.PollAnswer
 import com.nimko.messageservices.telegram.models.message.ResponseDataMessage
 import com.nimko.messageservices.telegram.models.message.TextMessage
+import com.nimko.messageservices.telegram.utils.CallbackData
 import com.nimko.messageservices.telegram.utils.Commands
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.support.ResourceBundleMessageSource
 import org.springframework.stereotype.Service
 import java.util.*
+import kotlin.random.Random
 
 @Service
 class MessageServicesListenerImpl @Autowired constructor(
     val personServices: PersonServices,
     val messageSource: ResourceBundleMessageSource
-):MessageServicesListener {
+):MessageServicesListener, PrizeServices {
 
     lateinit var sender: MessageServicesSender
 
@@ -40,21 +43,29 @@ class MessageServicesListenerImpl @Autowired constructor(
                     personServices.forFree(textMessage, sender)
                 }
             else -> {
-                log.info(textMessage.toString())
+                val person = personServices.getUtils().getPerson(textMessage.userId)!!
+                if (person.state == PersonState.PRIZE){
+                    person.state = PersonState.FREE
+                    personServices.getUtils().sendDeliveryAddress(textMessage,sender)
+                } else log.info(textMessage.toString())
             }
         }
     }
 
     override fun onDataMessage(responseDataMessage: ResponseDataMessage) {
         val person = personServices.getUtils().getPerson(responseDataMessage.callbackQuery.from.id.toString())!!
-
-        if (person.state == PersonState.REGISTRATION_CREATOR)
-            personServices.registrationCreator(
+        when{
+            person.state == PersonState.REGISTRATION_CREATOR -> personServices.registrationCreator(
                 responseDataMessage.callbackQuery.from,responseDataMessage,null,sender)
-        else
-            personServices.onQuiz(responseDataMessage.callbackQuery.from,
-                responseDataMessage,null, sender)
 
+            responseDataMessage.callbackQuery.data.startsWith(CallbackData.PRIZE.toString()) -> {
+                person.state = PersonState.PRIZE
+                personServices.getUtils().savePerson(person)
+            }
+
+            else ->  personServices.onQuiz(responseDataMessage.callbackQuery.from,
+                responseDataMessage,null, sender)
+        }
     }
 
     override fun onChannelId(channelIdMessage: ChannelIdMessage) {
@@ -62,7 +73,7 @@ class MessageServicesListenerImpl @Autowired constructor(
             ,channelIdMessage,sender)
     }
 
-    override fun getSender(sender: MessageServicesSender) {
+    override fun addSender(sender: MessageServicesSender) {
         this.sender = sender
     }
 
@@ -70,4 +81,19 @@ class MessageServicesListenerImpl @Autowired constructor(
     override fun onPollAnswer(pollAnswer: PollAnswer) {
         personServices.onQuiz(null,null,pollAnswer,sender)
     }
+
+    override fun playPrize(victorinas: List<VictorinaDto>) {
+        victorinas.forEach {
+            if (it.rightsAnsweredUserId != null) {
+                val winnerNum = getWinnerNum(it.rightsAnsweredUserId!!)
+                val winner = personServices.getUtils().getPerson(it.rightsAnsweredUserId!![winnerNum])!!
+                personServices.getUtils().sendVictorinaWinnerMessage(winner, it, sender)
+            }
+        }
+    }
+
+    private fun getWinnerNum(userIds:List<String>):Int{
+        return Random.nextInt(userIds.size)
+    }
+
 }

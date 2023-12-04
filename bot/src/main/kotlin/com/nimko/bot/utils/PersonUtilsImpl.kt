@@ -218,4 +218,51 @@ class PersonUtilsImpl @Autowired constructor(
             )
         )
     }
+
+    override fun sendVictorinaWinnerMessage(winner:Person,
+        victorina: VictorinaDto,
+        sender: MessageServicesSender
+    ) {
+        victorina.rightsAnsweredUserId!!.forEach { userId ->
+            val person = getPerson(userId)!!
+            if (userId == winner.id)
+                sender.sendTextAndInlineButton(
+                    TextMessage(winner.id,
+                        victorina.name +
+                        messageSource.getMessage("message.for.winner", null,
+                            Locale.forLanguageTag(winner.languageCode))
+                        , null),
+                    listOf(
+                        InlineButton(
+                            messageSource.getMessage("button.prize", null,
+                                Locale.forLanguageTag(winner.languageCode)), CallbackData.PRIZE.toString()
+                        )
+                    )
+                )
+             else sender.sendText(
+                TextMessage(userId,
+                    victorina.name +
+                    messageSource.getMessage("message.victorina.winner", null,
+                        Locale.forLanguageTag(person.languageCode)) + victorina.rightsAnsweredUserId!!.size + " " +
+                            messageSource.getMessage("message.victorina.winner.2", null,
+                                Locale.forLanguageTag(person.languageCode))  + (victorina.rightsAnsweredUserId!!.indexOf(winner.id)+1).toString() + " \n" +
+                            messageSource.getMessage("message.victorina.winner.3", null,
+                                Locale.forLanguageTag(person.languageCode)) + winner.firstName + " " + (winner.lastName ?: "") + "!"
+                    , null)
+            )
+
+        }
+        victorinaServices.saveWinner(winner.id, victorina.id!!)
+    }
+
+    override fun sendDeliveryAddress(winnerMess: TextMessage, sender: MessageServicesSender) {
+        val victorina = victorinaServices.getOwnerVictorinaIdByWinnerId(winnerMess.userId)
+        val owner = getPerson(victorina.ownerId)!!
+        sender.sendText(TextMessage(owner.id,
+            victorina.name + messageSource.getMessage("message.owner", null, Locale.forLanguageTag(owner.languageCode)) +
+                    winnerMess.user!!.userName +" : " + winnerMess.textMessage
+            ,null))
+    }
+
+
 }

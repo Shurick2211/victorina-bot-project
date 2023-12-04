@@ -46,7 +46,7 @@ class TelegramListenerImpl(
 
     override fun getBot(bot: TelegramBot) {
         val sender = MessageServicesSenderImpl(bot)
-        messageListener.getSender(sender)
+        messageListener.addSender(sender)
     }
 
 

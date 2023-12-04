@@ -42,4 +42,8 @@ interface PersonUtils {
     fun sendStartRegMessage(userId:String, lang:Locale, sender: MessageServicesSender)
 
     fun sendStartMessage(user:User, sender: MessageServicesSender)
+
+    fun sendVictorinaWinnerMessage(winner:Person, victorina: VictorinaDto, sender: MessageServicesSender)
+
+    fun sendDeliveryAddress(winnerMess: TextMessage, sender: MessageServicesSender)
 }

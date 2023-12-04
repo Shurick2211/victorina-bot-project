@@ -10,7 +10,7 @@ interface MessageServicesListener {
 
     fun onChannelId(channelIdMessage: ChannelIdMessage)
 
-    fun getSender(sender: MessageServicesSender)
+    fun addSender(sender: MessageServicesSender)
 
     fun onPollAnswer(pollAnswer: PollAnswer)
 }
