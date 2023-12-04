@@ -46,6 +46,7 @@ class MessageServicesListenerImpl @Autowired constructor(
                 val person = personServices.getUtils().getPerson(textMessage.userId)!!
                 if (person.state == PersonState.PRIZE){
                     person.state = PersonState.FREE
+                    personServices.getUtils().savePerson(person)
                     personServices.getUtils().sendDeliveryAddress(textMessage,sender)
                 } else log.info(textMessage.toString())
             }
@@ -60,6 +61,9 @@ class MessageServicesListenerImpl @Autowired constructor(
 
             responseDataMessage.callbackQuery.data.startsWith(CallbackData.PRIZE.toString()) -> {
                 person.state = PersonState.PRIZE
+                personServices.getUtils().deleteInlineKeyboard(responseDataMessage.chatId,
+                    responseDataMessage.callbackQuery.message.messageId.toString(), sender)
+                responseDataMessage.callbackQuery.data
                 personServices.getUtils().savePerson(person)
             }
 
