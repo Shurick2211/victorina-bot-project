@@ -10,6 +10,8 @@ interface VictorinaRepo: MongoRepository<VictorinaDto,String>{
 
     fun findAllByIsActiveIsTrueAndEndDateBefore(date: LocalDateTime):List<VictorinaDto>
 
+    fun findAllByIsActiveIsTrueAndHasPrizeIsTrueAndEndDateBefore(date: LocalDateTime):List<VictorinaDto>
+
     fun findAllByEndDateAfter(date: LocalDateTime):List<VictorinaDto>
 
     fun findByIsActiveIsTrueAndWinnerId(winnerId:String):VictorinaDto

@@ -88,6 +88,7 @@ export class CreateVictorinaComponent implements OnInit{
   newVictorina():Victorina{
     return  new Victorina(null,'','',
       new Array<Question>(), this.storage.person!.id,null,
-      null, null, false, false, null,null);
+      null, null, false, 0,false,
+      false,null,null);
   }
 }

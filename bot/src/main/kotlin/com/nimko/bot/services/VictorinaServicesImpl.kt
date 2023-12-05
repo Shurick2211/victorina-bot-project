@@ -18,7 +18,15 @@ class VictorinaServicesImpl @Autowired constructor(
     override fun getActiveVictorin(): List<VictorinaDto> {
         val today = LocalDateTime.now()
         list = victorinaRepo.findAllByEndDateAfter(today).filter { it.startDate.isBefore(today) }
-        runBackgroundSaveState()
+        runBackgroundSaveState {
+            list.forEach {
+                if(!it.isActive) {
+                    val victorina = victorinaRepo.findById(it.id!!).get()
+                    victorina.isActive = true
+                    victorinaRepo.save(victorina)
+                }
+            }
+        }
         return list
     }
 
@@ -42,7 +50,7 @@ class VictorinaServicesImpl @Autowired constructor(
         return list.first{ it.id == id }
     }
 
-    override fun getEndedVictorinsMarcAsActive(): List<VictorinaDto> = victorinaRepo.findAllByIsActiveIsTrueAndEndDateBefore(
+    override fun getEndedVictorinsMarcAsActive(): List<VictorinaDto> = victorinaRepo.findAllByIsActiveIsTrueAndHasPrizeIsTrueAndEndDateBefore(
         LocalDateTime.now())
 
     override fun getOwnerVictorinaIdByWinnerId(winnerId: String): VictorinaDto {
@@ -52,20 +60,28 @@ class VictorinaServicesImpl @Autowired constructor(
         return victorina
     }
 
+    override fun addParticipants(victorinaId: String) {
+        runBackgroundSaveState {
+            val victorina = victorinaRepo.findById(victorinaId).get()
+            victorina.numberParticipants += 1
+            victorinaRepo.save(victorina)
+        }
+    }
 
-    fun runBackgroundSaveState() = runBlocking {
+
+    fun runBackgroundSaveState(func:() -> Unit) = runBlocking {
         launch(Dispatchers.IO) {
-            saveActive()
+            func.invoke()
         }
     }
-    private suspend fun saveActive(){
-        list.forEach {
-            if(!it.isActive) {
-                val victorina = victorinaRepo.findById(it.id!!).get()
-                victorina.isActive = true
-                victorinaRepo.save(victorina)
-            }
-        }
-    }
+//    private suspend fun saveActive(){
+//        list.forEach {
+//            if(!it.isActive) {
+//                val victorina = victorinaRepo.findById(it.id!!).get()
+//                victorina.isActive = true
+//                victorinaRepo.save(victorina)
+//            }
+//        }
+//    }
 
 }
