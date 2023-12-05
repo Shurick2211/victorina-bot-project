@@ -1,0 +1,44 @@
+<div style="font-size: large; margin-left: 10px">
+  <h1 style="text-align: center">Statistic!</h1>
+  <p><b>Name:</b> {{victorina.name}}</p>
+  <p><b>Date start:</b> {{victorina.startDate|date}} - end: {{victorina.endDate|date}}</p>
+  <p><b>Title:</b> {{victorina.title}}</p>
+  <p *ngIf="victorina.winnerId !== null" >
+    <b>WinnerId: </b>
+    <a class="button-like" (click)="getWinner()">{{victorina.winnerId}}</a>
+    <span *ngIf="winner !== null"> {{winner.firstName}}: {{winner.userName}}</span>
+  </p>
+  <p *ngIf="isAdmin">
+    <b>OwnerId: </b>
+    <a class="button-like" (click)="getOwner()">{{victorina.ownerId}}</a>
+    <span  *ngIf="owner !== null"> {{owner.firstName}}: {{owner.userName}}</span>
+  </p>
+  <p *ngIf="victorina.channel !== null"><b>Channel:</b> {{victorina.channel.channelName}}</p>
+  <p><b>Number participants:</b> {{victorina.numberParticipants}}</p>
+  <p><b>Number right answered:</b> {{victorina.rightsAnsweredUserId?.length}}</p>
+  <p><b>Is active:</b> {{victorina.isActive}}. <b>Has prize:</b> {{victorina.hasPrize}}</p>
+  <hr>
+
+  <div style="width: 90%">
+    <mat-accordion >
+      <mat-expansion-panel (opened)="panelOpenState = true"
+                           (closed)="panelOpenState = false">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Questions
+          </mat-panel-title>
+          <mat-panel-description>
+            {{panelOpenState ? 'open' : 'closed'}}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <ul *ngFor="let question of victorina.questions; let in = index">
+          <li>
+            {{in+1}} {{victorina.questions[in].text}}
+          </li>
+        </ul>
+      </mat-expansion-panel>
+    </mat-accordion>
+
+  </div>
+</div>
+

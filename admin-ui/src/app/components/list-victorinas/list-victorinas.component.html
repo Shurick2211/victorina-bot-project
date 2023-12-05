@@ -2,15 +2,20 @@
   <table class="table table-bordered border-dark">
     <thead>
     <th>Name</th>
-    <th>Channel</th>
+    <th>Period</th>
+    <th>OwnerId/Channel</th>
     <th>Title</th>
     <th>Questions</th>
     <th>Actions</th>
     </thead>
     <tbody>
     <tr *ngFor="let victorina of storage.victorinas | paginate: {itemsPerPage: iPerPage, currentPage: curPage} ;let i = index; ">
-      <td> {{storage.victorinas[i].name}}</td>
-      <td> {{storage.victorinas[i].channel?.channelName}}</td>
+      <td><a [routerLink]="'/statistic/'+storage.victorinas[i].id"> {{storage.victorinas[i].name}}</a></td>
+      <td>{{storage.victorinas[i].startDate|date}}  <br>{{storage.victorinas[i].endDate|date}} </td>
+      <td>
+        <span *ngIf="isAdmin">OwnerId - {{storage.victorinas[i].ownerId}} <br></span>
+        Channel - {{storage.victorinas[i].channel?.channelName}}
+      </td>
       <td> {{storage.victorinas[i].title}}</td>
       <td>
         <mat-accordion >
@@ -20,9 +25,9 @@
             <mat-panel-title>
               Questions
             </mat-panel-title>
-            <mat-panel-description>
-               {{panelOpenState ? 'open' : 'closed'}}
-            </mat-panel-description>
+<!--            <mat-panel-description>-->
+<!--               {{panelOpenState ? 'open' : 'closed'}}-->
+<!--            </mat-panel-description>-->
           </mat-expansion-panel-header>
             <ul *ngFor="let question of storage.victorinas[i].questions; let in = index">
               <li>

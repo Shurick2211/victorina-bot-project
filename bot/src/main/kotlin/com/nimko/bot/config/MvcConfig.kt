@@ -36,5 +36,6 @@ class MvcConfig:WebMvcConfigurer {
         registry.addViewController("/list").setViewName("forward:/index.html")
         registry.addViewController("/create").setViewName("forward:/index.html")
         registry.addViewController("/edit/**").setViewName("forward:/index.html");
+        registry.addViewController("/statistic/**").setViewName("forward:/index.html");
     }
 }

@@ -24,7 +24,8 @@ import {MatSortModule} from "@angular/material/sort";
 import {MatIconModule} from "@angular/material/icon";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {NgxPaginationModule} from "ngx-pagination";
-
+import {StatisticComponent} from "./components/statistic/statistic.component";
+import { CommonModule } from '@angular/common';
 
 
 
@@ -33,7 +34,7 @@ const appRoutes: Routes = [
   {path: 'create', component: CreateVictorinaComponent},
   {path: 'list', component: ListVictorinasComponent},
   {path: 'edit/:id', component: CreateVictorinaComponent},
-
+  {path: 'statistic/:id', component: StatisticComponent},
 
 ]
 
@@ -44,9 +45,11 @@ const appRoutes: Routes = [
     CreateVictorinaComponent,
     ListVictorinasComponent,
     QuestionComponent,
-    StartComponent
+    StartComponent,
+    StatisticComponent
   ],
   imports: [
+    CommonModule,
     BrowserModule,
     RouterOutlet,
     FormsModule,

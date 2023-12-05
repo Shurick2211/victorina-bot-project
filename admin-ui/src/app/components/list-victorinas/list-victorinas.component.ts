@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {StorageService} from "../../services/storage.service";
+import {PersonRole} from "../../utils/person-role";
 
 
 @Component({
@@ -13,6 +14,7 @@ export class ListVictorinasComponent implements OnInit{
 
   iPerPage = 5;
   curPage = 1;
+  isAdmin = this.storage.person?.role === PersonRole.ADMIN
 
   constructor(public storage:StorageService) {
 
