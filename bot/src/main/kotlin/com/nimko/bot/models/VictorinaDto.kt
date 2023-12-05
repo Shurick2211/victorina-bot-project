@@ -15,7 +15,7 @@ data class VictorinaDto(
     val channel:Channel?,
     var winnerId:String?,
     var rightsAnsweredUserId: MutableList<String>?,
-    var numberParticipants:Int,
+    var participantsId:MutableList<String>?,
     var isActive:Boolean,
     var hasPrize :Boolean,
     val isManyAnswer:Boolean,

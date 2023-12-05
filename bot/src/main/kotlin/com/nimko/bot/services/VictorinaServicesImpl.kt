@@ -60,10 +60,11 @@ class VictorinaServicesImpl @Autowired constructor(
         return victorina
     }
 
-    override fun addParticipants(victorinaId: String) {
+    override fun addParticipants(personId: String, victorinaId: String) {
         runBackgroundSaveState {
             val victorina = victorinaRepo.findById(victorinaId).get()
-            victorina.numberParticipants += 1
+            if(victorina.participantsId == null) victorina.participantsId = ArrayList()
+            victorina.participantsId!!.add(personId)
             victorinaRepo.save(victorina)
         }
     }

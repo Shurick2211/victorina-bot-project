@@ -16,5 +16,5 @@ interface VictorinaServices {
 
     fun getOwnerVictorinaIdByWinnerId(winnerId:String):VictorinaDto
 
-    fun addParticipants(victorinaId: String)
+    fun addParticipants(personId: String, victorinaId: String)
 }

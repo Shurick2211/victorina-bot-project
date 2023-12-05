@@ -12,7 +12,7 @@ export class Victorina {
               public winnerId: string | null,
               public rightsAnsweredUserId: Array<String>|null,
               public isManyAnswer:boolean,
-              public numberParticipants:number,
+              public participantsId:Array<String>|null,
               public isActive:Boolean,
               public hasPrize:Boolean,
               public startDate: Date | null,

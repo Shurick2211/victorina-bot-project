@@ -165,7 +165,7 @@ class PersonUtilsImpl @Autowired constructor(
 
     override fun sendFinishQuizMessage(pollAnswer: PollAnswer, victorina: VictorinaDto, currentQuiz:Quiz, sender: MessageServicesSender){
         val locale = Locale.forLanguageTag(pollAnswer.userLang)
-        victorinaServices.addParticipants(victorina.id!!)
+        victorinaServices.addParticipants(pollAnswer.userId, victorina.id!!)
         sender.sendText(
             TextMessage(pollAnswer.userId,
                 "${messageSource.getMessage("message.end", null, locale)} " +

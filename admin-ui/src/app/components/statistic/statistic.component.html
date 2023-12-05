@@ -14,7 +14,7 @@
     <span  *ngIf="owner !== null"> {{owner.firstName}}: {{owner.userName}}</span>
   </p>
   <p *ngIf="victorina.channel !== null"><b>Channel:</b> {{victorina.channel.channelName}}</p>
-  <p><b>Number participants: </b> {{victorina.numberParticipants}}</p>
+  <p><b>Number participants: </b> {{victorina.participantsId?.length}}</p>
   <p><b>Number right answered: </b> {{victorina.rightsAnsweredUserId?.length}}</p>
   <p><b>Has prize: </b> {{victorina.hasPrize}}</p>
   <hr>
