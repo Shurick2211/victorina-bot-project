@@ -9,14 +9,14 @@
     <th>Actions</th>
     </thead>
     <tbody>
-    <tr *ngFor="let victorina of storage.victorinas | paginate: {itemsPerPage: iPerPage, currentPage: curPage, totalItems:storage.victorinas.length} ;let i = index; ">
-      <td><a [routerLink]="['/statistic',i]"> {{storage.victorinas[i].name}}</a></td>
-      <td>{{storage.victorinas[i].startDate|date}}  <br>{{storage.victorinas[i].endDate|date}} </td>
+    <tr *ngFor="let victorina of storage.victorinas | paginate:{itemsPerPage: iPerPage, currentPage: curPage} ;let i = index; ">
+      <td><a [routerLink]="['/statistic',item(i)]"> {{storage.victorinas[item(i)].name}}</a> </td>
+      <td>{{storage.victorinas[item(i)].startDate|date}}  <br>{{storage.victorinas[item(i)].endDate|date}} </td>
       <td>
-        <span *ngIf="isAdmin">OwnerId - {{storage.victorinas[i].ownerId}} <br></span>
-        Channel - {{storage.victorinas[i].channel?.channelName}}
+        <span *ngIf="isAdmin">OwnerId - {{storage.victorinas[item(i)].ownerId}} <br></span>
+        Channel - {{storage.victorinas[item(i)].channel?.channelName}}
       </td>
-      <td> {{storage.victorinas[i].title}}</td>
+      <td> {{storage.victorinas[item(i)].title}}</td>
       <td>
         <mat-accordion >
         <mat-expansion-panel (opened)="panelOpenState = true"
@@ -29,9 +29,9 @@
 <!--               {{panelOpenState ? 'open' : 'closed'}}-->
 <!--            </mat-panel-description>-->
           </mat-expansion-panel-header>
-            <ul *ngFor="let question of storage.victorinas[i].questions; let in = index">
+            <ul *ngFor="let question of storage.victorinas[item(i)].questions; let in = index">
               <li>
-                {{in+1}} {{storage.victorinas[i].questions[in].text}}
+                {{in+1}} {{storage.victorinas[item(i)].questions[in].text}}
               </li>
             </ul>
         </mat-expansion-panel>
@@ -39,10 +39,10 @@
 
       </td>
       <td>
-        <button mat-fab color="primary" aria-label="Edit" [routerLink]="['/edit',i]">
+        <button mat-fab color="primary" aria-label="Edit" [routerLink]="['/edit',item(i)]">
           <mat-icon>edit</mat-icon>
         </button>
-        <button mat-fab color="primary" aria-label="Delete" (click)="storage.delete(i)">
+        <button mat-fab color="primary" aria-label="Delete" (click)="storage.delete(item(i))">
           <mat-icon>delete</mat-icon>
         </button>
 
@@ -52,7 +52,8 @@
   </table>
 
   <div style="text-align: end">
-    <pagination-controls  (pageChange) = "pageChange($event)"></pagination-controls>
+    <pagination-controls
+      (pageChange) = "curPage = $event"></pagination-controls>
   </div>
 
 

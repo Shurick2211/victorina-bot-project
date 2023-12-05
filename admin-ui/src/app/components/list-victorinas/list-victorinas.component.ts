@@ -25,15 +25,8 @@ export class ListVictorinasComponent implements OnInit{
     this.storage.refreshVictorins()
   }
 
-
-  pageChange($event: number) {
-    console.log($event)
-    this.curPage = $event
+   item(i:number): number {
+    return i + this.iPerPage * (this.curPage - 1)
   }
 
-  get pagedVictorinas() {
-    const startIndex = (this.curPage - 1) * this.iPerPage;
-    const endIndex = startIndex + this.iPerPage;
-    return this.storage.victorinas.slice(startIndex, endIndex);
-  }
 }
