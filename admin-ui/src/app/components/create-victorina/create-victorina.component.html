@@ -2,7 +2,7 @@
   <h3>{{title}}</h3>
   <div>
     <span>Name: </span>
-    <input style="margin-left: 10px" size="100" type="text" name="victorina-name" [(ngModel)]="victorina.name">
+    <input style="margin-left: 10px; width: 70%"  type="text" name="victorina-name" [(ngModel)]="victorina.name">
     <button name = "save" class="btn btn-info" style="margin-left: 10px" (click)="save()" >Save Victorina!</button>
     <div *ngIf="isNotReady">
       <br>

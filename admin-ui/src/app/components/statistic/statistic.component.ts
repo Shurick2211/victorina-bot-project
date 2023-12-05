@@ -12,7 +12,7 @@ import {Person} from "../../dto/person";
   styleUrl: './statistic.component.scss'
 })
 export class StatisticComponent {
-
+  id:number
   victorina:Victorina
   panelOpenState = true
 
@@ -20,8 +20,9 @@ export class StatisticComponent {
   owner:Person | null = null
   isAdmin = this.storage.person?.role === PersonRole.ADMIN
   constructor(protected storage:StorageService, private api:ApiService,activeRoute:ActivatedRoute) {
-    let id = activeRoute.snapshot.params['id']
-    this.victorina = storage.victorinas.filter( v => v.id === id ).shift() as Victorina
+    this.id = activeRoute.snapshot.params['id']
+    this.victorina = storage.victorinas[this.id]
+    //this.victorina = storage.victorinas.filter( v => v.id === id ).shift() as Victorina
   }
 
   getOwner(){

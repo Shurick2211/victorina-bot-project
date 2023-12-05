@@ -10,7 +10,7 @@
     <textarea name="text" [disabled]="!isActive" rows="2" [(ngModel)] = "question.text"></textarea>
       <p *ngFor="let q of question.answers; let i = index; trackBy:trackByFn ">
         <span>{{i+1}}</span>
-        <input name="a-{{i}}" [disabled]="!isActive" style="margin-left: 10px" size="100" type="text"
+        <input name="a-{{i}}" [disabled]="!isActive" style="margin-left: 10px; width: 70%"  type="text"
                [(ngModel)]="question.answers[i]"  >
         <span style="margin-left: 10px">Is true!</span>
         <input name = "{{i}}" [disabled]="!isActive" style="margin-left: 10px" type="checkbox" (change)="clickNum(i)" [(ngModel)] = "checkeds[i]">

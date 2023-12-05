@@ -9,8 +9,8 @@
     <th>Actions</th>
     </thead>
     <tbody>
-    <tr *ngFor="let victorina of storage.victorinas | paginate: {itemsPerPage: iPerPage, currentPage: curPage} ;let i = index; ">
-      <td><a [routerLink]="'/statistic/'+storage.victorinas[i].id"> {{storage.victorinas[i].name}}</a></td>
+    <tr *ngFor="let victorina of storage.victorinas | paginate: {itemsPerPage: iPerPage, currentPage: curPage, totalItems:storage.victorinas.length} ;let i = index; ">
+      <td><a [routerLink]="['/statistic',i]"> {{storage.victorinas[i].name}}</a></td>
       <td>{{storage.victorinas[i].startDate|date}}  <br>{{storage.victorinas[i].endDate|date}} </td>
       <td>
         <span *ngIf="isAdmin">OwnerId - {{storage.victorinas[i].ownerId}} <br></span>
@@ -52,7 +52,7 @@
   </table>
 
   <div style="text-align: end">
-    <pagination-controls  (pageChange) = "curPage=$event"></pagination-controls>
+    <pagination-controls  (pageChange) = "pageChange($event)"></pagination-controls>
   </div>
 
 

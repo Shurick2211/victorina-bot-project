@@ -14,6 +14,7 @@ export class ListVictorinasComponent implements OnInit{
 
   iPerPage = 5;
   curPage = 1;
+
   isAdmin = this.storage.person?.role === PersonRole.ADMIN
 
   constructor(public storage:StorageService) {
@@ -25,5 +26,14 @@ export class ListVictorinasComponent implements OnInit{
   }
 
 
+  pageChange($event: number) {
+    console.log($event)
+    this.curPage = $event
+  }
 
+  get pagedVictorinas() {
+    const startIndex = (this.curPage - 1) * this.iPerPage;
+    const endIndex = startIndex + this.iPerPage;
+    return this.storage.victorinas.slice(startIndex, endIndex);
+  }
 }

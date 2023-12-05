@@ -1,8 +1,8 @@
 <div style="font-size: large; margin-left: 10px">
   <h1 style="text-align: center">Statistic!</h1>
-  <p><b>Name:</b> {{victorina.name}}</p>
-  <p><b>Date start:</b> {{victorina.startDate|date}} - end: {{victorina.endDate|date}}</p>
-  <p><b>Title:</b> {{victorina.title}}</p>
+  <p><b>Name: </b> <a [routerLink]="['/edit',id]" >{{victorina.name}}</a></p>
+  <p><b>Date start: </b> {{victorina.startDate|date}} - end: {{victorina.endDate|date}}</p>
+  <p><b>Title: </b> {{victorina.title}}</p>
   <p *ngIf="victorina.winnerId !== null" >
     <b>WinnerId: </b>
     <a class="button-like" (click)="getWinner()">{{victorina.winnerId}}</a>
@@ -14,9 +14,9 @@
     <span  *ngIf="owner !== null"> {{owner.firstName}}: {{owner.userName}}</span>
   </p>
   <p *ngIf="victorina.channel !== null"><b>Channel:</b> {{victorina.channel.channelName}}</p>
-  <p><b>Number participants:</b> {{victorina.numberParticipants}}</p>
-  <p><b>Number right answered:</b> {{victorina.rightsAnsweredUserId?.length}}</p>
-  <p><b>Is active:</b> {{victorina.isActive}}. <b>Has prize:</b> {{victorina.hasPrize}}</p>
+  <p><b>Number participants: </b> {{victorina.numberParticipants}}</p>
+  <p><b>Number right answered: </b> {{victorina.rightsAnsweredUserId?.length}}</p>
+  <p><b>Has prize: </b> {{victorina.hasPrize}}</p>
   <hr>
 
   <div style="width: 90%">
