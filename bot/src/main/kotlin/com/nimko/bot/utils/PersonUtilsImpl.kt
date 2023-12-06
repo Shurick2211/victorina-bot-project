@@ -9,6 +9,7 @@ import com.nimko.messageservices.services.MessageServicesSender
 import com.nimko.messageservices.telegram.models.message.*
 import com.nimko.messageservices.telegram.models.others.InlineButton
 import com.nimko.messageservices.telegram.utils.CallbackData
+import com.nimko.messageservices.telegram.utils.Commands
 import com.nimko.messageservices.telegram.utils.PollType
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -205,14 +206,14 @@ class PersonUtilsImpl @Autowired constructor(
                         + messageSource.getMessage("message.start", null,
                     Locale.forLanguageTag(user.languageCode)
                 ),
-                listOf(
+                listOf( Commands.START.getCommand() +
                     messageSource.getMessage("button.restart", null,
                         Locale.forLanguageTag(user.languageCode)
                     ),
-                    messageSource.getMessage("button.for.creator", null,
+                    Commands.CREATOR.getCommand() + messageSource.getMessage("button.for.creator", null,
                         Locale.forLanguageTag(user.languageCode)
                     ),
-                    messageSource.getMessage("button.free.message", null,
+                    Commands.REFRESH.getCommand() + messageSource.getMessage("button.free.message", null,
                         Locale.forLanguageTag(user.languageCode)
                     )
                 )

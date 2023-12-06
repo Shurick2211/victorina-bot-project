@@ -32,14 +32,11 @@ class MessageServicesListenerImpl @Autowired constructor(
             textMessage.textMessage.startsWith(Commands.START.getCommand()) -> {
                 personServices.registration(textMessage.user!!,sender)
             }
-            textMessage.textMessage == messageSource.getMessage("button.for.creator",null,
-                Locale.forLanguageTag(textMessage.user!!.languageCode)) -> {
+            textMessage.textMessage.startsWith(Commands.CREATOR.getCommand()) -> {
                     personServices.registrationCreator(
-                        textMessage.user,null,null, sender
-                    )
+                        textMessage.user,null,null, sender)
                 }
-            textMessage.textMessage == messageSource.getMessage("button.free.message",null,
-                Locale.forLanguageTag(textMessage.user!!.languageCode)) -> {
+            textMessage.textMessage.startsWith(Commands.REFRESH.getCommand()) -> {
                     personServices.forFree(textMessage, sender)
                 }
             else -> {
