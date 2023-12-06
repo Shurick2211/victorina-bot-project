@@ -7,13 +7,13 @@
   </mat-card-header>
 
   <mat-card-content>
-    <textarea name="text" [disabled]="!isActive" maxlength="100" rows="2" [(ngModel)] = "question.text"></textarea>
+    <textarea name="text" [disabled]="!isActive" rows="2" [(ngModel)] = "question.text"></textarea>
       <p *ngFor="let q of question.answers; let i = index; trackBy:trackByFn ">
         <span>{{i+1}}</span>
         <input name="a-{{i}}" [disabled]="!isActive" style="margin-left: 10px; width: 70%"  type="text"
                [(ngModel)]="question.answers[i]"  >
         <span style="margin-left: 10px">Is true!</span>
-        <input name = "{{i}}" [disabled]="!isActive" style="margin-left: 10px" type="checkbox" (change)="clickNum(i)" [(ngModel)] = "checkeds[i]">
+        <input name = "{{i}}" maxlength="100" [disabled]="!isActive" style="margin-left: 10px" type="checkbox" (change)="clickNum(i)" [(ngModel)] = "checkeds[i]">
       </p>
     <mat-card-actions>
       <button mat-button class="large-font" *ngIf="isActive " (click)="clickAdd()">+</button>
