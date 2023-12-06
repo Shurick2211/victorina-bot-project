@@ -64,9 +64,9 @@ export class QuestionComponent implements OnInit{
 
   save(){
     if(this.question.text !== '' && this.question.rightAnswer[0] > -1
-        && this.question.answers[0] !=='' && this.question.answers[1] !=='') {
-      this.notReady = false
-      this.quest.emit(this.question)
+        && this.question.answers[0] !=='' && this.question.answers[1] !=='' && this.lessHundred) {
+        this.notReady = false
+        this.quest.emit(this.question)
       if (!this.isEdit) {
         this.checkeds = new Array<boolean>(this.question.answers.length)
       } else {
@@ -85,6 +85,10 @@ export class QuestionComponent implements OnInit{
 
   deleteQuestion(){
     this.deleteQ.emit(true)
+  }
+
+  get lessHundred():boolean{
+    return this.question.answers.every(value => value.length<100)
   }
 
 }
