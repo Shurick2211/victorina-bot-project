@@ -3,16 +3,19 @@
   <p><b>Name: </b> <a [routerLink]="['/edit',id]" >{{victorina.name}}</a></p>
   <p><b>Date start: </b> {{victorina.startDate|date}} - end: {{victorina.endDate|date}}</p>
   <p><b>Title: </b> {{victorina.title}}</p>
-  <p *ngIf="victorina.winnerId !== null" >
-    <b>WinnerId: </b>
-    <a class="button-like" (click)="getWinner()">{{victorina.winnerId}}</a>
-    <span *ngIf="winner !== null"> {{winner.firstName}}: {{winner.userName}}</span>
-  </p>
+
   <p *ngIf="isAdmin">
     <b>OwnerId: </b>
-    <a class="button-like" (click)="getOwner()">{{victorina.ownerId}}</a>
-    <span  *ngIf="owner !== null"> {{owner.firstName}}: {{owner.userName}}</span>
+    <a *ngIf="owner === null" class="button-like" (click)="getOwner()">{{victorina.ownerId}}</a>
+    <span  *ngIf="owner !== null"> {{owner.firstName}} {{owner.lastName}}: {{sobaka}}{{owner.userName}}</span>
   </p>
+
+  <p *ngIf="victorina.winnerId !== null" >
+    <b>WinnerId: </b>
+    <a *ngIf="winner === null" class="button-like" (click)="getWinner()">{{victorina.winnerId}}</a>
+    <span *ngIf="winner !== null"> {{winner.firstName}}: {{sobaka}}{{winner.userName}}</span>
+  </p>
+
   <p *ngIf="victorina.channel !== null"><b>Channel:</b> {{victorina.channel.channelName}}</p>
   <p><b>Number participants: </b> {{victorina.participantsId?.length}}</p>
   <p><b>Number right answered: </b> {{victorina.rightsAnsweredUserId?.length}}</p>
@@ -21,22 +24,26 @@
 
   <div style="width: 90%">
     <mat-accordion >
-      <mat-expansion-panel (opened)="panelOpenStatePart = true"
+      <mat-expansion-panel (opened)="panelOpenStatePart = true; getParticipantsPoll()"
                            (closed)="panelOpenStatePart = false">
         <mat-expansion-panel-header>
           <mat-panel-title>
             Participants
           </mat-panel-title>
           <mat-panel-description>
-            {{panelOpenState ? 'open' : 'closed'}}
+            {{panelOpenStatePart ? 'open' : 'closed'}}
           </mat-panel-description>
         </mat-expansion-panel-header>
-        <ul *ngFor="let participants of victorina.participantsId; let in = index">
-          <li>
-            <a class="button-like" (click)="addPerson(participants.toString())" >{{participants}}</a>
-            <span > {{getPerson(participants.toString())?.firstName}}</span>
-          </li>
-        </ul>
+        <p *ngFor="let participants of victorina.participantsId; let in = index;">
+          <i>{{in+1}}.</i>
+            <a *ngIf="(getPerson(participants.toString()) === undefined)"
+               class="button-like" (click)="addPerson(participants.toString())" > {{participants}} </a>
+            <span *ngIf="getPerson(participants.toString()) !== undefined">
+                <i>{{getPerson(participants.toString())?.firstName}} {{getPerson(participants.toString())?.lastName}}.</i>
+                    Result: {{getPersonResult(participants.toString())}}%
+            </span>
+
+        </p>
       </mat-expansion-panel>
     </mat-accordion>
 
@@ -56,11 +63,9 @@
             {{panelOpenState ? 'open' : 'closed'}}
           </mat-panel-description>
         </mat-expansion-panel-header>
-        <ul *ngFor="let question of victorina.questions; let in = index">
-          <li>
-            {{in+1}} {{victorina.questions[in].text}}
-          </li>
-        </ul>
+        <p *ngFor="let question of victorina.questions; let in = index">
+          <i>{{in+1}}.</i> {{victorina.questions[in].text}}
+        </p>
       </mat-expansion-panel>
     </mat-accordion>
 
