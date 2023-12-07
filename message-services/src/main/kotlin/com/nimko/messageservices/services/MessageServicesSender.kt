@@ -8,6 +8,8 @@ import com.nimko.messageservices.telegram.models.others.InlineButton
 import org.telegram.telegrambots.meta.api.objects.Chat
 import org.telegram.telegrambots.meta.api.objects.ChatInviteLink
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember
+import org.telegram.telegrambots.meta.api.objects.commands.BotCommand
+import org.telegram.telegrambots.meta.api.objects.menubutton.MenuButtonCommands
 
 interface MessageServicesSender {
     fun sendText(message: TextMessage)
@@ -25,4 +27,6 @@ interface MessageServicesSender {
     fun createInviteChannelLink(channelId: String):ChatInviteLink
 
     fun getChat(chanelId:String):Chat
+
+    fun setMenu(commands: List<BotCommand>, lang:String)
 }

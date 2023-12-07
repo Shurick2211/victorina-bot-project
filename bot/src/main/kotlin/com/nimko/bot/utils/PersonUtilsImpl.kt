@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.MessageSource
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.objects.User
+import org.telegram.telegrambots.meta.api.objects.commands.BotCommand
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -200,25 +201,33 @@ class PersonUtilsImpl @Autowired constructor(
     }
 
     override fun sendStartMessage(user:User, sender: MessageServicesSender){
-        sender.sendMenu(
-            MenuMessage(
-                user.id.toString(), user.firstName + "! "
-                        + messageSource.getMessage("message.start", null,
-                    Locale.forLanguageTag(user.languageCode)
-                ),
-                listOf( Commands.START.getCommand() +
-                    messageSource.getMessage("button.restart", null,
-                        Locale.forLanguageTag(user.languageCode)
-                    ),
-                    Commands.CREATOR.getCommand() + messageSource.getMessage("button.for.creator", null,
-                        Locale.forLanguageTag(user.languageCode)
-                    ),
-                    Commands.REFRESH.getCommand() + messageSource.getMessage("button.free.message", null,
-                        Locale.forLanguageTag(user.languageCode)
-                    )
-                )
+        val commands = listOf(BotCommand(Commands.START.getCommand(),messageSource.getMessage("button.restart", null,
+            Locale.forLanguageTag(user.languageCode))),
+            BotCommand(Commands.CREATOR.getCommand(), messageSource.getMessage("button.for.creator", null,
+                Locale.forLanguageTag(user.languageCode))),
+            BotCommand(Commands.REFRESH.getCommand(), messageSource.getMessage("button.free.message", null,
+                Locale.forLanguageTag(user.languageCode)))
             )
-        )
+
+        sender.setMenu(commands, user.languageCode)
+//        sender.sendMenu(
+//            MenuMessage(
+//                user.id.toString(), user.firstName + "! "
+//                        + messageSource.getMessage("message.start", null,
+//                    Locale.forLanguageTag(user.languageCode)
+//                ),
+//                listOf( Commands.START.getCommand() +
+//                    messageSource.getMessage("button.restart", null,
+//                        Locale.forLanguageTag(user.languageCode)),
+//                    Commands.CREATOR.getCommand() + messageSource.getMessage("button.for.creator", null,
+//                        Locale.forLanguageTag(user.languageCode)
+//                    ),
+//                    Commands.REFRESH.getCommand() + messageSource.getMessage("button.free.message", null,
+//                        Locale.forLanguageTag(user.languageCode)
+//                    )
+//                )
+//            )
+//        )
     }
 
     override fun sendVictorinaWinnerMessage(winner:Person,

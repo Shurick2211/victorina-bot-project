@@ -7,6 +7,8 @@ import com.nimko.messageservices.telegram.models.message.PollMessage
 import com.nimko.messageservices.telegram.models.message.TextMessage
 import com.nimko.messageservices.telegram.models.others.InlineButton
 import com.nimko.messageservices.telegram.utils.PollType
+import org.apache.commons.codec.language.bm.Lang
+import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands
 import org.telegram.telegrambots.meta.api.methods.groupadministration.CreateChatInviteLink
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChat
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember
@@ -16,6 +18,9 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageRe
 import org.telegram.telegrambots.meta.api.objects.Chat
 import org.telegram.telegrambots.meta.api.objects.ChatInviteLink
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember
+import org.telegram.telegrambots.meta.api.objects.commands.BotCommand
+import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault
+import org.telegram.telegrambots.meta.api.objects.menubutton.MenuButtonCommands
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
@@ -65,6 +70,10 @@ class MessageServicesSenderImpl(
 
     override fun getChat(chanelId: String): Chat {
         return bot.execute(GetChat(chanelId))
+    }
+
+    override fun setMenu(commands: List<BotCommand>, lang: String) {
+      bot.execute(SetMyCommands(commands,BotCommandScopeDefault(),lang))
     }
 
     private fun createMessage(userId:String, text:String): SendMessage{

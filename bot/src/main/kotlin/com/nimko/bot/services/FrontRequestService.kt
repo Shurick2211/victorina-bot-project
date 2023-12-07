@@ -3,6 +3,7 @@ package com.nimko.bot.services
 import com.nimko.bot.models.VictorinaDto
 import com.nimko.bot.repositories.PersonRepo
 import com.nimko.bot.repositories.VictorinaRepo
+import com.nimko.messageservices.services.MessageServicesSender
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
@@ -10,7 +11,8 @@ import org.springframework.stereotype.Service
 @Service
 class FrontRequestService  @Autowired constructor(
     val victorinasDb: VictorinaRepo,
-    val personsDb: PersonRepo
+    val personsDb: PersonRepo,
+    val personServices: PersonServices
     ) {
 
 
@@ -42,6 +44,10 @@ class FrontRequestService  @Autowired constructor(
         person.password = password
         personsDb.save(person)
         return ResponseEntity.ok().build()
+    }
+
+    fun addPersonOnVictorin(userId:String){
+        println("FROM REDIRECT" + userId)
     }
 
 }

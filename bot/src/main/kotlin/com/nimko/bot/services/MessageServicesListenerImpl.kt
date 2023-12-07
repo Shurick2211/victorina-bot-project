@@ -8,10 +8,12 @@ import com.nimko.messageservices.telegram.models.message.ChannelIdMessage
 import com.nimko.messageservices.telegram.models.message.PollAnswer
 import com.nimko.messageservices.telegram.models.message.ResponseDataMessage
 import com.nimko.messageservices.telegram.models.message.TextMessage
+import com.nimko.messageservices.telegram.models.others.InlineButton
 import com.nimko.messageservices.telegram.utils.CallbackData
 import com.nimko.messageservices.telegram.utils.Commands
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.support.ResourceBundleMessageSource
 import org.springframework.stereotype.Service
 import java.util.*
@@ -26,6 +28,9 @@ class MessageServicesListenerImpl @Autowired constructor(
     lateinit var sender: MessageServicesSender
 
     val log = LoggerFactory.getLogger("MSG_SERV")
+
+    @Value("\${my.address}")
+    lateinit var url:String
 
     override fun onTextMessage(textMessage: TextMessage) {
         when{
@@ -45,7 +50,11 @@ class MessageServicesListenerImpl @Autowired constructor(
                     person.state = PersonState.FREE
                     personServices.getUtils().savePerson(person)
                     personServices.getUtils().sendDeliveryAddress(textMessage,sender)
-                } else log.info(textMessage.toString())
+                } else {
+                    log.info(textMessage.toString())
+//                    sender.sendTextAndInlineButton(TextMessage("-1001157907701","Go",null),
+//                        listOf(InlineButton("Bot","data", url = url+"/persons/bot?user="+textMessage.userId)))
+                }
             }
         }
     }
