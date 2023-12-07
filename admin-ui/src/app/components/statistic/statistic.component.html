@@ -21,6 +21,31 @@
 
   <div style="width: 90%">
     <mat-accordion >
+      <mat-expansion-panel (opened)="panelOpenStatePart = true"
+                           (closed)="panelOpenStatePart = false">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Participants
+          </mat-panel-title>
+          <mat-panel-description>
+            {{panelOpenState ? 'open' : 'closed'}}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <ul *ngFor="let participants of victorina.participantsId; let in = index">
+          <li>
+            <a class="button-like" (click)="addPerson(participants.toString())" >{{participants}}</a>
+            <span > {{getPerson(participants.toString())?.firstName}}</span>
+          </li>
+        </ul>
+      </mat-expansion-panel>
+    </mat-accordion>
+
+  </div>
+
+  <hr>
+
+  <div style="width: 90%">
+    <mat-accordion >
       <mat-expansion-panel (opened)="panelOpenState = true"
                            (closed)="panelOpenState = false">
         <mat-expansion-panel-header>

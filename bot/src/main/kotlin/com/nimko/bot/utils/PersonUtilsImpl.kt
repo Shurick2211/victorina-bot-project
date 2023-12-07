@@ -208,26 +208,7 @@ class PersonUtilsImpl @Autowired constructor(
             BotCommand(Commands.REFRESH.getCommand(), messageSource.getMessage("button.free.message", null,
                 Locale.forLanguageTag(user.languageCode)))
             )
-
         sender.setMenu(commands, user.languageCode)
-//        sender.sendMenu(
-//            MenuMessage(
-//                user.id.toString(), user.firstName + "! "
-//                        + messageSource.getMessage("message.start", null,
-//                    Locale.forLanguageTag(user.languageCode)
-//                ),
-//                listOf( Commands.START.getCommand() +
-//                    messageSource.getMessage("button.restart", null,
-//                        Locale.forLanguageTag(user.languageCode)),
-//                    Commands.CREATOR.getCommand() + messageSource.getMessage("button.for.creator", null,
-//                        Locale.forLanguageTag(user.languageCode)
-//                    ),
-//                    Commands.REFRESH.getCommand() + messageSource.getMessage("button.free.message", null,
-//                        Locale.forLanguageTag(user.languageCode)
-//                    )
-//                )
-//            )
-//        )
     }
 
     override fun sendVictorinaWinnerMessage(winner:Person,

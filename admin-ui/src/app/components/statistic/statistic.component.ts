@@ -19,6 +19,9 @@ export class StatisticComponent {
   winner:Person | null = null
   owner:Person | null = null
   isAdmin = this.storage.person?.role === PersonRole.ADMIN
+
+  panelOpenStatePart= false
+
   constructor(protected storage:StorageService, private api:ApiService,activeRoute:ActivatedRoute) {
     this.id = activeRoute.snapshot.params['id']
     this.victorina = storage.victorinas[this.id]
@@ -36,5 +39,20 @@ export class StatisticComponent {
       this.winner = response.body;
     })
   }
+
+
+
+  persons = new Array<Person>()
+  addPerson(id:string){
+    this.api.getPerson(id).subscribe( response => {
+      let person = response.body
+      this.persons.push(person!)
+    })
+  }
+
+  getPerson(id:string):Person | undefined  {
+    return this.persons.find(p => p.id === id)
+  }
+
 
 }
