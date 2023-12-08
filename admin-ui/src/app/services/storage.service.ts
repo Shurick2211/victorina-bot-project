@@ -25,7 +25,7 @@ export class StorageService {
 
   refreshPerson(){
     if (this.userId !== null)
-    this.api.getPerson(this.userId).subscribe( response => {
+    this.api.getPerson(this.userId, this.userId).subscribe(response => {
       this.person = response.body
       console.log(this.person?.userName)
     })

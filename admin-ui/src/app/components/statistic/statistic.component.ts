@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {StorageService} from "../../services/storage.service";
 import {Victorina} from "../../dto/victorina";
 import {ActivatedRoute} from "@angular/router";
@@ -22,24 +22,26 @@ export class StatisticComponent{
   winner:Person | null = null
   owner:Person | null = null
   isAdmin = this.storage.person?.role === PersonRole.ADMIN
+  headId:string
 
   panelOpenStatePart= false
   panelOpenState = false
   constructor(protected storage:StorageService, private api:ApiService,activeRoute:ActivatedRoute) {
     this.id = activeRoute.snapshot.params['id']
     this.victorina = storage.victorinas[this.id]
-
+    if (this.isAdmin) this.headId = PersonRole.ADMIN
+    else this.headId = storage.userId!
   }
 
 
   getOwner(){
-    this.api.getPerson(this.victorina.ownerId).subscribe( response => {
+    this.api.getPerson(this.victorina.ownerId, this.headId).subscribe( response => {
       this.owner = response.body;
     })
   }
 
   getWinner(){
-    this.api.getPerson(this.victorina.winnerId!).subscribe( response => {
+    this.api.getPerson(this.victorina.winnerId!, this.headId).subscribe( response => {
       this.winner = response.body;
     })
   }
@@ -48,7 +50,7 @@ export class StatisticComponent{
 
   persons = new Array<Person>()
   addPerson(id:string){
-    this.api.getPerson(id).subscribe( response => {
+    this.api.getPerson(id, this.headId).subscribe( response => {
       let person = response.body
       this.persons.push(person!)
     })

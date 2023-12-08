@@ -32,8 +32,9 @@ export class ApiService {
     return this.http.delete<any>(this.apiVictorina,{body: id, observe:'response'})
   }
 
-  getPerson(id:string):Observable<HttpResponse<Person>>{
-    return this.http.post<Person>(this.apiPerson,id,{observe:'response'})
+  getPerson(id:string, headId:string):Observable<HttpResponse<Person>>{
+    let header = new HttpHeaders().set("id", headId)
+    return this.http.post<Person>(this.apiPerson,id,{observe:'response', headers:header})
   }
 
   savePassFromPerson(id:string, pass:String):Observable<any>{

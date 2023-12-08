@@ -3,6 +3,7 @@ package com.nimko.bot.services
 import com.nimko.bot.models.VictorinaDto
 import com.nimko.bot.repositories.PersonRepo
 import com.nimko.bot.repositories.VictorinaRepo
+import com.nimko.bot.utils.PersonRole
 import com.nimko.messageservices.services.MessageServicesSender
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -34,8 +35,9 @@ class FrontRequestService  @Autowired constructor(
         return ResponseEntity.ok().build()
     }
 
-    fun getPerson(id: String): ResponseEntity<Any>{
+    fun getPerson(id: String, headId:String): ResponseEntity<Any>{
         val person = personsDb.findById(id).get()
+        if (id != headId || headId == PersonRole.ADMIN.name) person.password = "***"
         return ResponseEntity.ok(person.toDto())
     }
 

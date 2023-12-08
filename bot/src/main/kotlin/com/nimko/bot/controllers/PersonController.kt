@@ -21,7 +21,8 @@ class PersonController @Autowired constructor(val service: FrontRequestService) 
     @Operation(
         summary = "Get person by id"
     )
-    fun getPerson(@RequestBody id:String) = service.getPerson(id)
+    fun getPerson(@RequestBody id:String, request:HttpServletRequest) =
+        service.getPerson(id, request.getHeader("id"))
 
     @PutMapping
     @Operation(
@@ -33,6 +34,9 @@ class PersonController @Autowired constructor(val service: FrontRequestService) 
 
 
     @GetMapping("/bot")
+    @Operation(
+        summary = "Redirect to bot"
+    )
     fun redirectToBot (@RequestParam("user") userId:String, response:HttpServletResponse){
         service.addPersonOnVictorin(userId)
         response.sendRedirect("https://t.me/${botName}")
