@@ -256,5 +256,20 @@ class PersonUtilsImpl @Autowired constructor(
             ,null))
     }
 
+    override fun sendChannelMessageForStartVictorina(
+        victorina: VictorinaDto,
+        sender: MessageServicesSender
+    ) {
+        val owner = getPerson(victorina.ownerId)!!
+        sender.sendTextAndInlineButton(TextMessage(victorina.channel!!.channelId,victorina.name +
+        messageSource.getMessage("message.channel.start", null, Locale.forLanguageTag(owner.languageCode)), null)
+            , listOf(
+                InlineButton(
+                messageSource.getMessage("button.channel.start", null, Locale.forLanguageTag(owner.languageCode)),
+                    CallbackData.QUIZ.name+"#"+victorina.id!!
+            )
+            ))
+    }
+
 
 }

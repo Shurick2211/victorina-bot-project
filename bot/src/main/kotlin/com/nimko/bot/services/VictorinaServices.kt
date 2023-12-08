@@ -17,4 +17,6 @@ interface VictorinaServices {
     fun getOwnerVictorinaIdByWinnerId(winnerId:String):VictorinaDto
 
     fun addParticipants(personId: String, victorinaId: String)
+
+    fun startChanellAndIsActiveTrueAllVictorinas():List<VictorinaDto>
 }

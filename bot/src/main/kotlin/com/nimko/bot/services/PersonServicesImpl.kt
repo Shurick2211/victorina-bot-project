@@ -23,16 +23,11 @@ class PersonServicesImpl @Autowired constructor(
     override fun registration(user: User, sender: MessageServicesSender) {
         var person = personUtils.getPerson(user.id.toString())
         if (person == null) {
-            person = Person(
-                user.id.toString(),
-                user.firstName, user.lastName, user.userName,
-                user.languageCode, null, null,
-                PersonState.FREE,
-                PersonRole.USER,
-                null
-            )
-        } else person.languageCode = user.languageCode
-        personUtils.savePerson(person)
+            person = newPerson(user)
+        } else {
+            person.languageCode = user.languageCode
+            personUtils.savePerson(person)
+        }
         if (person.state == PersonState.FREE) personUtils.sendStartMessage(user, sender)
         forFree(TextMessage(user.id.toString()," ", user), sender)
     }
@@ -124,8 +119,11 @@ class PersonServicesImpl @Autowired constructor(
                             responseDataMessage.callbackQuery.data
                         }
                     val victorina = victorinaServices.getVictorinaById(victorinaId)
-                    val person = personUtils.getPerson(responseDataMessage.chatId)!!
-                    personUtils.sendStartVictorinaMessage(person, victorina, sender)
+                    var person = personUtils.getPerson(responseDataMessage.chatId)
+                    if (person == null) person = newPerson(responseDataMessage.callbackQuery.from)
+                    if (hasEndedQuiz(person, victorina.id!!))
+                        forFree(TextMessage(responseDataMessage.callbackQuery.from.id.toString()," ", responseDataMessage.callbackQuery.from), sender)
+                    else personUtils.sendStartVictorinaMessage(person, victorina, sender)
                 }
             }
 
@@ -143,4 +141,20 @@ class PersonServicesImpl @Autowired constructor(
         return personUtils
     }
 
+    private fun newPerson(user:User):Person{
+        val person = Person(
+            user.id.toString(),
+            user.firstName, user.lastName, user.userName,
+            user.languageCode, null, null,
+            PersonState.FREE,
+            PersonRole.USER,
+            null
+        )
+        personUtils.savePerson(person)
+        return person
+    }
+
+    private fun hasEndedQuiz(person: Person, quizId:String):Boolean{
+        return person.quizes?.find { it.victorinaId == quizId } != null
+    }
 }

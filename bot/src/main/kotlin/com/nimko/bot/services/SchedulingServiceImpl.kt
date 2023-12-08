@@ -19,8 +19,19 @@ class SchedulingServiceImpl @Autowired constructor(
     @Scheduled(cron = "\${checked.time.end}")
     override fun checkEndedVictorinas() {
         val listEndedVictorinasMarcAsActive = victorinaServices.getEndedVictorinsMarcAsActive()
-        log.info(listEndedVictorinasMarcAsActive.stream().map { it.name }.reduce{ n, m -> n + ", " + m}.get())
-        if(listEndedVictorinasMarcAsActive.isNotEmpty()) prizeServices.playPrize(listEndedVictorinasMarcAsActive)
+        if(listEndedVictorinasMarcAsActive.isNotEmpty()) {
+            log.info(listEndedVictorinasMarcAsActive.stream().map { it.name }.reduce{ n, m -> n + ", " + m}.get())
+            prizeServices.playPrize(listEndedVictorinasMarcAsActive)
+        }
+    }
+
+    @Scheduled(cron = "\${checked.time.start}")
+    override fun checkStartChanelViqtorinas() {
+        val listStartChanellVictorinas = victorinaServices.startChanellAndIsActiveTrueAllVictorinas()
+        if(listStartChanellVictorinas.isNotEmpty()) {
+            log.info(listStartChanellVictorinas.stream().map { it.name }.reduce{ n, m -> n + ", " + m}.get())
+            prizeServices.startChannelVictorinasForPlayPrize(listStartChanellVictorinas)
+        }
     }
 
 

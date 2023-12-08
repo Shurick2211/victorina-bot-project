@@ -11,22 +11,13 @@ import kotlinx.coroutines.runBlocking
 
 @Service
 class VictorinaServicesImpl @Autowired constructor(
-    val victorinaRepo: VictorinaRepo
+    private val victorinaRepo: VictorinaRepo
 ):VictorinaServices {
 
-    lateinit var list:List<VictorinaDto>
+    var list:List<VictorinaDto> = emptyList()
     override fun getActiveVictorin(): List<VictorinaDto> {
         val today = LocalDateTime.now()
         list = victorinaRepo.findAllByEndDateAfter(today).filter { it.startDate.isBefore(today) }
-        runBackgroundSaveState {
-            list.forEach {
-                if(!it.isActive) {
-                    val victorina = victorinaRepo.findById(it.id!!).get()
-                    victorina.isActive = true
-                    victorinaRepo.save(victorina)
-                }
-            }
-        }
         return list
     }
 
@@ -35,19 +26,17 @@ class VictorinaServicesImpl @Autowired constructor(
         if(victorina.rightsAnsweredUserId == null)
             victorina.rightsAnsweredUserId = ArrayList()
         victorina.rightsAnsweredUserId!!.add(userId)
-        victorinaRepo.save(victorina)
+        runBackgroundSaveState { victorinaRepo.save(victorina) }
     }
 
     override fun saveWinner(userId: String, victorinaId: String) {
         val victorina = victorinaRepo.findById(victorinaId).get()
         victorina.winnerId = userId
-        victorinaRepo.save(victorina)
+        runBackgroundSaveState { victorinaRepo.save(victorina) }
     }
 
-
-
     override fun getVictorinaById(id: String): VictorinaDto {
-        return list.first{ it.id == id }
+        return list.firstOrNull { it.id == id } ?: getActiveVictorin().first{it.id == id}
     }
 
     override fun getEndedVictorinsMarcAsActive(): List<VictorinaDto> = victorinaRepo.findAllByIsActiveIsTrueAndHasPrizeIsTrueAndEndDateBefore(
@@ -56,7 +45,7 @@ class VictorinaServicesImpl @Autowired constructor(
     override fun getOwnerVictorinaIdByWinnerId(winnerId: String): VictorinaDto {
         val victorina = victorinaRepo.findByIsActiveIsTrueAndWinnerId(winnerId)
         victorina.isActive = false
-        victorinaRepo.save(victorina)
+        runBackgroundSaveState { victorinaRepo.save(victorina) }
         return victorina
     }
 
@@ -69,20 +58,28 @@ class VictorinaServicesImpl @Autowired constructor(
         }
     }
 
+    override fun startChanellAndIsActiveTrueAllVictorinas(): List<VictorinaDto> {
+        val today = LocalDateTime.now()
+        val listStart = victorinaRepo.findAllByIsActiveIsFalseAndEndDateAfter(today)
+            .filter { it.startDate.isBefore(today) }
+        runBackgroundSaveState {
+            listStart.forEach {
+                if(!it.isActive) {
+                    val victorina = victorinaRepo.findById(it.id!!).get()
+                    victorina.isActive = true
+                    victorinaRepo.save(victorina)
+                }
+            }
+        }
+        return listStart.filter { it.hasPrize && it.channel != null }
+    }
 
-    fun runBackgroundSaveState(func:() -> Unit) = runBlocking {
+
+    private fun runBackgroundSaveState(func:() -> Unit) = runBlocking {
         launch(Dispatchers.IO) {
             func.invoke()
         }
     }
-//    private suspend fun saveActive(){
-//        list.forEach {
-//            if(!it.isActive) {
-//                val victorina = victorinaRepo.findById(it.id!!).get()
-//                victorina.isActive = true
-//                victorinaRepo.save(victorina)
-//            }
-//        }
-//    }
+
 
 }
