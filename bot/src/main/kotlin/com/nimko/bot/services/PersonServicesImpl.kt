@@ -7,6 +7,7 @@ import com.nimko.bot.utils.PersonUtils
 import com.nimko.messageservices.services.MessageServicesSender
 import com.nimko.messageservices.telegram.models.message.*
 import com.nimko.messageservices.telegram.utils.CallbackData
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.stereotype.Component
@@ -19,6 +20,8 @@ class PersonServicesImpl @Autowired constructor(
     private val victorinaServices: VictorinaServices,
     private val personUtils: PersonUtils
 ):PersonServices{
+
+    val log = LoggerFactory.getLogger("PSN_SERV")
 
     override fun registration(user: User, sender: MessageServicesSender) {
         var person = personUtils.getPerson(user.id.toString())
@@ -120,7 +123,9 @@ class PersonServicesImpl @Autowired constructor(
                         }
                     val victorina = victorinaServices.getVictorinaById(victorinaId)
                     var person = personUtils.getPerson(responseDataMessage.chatId)
-                    if (person == null) person = newPerson(responseDataMessage.callbackQuery.from)
+                    if (person == null) {
+                        person = newPerson(responseDataMessage.callbackQuery.from)
+                    }
                     if (hasEndedQuiz(person, victorina.id!!))
                         forFree(TextMessage(responseDataMessage.callbackQuery.from.id.toString()," ", responseDataMessage.callbackQuery.from), sender)
                     else personUtils.sendStartVictorinaMessage(person, victorina, sender)
@@ -151,6 +156,7 @@ class PersonServicesImpl @Autowired constructor(
             null
         )
         personUtils.savePerson(person)
+        log.info("CREATE & ADD:" + person.userName)
         return person
     }
 

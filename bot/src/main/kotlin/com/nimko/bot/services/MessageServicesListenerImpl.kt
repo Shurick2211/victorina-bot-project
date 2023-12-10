@@ -56,17 +56,17 @@ class MessageServicesListenerImpl @Autowired constructor(
     }
 
     override fun onDataMessage(responseDataMessage: ResponseDataMessage) {
-        val person = personServices.getUtils().getPerson(responseDataMessage.callbackQuery.from.id.toString())!!
+        val person = personServices.getUtils().getPerson(responseDataMessage.callbackQuery.from.id.toString())
         when{
-            person.state == PersonState.REGISTRATION_CREATOR -> personServices.registrationCreator(
+            person?.state == PersonState.REGISTRATION_CREATOR -> personServices.registrationCreator(
                 responseDataMessage.callbackQuery.from,responseDataMessage,null,sender)
 
             responseDataMessage.callbackQuery.data.startsWith(CallbackData.PRIZE.toString()) -> {
-                person.state = PersonState.PRIZE
+                person!!.state = PersonState.PRIZE
                 personServices.getUtils().deleteInlineKeyboard(responseDataMessage.chatId,
                     responseDataMessage.callbackQuery.message.messageId.toString(), sender)
                 responseDataMessage.callbackQuery.data
-                personServices.getUtils().savePerson(person)
+                personServices.getUtils().savePerson(person!!)
             }
 
             else ->  personServices.onQuiz(responseDataMessage.callbackQuery.from,
