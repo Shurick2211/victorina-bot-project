@@ -81,7 +81,7 @@ class MessageServicesSenderImpl(
         sendMessage.chatId = userId
         sendMessage.text = text
         sendMessage.enableHtml(true)
-        sendMessage.enableMarkdown(true)
+        sendMessage.disableWebPagePreview = true
         return sendMessage
     }
 

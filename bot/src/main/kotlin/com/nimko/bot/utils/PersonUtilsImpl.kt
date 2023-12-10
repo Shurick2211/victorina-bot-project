@@ -58,7 +58,13 @@ class PersonUtilsImpl @Autowired constructor(
     }
 
     override fun sendStartVictorinaMessage(person: Person, victorina: VictorinaDto, sender: MessageServicesSender) {
-        val mess = TextMessage(person.id, victorina.title,null)
+        val nameOfOwner = if (victorina.channel != null) "<a href=\"${victorina.channel.url}\">${victorina.channel.channelName}</a>"
+        else getPerson(victorina.ownerId)!!.firstName
+        val mess = TextMessage(person.id,
+            "<b>${ victorina.name }</b> " +
+                    messageSource.getMessage("message.from", null, Locale.forLanguageTag(person.languageCode)) + " " +
+                    nameOfOwner +
+                    "\n\n" + victorina.title,null)
         if (isChannelUser(person, victorina, sender) == true) {
             if (person.quizes == null) person.quizes = ArrayList()
             val quiz = Quiz(victorina.id!!, ArrayList())
@@ -100,12 +106,12 @@ class PersonUtilsImpl @Autowired constructor(
         val listButton = ArrayList<InlineButton>()
         victorinaServices.getActiveVictorin().forEach {
             if(!isEndedVictorinaByUser(userId, it.id!!)) {
-                var name = "${it.name} ${
-                    messageSource.getMessage("message.from", null, lang)
-                } - "
-                name += if (it.channel !== null) it.channel.channelName
-                else getPerson(it.ownerId)!!.firstName ?: getPerson(it.ownerId)!!.userName
-                val button = InlineButton(name, it.id!!)
+//                var name = "${it.name} ${
+//                    messageSource.getMessage("message.from", null, lang)
+//                } - "
+//                name += if (it.channel !== null) it.channel.channelName
+//                else getPerson(it.ownerId)!!.firstName ?: getPerson(it.ownerId)!!.userName
+                val button = InlineButton(it.name, it.id!!)
                 listButton.add(button)
             }
         }
@@ -172,8 +178,12 @@ class PersonUtilsImpl @Autowired constructor(
             TextMessage(pollAnswer.userId,
                 "${messageSource.getMessage("message.end", null, locale)} " +
                         "${currentQuiz.percentRightAnswer}% \n " +
-                        messageSource.getMessage("message.end.continuation", null, locale) +
-                        " - ${victorina.endDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).withLocale(locale))}"
+                        if(victorina.hasPrize) {
+                            messageSource.getMessage("message.end.continuation", null, locale) +
+                            " - ${ victorina.endDate.format(
+                                    DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).withLocale(locale)
+                                ) }"}
+                        else ""
                 ,null))
     }
 
@@ -208,6 +218,9 @@ class PersonUtilsImpl @Autowired constructor(
             BotCommand(Commands.REFRESH.getCommand(), messageSource.getMessage("button.free.message", null,
                 Locale.forLanguageTag(user.languageCode)))
             )
+        sender.sendText(TextMessage(user.id.toString(),"  " +
+            messageSource.getMessage("message.start", null, Locale.forLanguageTag(user.languageCode))
+            ,null))
         sender.setMenu(commands, user.languageCode)
     }
 
