@@ -33,10 +33,13 @@
       </mat-card-actions>
     </mat-card>
 
-    <div *ngIf="storage.isReg && storage.person!==null">
+    <div *ngIf="storage.isReg && storage.person!==null" style="padding: 2%">
       <h2>
         It is admin page {{storage.person.firstName}} {{storage.person.lastName}}! Please create your victorins!
       </h2>
+      <div>
+        {{rules}}
+      </div>
     </div>
 
   </div>
