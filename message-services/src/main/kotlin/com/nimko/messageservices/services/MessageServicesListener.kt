@@ -12,5 +12,7 @@ interface MessageServicesListener {
 
     fun addSender(sender: MessageServicesSender)
 
+    fun onSender():MessageServicesSender
+
     fun onPollAnswer(pollAnswer: PollAnswer)
 }

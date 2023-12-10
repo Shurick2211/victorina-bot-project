@@ -41,4 +41,12 @@ class PersonController @Autowired constructor(val service: FrontRequestService) 
         service.addPersonOnVictorin(userId)
         response.sendRedirect("https://t.me/${botName}")
     }
+
+    @GetMapping("/message")
+    @Operation(
+        summary = "Messaging front"
+    )
+    fun getMessageFront (@RequestParam("mess") mess:String, request:HttpServletRequest) =
+        service.getMessageFront(mess, request.getHeader("id"))
+
 }

@@ -41,4 +41,13 @@ export class ApiService {
     let header = new HttpHeaders().set("id", id)
     return this.http.put<any>(this.apiPerson,pass,{observe:'response', headers:header})
   }
+
+  sendAdminMess(mess:string, userId:string){
+    let paramMess = new HttpParams().set("mess", mess)
+    let header = new HttpHeaders().set("id", userId)
+    this.http.get<any>(this.apiPerson+'/message',{params:paramMess, observe:"response", headers:header})
+      .subscribe(response =>
+        console.log(response.status))
+  }
+
 }

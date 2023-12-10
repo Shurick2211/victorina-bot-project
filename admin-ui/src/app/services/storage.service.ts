@@ -19,6 +19,8 @@ export class StorageService {
 
   public isReg = false
 
+  public isAdmin = false
+
   constructor(private api:ApiService) {
     this.victorinas = new Array<Victorina>()
   }
@@ -28,13 +30,14 @@ export class StorageService {
     this.api.getPerson(this.userId, this.userId).subscribe(response => {
       this.person = response.body
       console.log(this.person?.userName)
+      this.isAdmin = this.person?.role === PersonRole.ADMIN
     })
   }
 
   refreshVictorins(){
-    console.log(`Is admin = ${this.person!!.role === PersonRole.ADMIN}`)
+    console.log(`Is admin = ${this.isAdmin}`)
 
-    if (this.person!!.role === PersonRole.ADMIN)
+    if (this.isAdmin)
       this.api.getAllVictorinas().subscribe(response => {
         this.victorinas = response.reverse()
       })

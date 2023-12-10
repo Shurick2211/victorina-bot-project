@@ -1,6 +1,7 @@
 package com.nimko.bot.services
 
 import com.nimko.bot.models.VictorinaDto
+import com.nimko.bot.utils.PersonRole
 import com.nimko.bot.utils.PersonState
 import com.nimko.messageservices.services.MessageServicesListener
 import com.nimko.messageservices.services.MessageServicesSender
@@ -19,8 +20,7 @@ import kotlin.random.Random
 
 @Service
 class MessageServicesListenerImpl @Autowired constructor(
-    val personServices: PersonServices,
-    val messageSource: ResourceBundleMessageSource
+    val personServices: PersonServices
 ):MessageServicesListener, PrizeServices {
 
     lateinit var sender: MessageServicesSender
@@ -50,6 +50,10 @@ class MessageServicesListenerImpl @Autowired constructor(
                     personServices.getUtils().sendDeliveryAddress(textMessage,sender)
                 } else {
                     log.info(textMessage.toString())
+                    val isAdminMess = personServices.getUtils().getPerson(textMessage.userId)!!.role == PersonRole.ADMIN
+                    if (isAdminMess)  sender.sendText(
+                        TextMessage(textMessage.textMessage.split("#")[0], textMessage.textMessage.split("#")[1] ,null)
+                        )
                 }
             }
         }
@@ -59,7 +63,7 @@ class MessageServicesListenerImpl @Autowired constructor(
         val person = personServices.getUtils().getPerson(responseDataMessage.callbackQuery.from.id.toString())
         when{
             person?.state == PersonState.REGISTRATION_CREATOR -> personServices.registrationCreator(
-                responseDataMessage.callbackQuery.from,responseDataMessage,null,sender)
+                responseDataMessage.callbackQuery.from,responseDataMessage,null, sender)
 
             responseDataMessage.callbackQuery.data.startsWith(CallbackData.PRIZE.toString()) -> {
                 person!!.state = PersonState.PRIZE
@@ -82,6 +86,9 @@ class MessageServicesListenerImpl @Autowired constructor(
     override fun addSender(sender: MessageServicesSender) {
         this.sender = sender
     }
+
+    override fun onSender() = sender
+
 
 
     override fun onPollAnswer(pollAnswer: PollAnswer) {

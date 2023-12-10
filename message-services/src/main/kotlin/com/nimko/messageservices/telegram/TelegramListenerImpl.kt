@@ -18,10 +18,16 @@ class TelegramListenerImpl(
         when{
             update.hasMessage() -> {
                 val chatId = update.message.chatId.toString()
-                val text = update.message.text
+                var text = update.message.text
                 val user = update.message.from
+                val reply = update.message.replyToMessage
                 if (update.message.forwardFromChat == null) {
-                   messageListener.onTextMessage(TextMessage(chatId,text,user))
+                    text =
+                        if(reply != null && reply.entities != null)
+                            reply.text + "#" + text
+                         else
+                             text
+                    messageListener.onTextMessage(TextMessage(chatId,text,user))
                 } else {
                     messageListener.onChannelId(
                         ChannelIdMessage(chatId,
