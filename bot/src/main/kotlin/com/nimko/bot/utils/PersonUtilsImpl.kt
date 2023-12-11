@@ -33,7 +33,7 @@ class PersonUtilsImpl @Autowired constructor(
 
     @Value("\${my.address}") private lateinit var url:String
 
-    val log = LoggerFactory.getLogger("PERS_UTIL")
+    val log = LoggerFactory.getLogger("PERS_UTIL")!!
 
    override fun sendRegistrationFinishMessage(userId: String,lang:Locale, sender: MessageServicesSender) {
 
@@ -166,7 +166,7 @@ class PersonUtilsImpl @Autowired constructor(
     override fun checkVictorinaResult(quiz: Quiz, victorina: VictorinaDto):Quiz {
         var rA = 0
         for (i in 0 until quiz.userAnswers.size){
-            if(quiz.userAnswers[i].equals(victorina.questions[i].rightAnswer.toList())) rA++
+            if(quiz.userAnswers[i] == victorina.questions[i].rightAnswer.toList()) rA++
         }
         quiz.isRightAnswered = rA == quiz.userAnswers.size
         val res = rA.toDouble().div(quiz.userAnswers.size.toDouble()).times(100.0)
