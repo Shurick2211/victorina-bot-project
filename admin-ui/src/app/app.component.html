@@ -21,9 +21,11 @@
   </aside>
 
   <main class="d-flex flex-column " style="width: 100%">
-    <button *ngIf="storage.isMobileScreen" mat-fab color="primary" aria-label="Menu"  (click)="toggleAside()">
-      <mat-icon>menu</mat-icon>
-    </button>
+    <div>
+      <button *ngIf="storage.isMobileScreen" mat-mini-fab color="primary" aria-label="Menu"  (click)="toggleAside()">
+        <mat-icon>menu</mat-icon>
+      </button>
+    </div>
     <div>
       <router-outlet></router-outlet>
     </div>
