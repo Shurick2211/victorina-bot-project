@@ -50,4 +50,10 @@ export class ApiService {
         console.log(response.status))
   }
 
+  getPersons(page:number, perPage:number,  headId:string):Observable<HttpResponse<Person[]>>{
+    let header = new HttpHeaders().set("id", headId)
+    let param = new HttpParams().set("perpage", perPage).set("page", page)
+    return this.http.get<Person[]>(this.apiPerson,{observe:'response', headers:header, params:param})
+  }
+
 }

@@ -13,6 +13,8 @@ export class StorageService {
 
   public victorinas:Victorina[];
 
+  public persons:Person[] = Array<Person>()
+
   public userId:string | null = null
 
   public person:Person | null = null
@@ -66,6 +68,15 @@ export class StorageService {
     this.api.savePassFromPerson(this.person!.id, this.person!.password).subscribe(response => {
       console.log(response)
       if(response.status == HttpStatusCode.Ok) this.isReg = true
+    })
+  }
+
+  getPersons(page:number, perPage:number){
+    this.api.getPersons(page, perPage,this.person!!.id).subscribe( response =>{
+      if (response.body !== null){
+        // @ts-ignore
+        this.persons.push(response.body);
+      } else console.log(response.status)
     })
   }
 

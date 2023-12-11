@@ -17,6 +17,13 @@ class PersonController @Autowired constructor(val service: FrontRequestService) 
     @Value("\${name.telega}")
     lateinit var botName:String
 
+    @GetMapping
+    @Operation(
+        summary = "Get all persons"
+    )
+    fun getPersons(@RequestParam("perpage") perPage:Int, @RequestParam("page") page:Int, request:HttpServletRequest) =
+        service.getPersons(perPage, page, request.getHeader("id"))
+
     @PostMapping
     @Operation(
         summary = "Get person by id"

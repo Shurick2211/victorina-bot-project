@@ -12,7 +12,7 @@
             <mat-icon>list</mat-icon>
             All Victorinas</button>
         </div>
-        <div *ngIf="storage.isAdmin" style="margin-top: 1%">
+        <div *ngIf="!storage.isAdmin" style="margin: 1%">
           <h3>Send message for ADMIN:</h3>
           <input class="sender" type="text" [(ngModel)]="textMess" placeholder="Text...">
           <button class="sender btn-secondary" (click)="sendMess()">Send    <mat-icon>send</mat-icon></button>
@@ -22,7 +22,7 @@
   </mat-drawer>
    <div class="d-flex" style="display: flex;">
      <button class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 3%; min-height: 100vh"
-             [hidden]="!storage.isReg" type="button"  aria-label="Menu" (click)="drawer.toggle()">
+             *ngIf="!storage.isReg" type="button"  aria-label="Menu" (click)="drawer.toggle()">
        <mat-icon>menu</mat-icon>
      </button>
 

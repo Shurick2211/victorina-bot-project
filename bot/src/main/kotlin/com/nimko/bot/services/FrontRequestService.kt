@@ -1,16 +1,19 @@
 package com.nimko.bot.services
 
+import com.nimko.bot.models.Person
 import com.nimko.bot.models.VictorinaDto
 import com.nimko.bot.repositories.PersonRepo
 import com.nimko.bot.repositories.VictorinaRepo
 import com.nimko.bot.utils.PersonRole
 import com.nimko.messageservices.services.MessageServicesListener
-import com.nimko.messageservices.services.MessageServicesSender
 import com.nimko.messageservices.telegram.models.message.TextMessage
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+
 
 @Service
 class FrontRequestService  @Autowired constructor(
@@ -68,5 +71,13 @@ class FrontRequestService  @Autowired constructor(
         }
 
         return ResponseEntity.ok().build()
+    }
+
+    fun getPersons(page:Int = 0, perPage:Int = 50,  header: String): List<Person> {
+        if(personsDb.findById(header).get().role == PersonRole.ADMIN) {
+            val pageable: Pageable = PageRequest.of(page, perPage)
+            return personsDb.findAll(pageable).toList()
+        }
+        return  emptyList()
     }
 }
