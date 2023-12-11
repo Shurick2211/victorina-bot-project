@@ -3,7 +3,7 @@ import {DOCUMENT} from "@angular/common";
 import {Router} from "@angular/router";
 import {StorageService} from "./services/storage.service";
 import {ApiService} from "./services/api.service";
-import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
+
 
 @Component({
   selector: 'app-root',
@@ -14,9 +14,9 @@ import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
 export class AppComponent implements OnInit {
   title = 'admin-ui';
   textMess = '';
-  asideHidden = false
 
-  constructor(@Inject(DOCUMENT) private document: Document, private router:Router, private breakpointObserver: BreakpointObserver,
+
+  constructor(@Inject(DOCUMENT) private document: Document, private router:Router,
               protected  storage:StorageService, private apiService:ApiService) {}
 
   ngOnInit(): void {
@@ -31,12 +31,6 @@ export class AppComponent implements OnInit {
       this.storage.userId = paramId
     }
 
-    this.breakpointObserver.observe([
-      Breakpoints.HandsetPortrait,
-      Breakpoints.HandsetLandscape,
-    ]).subscribe(result => {
-      this.storage.isMobileScreen = result.matches;
-    });
 
 
     // Perform actions with the received parameter
@@ -49,7 +43,5 @@ export class AppComponent implements OnInit {
     this.textMess =''
   }
 
-  toggleAside() {
-    this.asideHidden = !this.asideHidden
-  }
+
 }
