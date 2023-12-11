@@ -93,12 +93,15 @@ class PersonUtilsImpl @Autowired constructor(
         if (admin.channelsAdmin == null){
             admin.channelsAdmin = ArrayList()
         }
-        if (admin.channelsAdmin!!.indexOf(channelIdMessage) == -1){
-            channelIdMessage.channel.inviteLink =
-                sender.getChat(channelIdMessage.channelId).inviteLink
+        val indChatOnAdmin = admin.channelsAdmin!!.indexOf(channelIdMessage)
+        val chat = sender.getChat(channelIdMessage.channelId)
+        channelIdMessage.channel.inviteLink =
+            if (chat.inviteLink != null) chat.inviteLink
+            else "https://t.me/" + chat.userName
+        if ( indChatOnAdmin == -1){
             admin.channelsAdmin!!.add(channelIdMessage)
-            personRepo.save(admin)
-        }
+        } else admin.channelsAdmin!!.set(indChatOnAdmin, channelIdMessage)
+        personRepo.save(admin)
     }
 
     override fun sendFreeMessage(userId: String, lang: Locale, sender: MessageServicesSender) {
@@ -274,7 +277,7 @@ class PersonUtilsImpl @Autowired constructor(
         sender: MessageServicesSender
     ) {
         val owner = getPerson(victorina.ownerId)!!
-        sender.sendTextAndInlineButton(TextMessage(victorina.channel!!.channelId,victorina.name +
+        sender.sendTextAndInlineButton(TextMessage(victorina.channel!!.channelId,"<b>" + victorina.name + "</b>"+
         messageSource.getMessage("message.channel.start", null, Locale.forLanguageTag(owner.languageCode)), null)
             , listOf(
                 InlineButton(
