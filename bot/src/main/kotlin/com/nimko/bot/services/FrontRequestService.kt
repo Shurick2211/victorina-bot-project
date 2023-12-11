@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
@@ -73,11 +74,13 @@ class FrontRequestService  @Autowired constructor(
         return ResponseEntity.ok().build()
     }
 
-    fun getPersons(page:Int = 0, perPage:Int = 50,  header: String): List<Person> {
+    fun getPersons(page:Int , perPage:Int ,  header: String): ResponseEntity<List<Person>> {
         if(personsDb.findById(header).get().role == PersonRole.ADMIN) {
-            val pageable: Pageable = PageRequest.of(page, perPage)
-            return personsDb.findAll(pageable).toList()
+            val pageable: Pageable = PageRequest.of(page, perPage, Sort.unsorted())
+            val pageList = personsDb.findAll(pageable).content
+            log.info(pageList.size.toString())
+            return ResponseEntity.ok().body(pageList)
         }
-        return  emptyList()
+        return  ResponseEntity.ok().body(emptyList())
     }
 }

@@ -21,8 +21,8 @@ class PersonController @Autowired constructor(val service: FrontRequestService) 
     @Operation(
         summary = "Get all persons"
     )
-    fun getPersons(@RequestParam("perpage") perPage:Int, @RequestParam("page") page:Int, request:HttpServletRequest) =
-        service.getPersons(perPage, page, request.getHeader("id"))
+    fun getPersons(@RequestParam("page") page:Int, @RequestParam("perpage") perPage:Int,  request:HttpServletRequest) =
+        service.getPersons( page=page, perPage=perPage, header = request.getHeader("id"))
 
     @PostMapping
     @Operation(
