@@ -236,7 +236,7 @@ class PersonUtilsImpl @Autowired constructor(
             if (userId == winner.id)
                 sender.sendTextAndInlineButton(
                     TextMessage(winner.id,
-                        victorina.name +
+                        "<b>"+victorina.name + "</b> " +
                         messageSource.getMessage("message.for.winner", null,
                             Locale.forLanguageTag(winner.languageCode))
                         , null),
@@ -249,7 +249,7 @@ class PersonUtilsImpl @Autowired constructor(
                 )
              else sender.sendText(
                 TextMessage(userId,
-                    victorina.name +
+                    "<b>"+victorina.name + "</b> " +
                     messageSource.getMessage("message.victorina.winner", null,
                         Locale.forLanguageTag(person.languageCode)) + victorina.rightsAnsweredUserId!!.size + " " +
                             messageSource.getMessage("message.victorina.winner.2", null,
@@ -277,7 +277,8 @@ class PersonUtilsImpl @Autowired constructor(
         sender: MessageServicesSender
     ) {
         val owner = getPerson(victorina.ownerId)!!
-        sender.sendTextAndInlineButton(TextMessage(victorina.channel!!.channelId,"<b>" + victorina.name + "</b>"+
+        sender.sendTextAndInlineButton(TextMessage(victorina.channel!!.channelId,"<b>" + victorina.name + "</b> \n"+
+        victorina.title +
         messageSource.getMessage("message.channel.start", null, Locale.forLanguageTag(owner.languageCode)), null)
             , listOf(
                 InlineButton(
