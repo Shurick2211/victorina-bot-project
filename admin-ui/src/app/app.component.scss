@@ -6,12 +6,13 @@ button{
 button:hover {
   background: #353740;
 }
-main {
+.main {
   background: blanchedalmond;
 }
 
 .all-screen{
   min-height: 100vh;
+  min-width: 100vh;
 }
 
 div.menu{
