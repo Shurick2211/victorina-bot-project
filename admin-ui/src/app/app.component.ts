@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit, signal} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {DOCUMENT} from "@angular/common";
 import {Router} from "@angular/router";
 import {StorageService} from "./services/storage.service";
