@@ -3,6 +3,7 @@
   <div>
     <span>Name: </span>
     <input style="margin-left: 10px; width: 70%"  type="text" name="victorina-name" [(ngModel)]="victorina.name">
+    <br *ngIf="storage.isMobileScreen" >
     <button name = "save" class="btn btn-info" style="margin-left: 10px" (click)="save()" >Save Victorina!</button>
     <div *ngIf="isNotReady">
       <br>

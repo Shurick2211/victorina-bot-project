@@ -21,6 +21,7 @@ export class StorageService {
 
   public isAdmin = false
 
+  isMobileScreen = false;
   constructor(private api:ApiService) {
     this.victorinas = new Array<Victorina>()
   }

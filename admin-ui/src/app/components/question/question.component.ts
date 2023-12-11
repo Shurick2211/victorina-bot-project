@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Question} from "../../dto/question";
+import {StorageService} from "../../services/storage.service";
 
 
 @Component({
@@ -29,7 +30,7 @@ export class QuestionComponent implements OnInit{
   @Input()
   isManyAnswer=false
 
-  constructor() {
+  constructor(protected  storage:StorageService) {
     this.question = new Question('', new Array<string>(2), new Array<number>(1))
     this.checkeds = new Array<boolean>(this.question.answers.length)
     this.checkeds.forEach(value => value = false)
