@@ -12,7 +12,6 @@
         <span>{{i+1}}</span>
         <input name="a-{{i}}" [disabled]="!isActive" style="margin-left: 10px; width: 70%"  type="text"
                [(ngModel)]="question.answers[i]" [ngClass]="{'error-red':question.answers[i].length>99}" >
-        <br *ngIf="storage.isMobileScreen" >
         <span style="margin-left: 10px">Is true!</span>
         <input name = "{{i}}" maxlength="100" [disabled]="!isActive" style="margin-left: 10px" type="checkbox" (change)="clickNum(i)" [(ngModel)] = "checkeds[i]">
       </p>

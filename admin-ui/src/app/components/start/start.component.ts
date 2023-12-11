@@ -18,7 +18,7 @@ export class StartComponent implements OnInit{
     "to participate in the quiz!\n" +
     "The day after end date in 10:00 GMT the bot will choose a winner randomly among those who right answered!" +
     "And all of them will received message with winner`s name! After it the winner will be asked for the delivery " +
-    "address, and the bot will forward information about the winner and his address to the owner of the quiz."
+    "address, and the bot will forward information about the winner and his address to the owner of the quiz.\n\n"
 
   constructor(public storage:StorageService) {
     storage.refreshPerson()

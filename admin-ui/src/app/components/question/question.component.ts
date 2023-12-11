@@ -30,7 +30,7 @@ export class QuestionComponent implements OnInit{
   @Input()
   isManyAnswer=false
 
-  constructor(protected  storage:StorageService) {
+  constructor() {
     this.question = new Question('', new Array<string>(2), new Array<number>(1))
     this.checkeds = new Array<boolean>(this.question.answers.length)
     this.checkeds.forEach(value => value = false)
