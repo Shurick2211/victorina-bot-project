@@ -1,9 +1,7 @@
 <div  class="d-flex all-screen" >
-  <button *ngIf="isMobileScreen" mat-fab color="primary" aria-label="Menu"  (click)="toggleAside()">
-    <mat-icon>menu</mat-icon>
-  </button>
+
   <aside *ngIf="storage.isReg" class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark"
-         [hidden]="asideHidden" [ngStyle]="{'width': isMobileScreen ? '50%' : '20%'}">
+         [hidden]="asideHidden" [ngStyle]="{'width': storage.isMobileScreen ? '50%' : '20%'}">
     <nav>
       <div class="btn-block top-nav menu" >
         <button class="btn btn-dark"  name="create" routerLinkActive="activeButton" routerLink="/create">
@@ -23,6 +21,9 @@
   </aside>
 
   <main class="d-flex flex-column " style="width: 100%">
+    <button *ngIf="storage.isMobileScreen" mat-fab color="primary" aria-label="Menu"  (click)="toggleAside()">
+      <mat-icon>menu</mat-icon>
+    </button>
     <div>
       <router-outlet></router-outlet>
     </div>

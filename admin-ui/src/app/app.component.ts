@@ -14,7 +14,6 @@ import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
 export class AppComponent implements OnInit {
   title = 'admin-ui';
   textMess = '';
-  isMobileScreen = false;
   asideHidden = false
 
   constructor(@Inject(DOCUMENT) private document: Document, private router:Router, private breakpointObserver: BreakpointObserver,
@@ -36,7 +35,7 @@ export class AppComponent implements OnInit {
       Breakpoints.HandsetPortrait,
       Breakpoints.HandsetLandscape,
     ]).subscribe(result => {
-      this.isMobileScreen = result.matches;
+      this.storage.isMobileScreen = result.matches;
     });
 
 
