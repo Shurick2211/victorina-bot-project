@@ -1,34 +1,68 @@
 <div  class="d-flex all-screen" >
 
-  <aside *ngIf="storage.isReg" class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark"
-         [hidden]="asideHidden" [ngStyle]="{'width': storage.isMobileScreen ? '50%' : '20%'}">
-    <nav class="btn-block top-nav menu">
-      <div >
-        <button class="btn btn-dark"  name="create" routerLinkActive="activeButton" routerLink="/create">
-          <mat-icon>build</mat-icon>
-          Create Victorina</button>
-        <br>
-        <button class="btn btn-dark"  name="list" routerLinkActive="activeButton" routerLink="/list">
-          <mat-icon>list</mat-icon>
-          All Victorinas</button>
-      </div>
-      <div *ngIf="storage.isAdmin" style="margin-top: 1%">
-        <h3>Send message for ADMIN:</h3>
-        <input class="sender" type="text" [(ngModel)]="textMess" placeholder="Text...">
-        <button class="sender btn-secondary" (click)="sendMess()">Send    <mat-icon>send</mat-icon></button>
-      </div>
-    </nav>
-  </aside>
+<!--  <aside *ngIf="storage.isReg" class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark"-->
+<!--         [hidden]="asideHidden" [ngStyle]="{'width': storage.isMobileScreen ? '50%' : '20%'}">-->
+<!--    <nav class="btn-block top-nav menu">-->
+<!--      <div >-->
+<!--        <button class="btn btn-dark"  name="create" routerLinkActive="activeButton" routerLink="/create">-->
+<!--          <mat-icon>build</mat-icon>-->
+<!--          Create Victorina</button>-->
+<!--        <br>-->
+<!--        <button class="btn btn-dark"  name="list" routerLinkActive="activeButton" routerLink="/list">-->
+<!--          <mat-icon>list</mat-icon>-->
+<!--          All Victorinas</button>-->
+<!--      </div>-->
+<!--      <div *ngIf="storage.isAdmin" style="margin-top: 1%">-->
+<!--        <h3>Send message for ADMIN:</h3>-->
+<!--        <input class="sender" type="text" [(ngModel)]="textMess" placeholder="Text...">-->
+<!--        <button class="sender btn-secondary" (click)="sendMess()">Send    <mat-icon>send</mat-icon></button>-->
+<!--      </div>-->
+<!--    </nav>-->
+<!--  </aside>-->
 
-  <main class="d-flex flex-column " style="width: 100%">
-    <div style="width: auto">
-      <button *ngIf="storage.isMobileScreen" mat-mini-fab color="primary" aria-label="Menu"  (click)="toggleAside()">
-        <mat-icon>menu</mat-icon>
-      </button>
-    </div>
+<!--  <main class="d-flex flex-column " style="width: 100%">-->
+<!--    <div style="width: auto">-->
+<!--      <button *ngIf="storage.isMobileScreen" mat-mini-fab color="primary" aria-label="Menu"  (click)="toggleAside()">-->
+<!--        <mat-icon>menu</mat-icon>-->
+<!--      </button>-->
+<!--    </div>-->
+<!--    <div>-->
+<!--      <router-outlet></router-outlet>-->
+<!--    </div>-->
+<!--  </main>-->
+<!--</div>-->
+
+<mat-drawer-container class="example-container" autosize>
+  <mat-drawer #drawer class="example-sidenav" mode="side">
+    <aside *ngIf="storage.isReg" class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark"
+           [hidden]="asideHidden" [ngStyle]="{'width': storage.isMobileScreen ? '50%' : '20%'}">
+      <nav class="btn-block top-nav menu">
+        <div>
+          <button class="btn btn-dark"  name="create" routerLinkActive="activeButton" routerLink="/create">
+            <mat-icon>build</mat-icon>
+            Create Victorina</button>
+          <br>
+          <button class="btn btn-dark"  name="list" routerLinkActive="activeButton" routerLink="/list">
+            <mat-icon>list</mat-icon>
+            All Victorinas</button>
+        </div>
+        <div *ngIf="storage.isAdmin" style="margin-top: 1%">
+          <h3>Send message for ADMIN:</h3>
+          <input class="sender" type="text" [(ngModel)]="textMess" placeholder="Text...">
+          <button class="sender btn-secondary" (click)="sendMess()">Send    <mat-icon>send</mat-icon></button>
+        </div>
+      </nav>
+    </aside>
+  </mat-drawer>
+
+  <div>
+    <button type="button" *ngIf="storage.isMobileScreen" mat-mini-fab color="primary" aria-label="Menu" (click)="drawer.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
     <div>
       <router-outlet></router-outlet>
     </div>
-  </main>
-</div>
+  </div>
 
+</mat-drawer-container>
+</div>

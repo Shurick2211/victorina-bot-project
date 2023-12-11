@@ -26,6 +26,7 @@ import {MatExpansionModule} from "@angular/material/expansion";
 import {NgxPaginationModule} from "ngx-pagination";
 import {StatisticComponent} from "./components/statistic/statistic.component";
 import { CommonModule } from '@angular/common';
+import {MatSidenavModule} from "@angular/material/sidenav";
 
 
 
@@ -70,7 +71,8 @@ const appRoutes: Routes = [
     MatSortModule,
     MatIconModule,
     MatExpansionModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    MatSidenavModule
 
   ],
   providers: [ApiService,
