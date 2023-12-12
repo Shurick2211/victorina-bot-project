@@ -4,15 +4,15 @@ import com.nimko.bot.utils.PersonRole
 
 
 data class PersonDto(
-    val id:String,
-    val firstName:String?,
-    val lastName:String?,
-    val userName:String,
-    val languageCode:String,
-    val channelsAdmin:Array<Channel>?,
-    val quizes: Array<Quiz>?,
-    var role: PersonRole,
-    val password:String?
+    var id:String? = null,
+    var firstName:String? = null,
+    var lastName:String? = null,
+    var userName:String? = null,
+    var languageCode:String? =null,
+    var channelsAdmin:Array<Channel>? = null,
+    var quizes: Array<Quiz>? = null,
+    var role: PersonRole? = null,
+    var password:String? = null
 ){
 
 }

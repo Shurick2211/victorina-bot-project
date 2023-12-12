@@ -1,1 +1,42 @@
-<p>persons works!</p>
+<div>
+  <table class="table table-bordered border-dark">
+    <thead>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Last name</th>
+      <th>User name</th>
+      <th>Role</th>
+      <th>Channel</th>
+      <th>Quizzes</th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of storage.persons; let i=index">
+        <td>{{ storage.persons[i].id }}</td>
+        <td>{{ storage.persons[i].firstName }}</td>
+        <td>{{ storage.persons[i].lastName }}</td>
+        <td>{{ storage.persons[i].userName }}</td>
+        <td>
+          <mat-form-field  style="margin: 5px">
+            <mat-label>Role</mat-label>
+            <mat-select [(ngModel)]="storage.persons[i].role">
+              <mat-option *ngFor="let role of roles" [value]="role">{{role}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <button mat-fab color="primary" aria-label="Save" (click)="api.savePerson(storage.person!.id, storage.persons[i])">
+            <mat-icon>save</mat-icon>
+          </button>
+        </td>
+        <td>
+          <ul>
+            <li *ngFor="let ch of storage.persons[i].channelsAdmin; let j=index">{{storage.persons[i].channelsAdmin[j].channelName}}</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li *ngFor="let qu of storage.persons[i].quizes; let ii=index">{{storage.persons[i].quizes[ii].victorinaId}}</li>
+          </ul>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -37,9 +37,9 @@ export class ApiService {
     return this.http.post<Person>(this.apiPerson,id,{observe:'response', headers:header})
   }
 
-  savePassFromPerson(id:string, pass:String):Observable<any>{
+  savePerson(id:string, person:Person):Observable<any>{
     let header = new HttpHeaders().set("id", id)
-    return this.http.put<any>(this.apiPerson,pass,{observe:'response', headers:header})
+    return this.http.put<any>(this.apiPerson,person,{observe:'response', headers:header})
   }
 
   sendAdminMess(mess:string, userId:string){

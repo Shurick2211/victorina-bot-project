@@ -1,5 +1,7 @@
 package com.nimko.bot.controllers
 
+import com.nimko.bot.models.Person
+import com.nimko.bot.models.PersonDto
 import com.nimko.bot.services.FrontRequestService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -35,8 +37,8 @@ class PersonController @Autowired constructor(val service: FrontRequestService) 
     @Operation(
         summary = "Save person's password"
     )
-    fun putPasswordForPerson (@RequestBody pass:String, request:HttpServletRequest) =
-        service.putPasswordForPerson(request.getHeader("id"),pass)
+    fun putPerson (@RequestBody person:PersonDto, request:HttpServletRequest) =
+        service.putPerson(request.getHeader("id"),person)
 
 
 

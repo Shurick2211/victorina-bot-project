@@ -11,6 +11,10 @@
           <button class="btn btn-dark"  name="list" routerLinkActive="activeButton" routerLink="/list">
             <mat-icon>list</mat-icon>
             All Victorinas</button>
+          <br>
+          <button class="btn btn-dark" *ngIf="storage.isAdmin" name="persons" routerLinkActive="activeButton" routerLink="/persons">
+            <mat-icon>assignment_ind</mat-icon>
+            All Persons</button>
         </div>
         <div *ngIf="!storage.isAdmin" style="margin: 1%">
           <h3>Send message for ADMIN:</h3>

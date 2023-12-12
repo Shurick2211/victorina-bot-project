@@ -1,6 +1,7 @@
 package com.nimko.bot.services
 
 import com.nimko.bot.models.Person
+import com.nimko.bot.models.PersonDto
 import com.nimko.bot.models.VictorinaDto
 import com.nimko.bot.repositories.PersonRepo
 import com.nimko.bot.repositories.VictorinaRepo
@@ -48,10 +49,18 @@ class FrontRequestService  @Autowired constructor(
         return ResponseEntity.ok(person.toDto())
     }
 
-    fun putPasswordForPerson(id: String, password:String):ResponseEntity<Any>{
-        val person = personsDb.findById(id).get()
-        person.password = password
-        personsDb.save(person)
+    fun putPerson(id: String, person: PersonDto):ResponseEntity<Any>{
+        val personById = personsDb.findById(id).get()
+        val personForSave =
+        if (id == person.id ) {
+            personById
+        } else
+        if (personById.role == PersonRole.ADMIN) {
+             personsDb.findById(person.id!!).get()
+        } else return ResponseEntity.badRequest().build()
+        personForSave.password = person.password!!
+        personForSave.role = person.role!!
+        personsDb.save(personForSave)
         return ResponseEntity.ok().build()
     }
 
@@ -76,9 +85,9 @@ class FrontRequestService  @Autowired constructor(
 
     fun getPersons(page:Int , perPage:Int ,  header: String): ResponseEntity<List<Person>> {
         if(personsDb.findById(header).get().role == PersonRole.ADMIN) {
+            log.info("page:${page}, size:${perPage}")
             val pageable: Pageable = PageRequest.of(page, perPage, Sort.unsorted())
             val pageList = personsDb.findAll(pageable).content
-            log.info(pageList.size.toString())
             return ResponseEntity.ok().body(pageList)
         }
         return  ResponseEntity.ok().body(emptyList())

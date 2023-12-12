@@ -65,7 +65,7 @@ export class StorageService {
   }
 
   savePerson(){
-    this.api.savePassFromPerson(this.person!.id, this.person!.password).subscribe(response => {
+    this.api.savePerson(this.person!.id, this.person!).subscribe(response => {
       console.log(response)
       if(response.status == HttpStatusCode.Ok) this.isReg = true
     })
@@ -74,8 +74,9 @@ export class StorageService {
   getPersons(page:number, perPage:number){
     this.api.getPersons(page, perPage,this.person!!.id).subscribe( response =>{
       if (response.body !== null){
-        // @ts-ignore
-        this.persons.push(response.body);
+        response.body.forEach(value => {
+          if(this.persons.indexOf(value) === -1) this.persons.push(value);
+        })
       } else console.log(response.status)
     })
   }
