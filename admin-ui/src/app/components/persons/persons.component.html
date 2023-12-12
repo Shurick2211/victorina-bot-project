@@ -22,7 +22,7 @@
               <mat-option *ngFor="let role of roles" [value]="role">{{role}}</mat-option>
             </mat-select>
           </mat-form-field>
-          <button mat-fab color="primary" aria-label="Save" (click)="api.savePerson(storage.person!.id, storage.persons[i])">
+          <button mat-fab color="primary" aria-label="Save" (click)="save(i)">
             <mat-icon>save</mat-icon>
           </button>
         </td>

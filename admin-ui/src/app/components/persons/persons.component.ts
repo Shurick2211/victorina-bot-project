@@ -11,10 +11,14 @@ import {ApiService} from "../../services/api.service";
 export class PersonsComponent {
 
   roles = Object.values(PersonRole)
-  constructor(protected storage:StorageService, protected api:ApiService) {
+  constructor(protected storage:StorageService, private api:ApiService) {
     storage.getPersons(0, 5)
   }
 
 
-  protected readonly PersonRole = PersonRole;
+  save(i: number) {
+    this.api.savePerson(this.storage.person!.id, this.storage.persons[i]).subscribe(response=>{
+      console.log(response.status)
+    })
+  }
 }
