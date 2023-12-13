@@ -1,5 +1,6 @@
 package com.nimko.bot.services
 
+import com.nimko.bot.models.Person
 import com.nimko.bot.utils.PersonUtils
 import com.nimko.messageservices.services.MessageServicesSender
 import com.nimko.messageservices.telegram.models.message.ChannelIdMessage
@@ -26,5 +27,5 @@ interface PersonServices {
 
     fun getUtils():PersonUtils
 
-
+    fun startVictorinaToInvite(user: User, victorinaId: String, sender: MessageServicesSender)
 }

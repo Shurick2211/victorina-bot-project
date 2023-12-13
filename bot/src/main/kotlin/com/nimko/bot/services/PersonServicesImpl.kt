@@ -29,6 +29,7 @@ class PersonServicesImpl @Autowired constructor(
             person = newPerson(user)
         } else {
             person.languageCode = user.languageCode
+            person.state = PersonState.FREE
             personUtils.savePerson(person)
         }
         if (person.state == PersonState.FREE) personUtils.sendStartMessage(user, sender)
@@ -122,10 +123,7 @@ class PersonServicesImpl @Autowired constructor(
                             responseDataMessage.callbackQuery.data
                         }
                     val victorina = victorinaServices.getVictorinaById(victorinaId)
-                    var person = personUtils.getPerson(responseDataMessage.chatId)
-                    if (person == null) {
-                        person = newPerson(responseDataMessage.callbackQuery.from)
-                    }
+                    val person = personUtils.getPerson(responseDataMessage.chatId)!!
                     if (hasEndedQuiz(person, victorina.id!!))
                         forFree(TextMessage(responseDataMessage.callbackQuery.from.id.toString()," ", responseDataMessage.callbackQuery.from), sender)
                     else personUtils.sendStartVictorinaMessage(person, victorina, sender)
@@ -144,6 +142,18 @@ class PersonServicesImpl @Autowired constructor(
 
     override fun getUtils(): PersonUtils {
         return personUtils
+    }
+
+    override fun startVictorinaToInvite(
+        user: User,
+        victorinaId: String,
+        sender: MessageServicesSender
+    ) {
+        val person = personUtils.getPerson(user.id.toString())
+        if (person != null && hasEndedQuiz(person, victorinaId))
+            sender.sendText(TextMessage(user.id.toString(),
+                messageSource.getMessage("message.done.invite", null, Locale.forLanguageTag(user.languageCode)), null))
+        else personUtils.sendStartVictorinaMessage(newPerson(user), victorinaServices.getVictorinaById(victorinaId),sender)
     }
 
     private fun newPerson(user:User):Person{

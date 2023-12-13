@@ -12,7 +12,7 @@ export class PersonsComponent {
 
   roles = Object.values(PersonRole)
   constructor(protected storage:StorageService, private api:ApiService) {
-    storage.getPersons(0, 5)
+    storage.getPersons(0, 20)
   }
 
 

@@ -33,7 +33,12 @@ class MessageServicesListenerImpl @Autowired constructor(
     override fun onTextMessage(textMessage: TextMessage) {
         when{
             textMessage.textMessage.startsWith(Commands.START.getCommand()) -> {
-                personServices.registration(textMessage.user!!,sender)
+                val command = textMessage.textMessage.substring(Commands.START.name.length + 1).trim()
+                if(command.length > 10) {
+                    log.info(textMessage.textMessage + " : " + command + " : " + textMessage.userId)
+                    personServices.startVictorinaToInvite(textMessage.user!!, command, sender)
+                }
+                else personServices.registration(textMessage.user!!,sender)
             }
             textMessage.textMessage.startsWith(Commands.CREATOR.getCommand()) -> {
                     personServices.registrationCreator(

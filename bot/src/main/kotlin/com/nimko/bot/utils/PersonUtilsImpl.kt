@@ -272,6 +272,9 @@ class PersonUtilsImpl @Autowired constructor(
             ,null))
     }
 
+
+    @Value("\${name.telega}")
+    lateinit var nameBot:String
     override fun sendChannelMessageForStartVictorina(
         victorina: VictorinaDto,
         sender: MessageServicesSender
@@ -283,7 +286,7 @@ class PersonUtilsImpl @Autowired constructor(
             , listOf(
                 InlineButton(
                 messageSource.getMessage("button.channel.start", null, Locale.forLanguageTag(owner.languageCode)),
-                    CallbackData.QUIZ.name+"#"+victorina.id!!
+                    CallbackData.QUIZ.name+"#"+victorina.id!!, url = "https://t.me/" + nameBot + "?start=" + victorina.id!!
             )
             ))
     }
