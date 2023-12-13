@@ -14,8 +14,6 @@ export class Person {
     public quizes:Array<Quiz>,
     public role:PersonRole,
     public password:String
-  ) {
-
-  }
+  ) {}
 
 }

@@ -75,11 +75,12 @@ export class StorageService {
     this.api.getPersons(page, perPage,this.person!!.id).subscribe( response =>{
       if (response.body !== null){
         response.body.forEach(value => {
-          if(this.persons.indexOf(value) === -1) this.persons.push(value);
+
+          if(!this.persons.some(person => person.id === value.id)) this.persons.push(value);
         })
       } else console.log(response.status)
     })
   }
 
 }
-//curl -X 'GET' 'http://127.0.0.1:5000/persons?perpage=50&page=1'  -H 'accept: */*' -H 'id:1005227074'
+

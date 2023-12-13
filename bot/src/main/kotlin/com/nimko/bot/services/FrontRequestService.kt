@@ -83,11 +83,11 @@ class FrontRequestService  @Autowired constructor(
         return ResponseEntity.ok().build()
     }
 
-    fun getPersons(page:Int , perPage:Int ,  header: String): ResponseEntity<List<Person>> {
+    fun getPersons(page:Int , perPage:Int ,  header: String): ResponseEntity<List<PersonDto>> {
         if(personsDb.findById(header).get().role == PersonRole.ADMIN) {
             log.info("page:${page}, size:${perPage}")
             val pageable: Pageable = PageRequest.of(page, perPage, Sort.unsorted())
-            val pageList = personsDb.findAll(pageable).content
+            val pageList = personsDb.findAll(pageable).content.map { it.toDto() }
             return ResponseEntity.ok().body(pageList)
         }
         return  ResponseEntity.ok().body(emptyList())

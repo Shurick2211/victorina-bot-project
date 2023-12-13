@@ -28,7 +28,9 @@
         </td>
         <td>
           <ul>
-            <li *ngFor="let ch of storage.persons[i].channelsAdmin; let j=index">{{storage.persons[i].channelsAdmin[j].channelName}}</li>
+            <li *ngFor="let ch of storage.persons[i].channelsAdmin; let j=index">
+              <a [href]="storage.persons[i].channelsAdmin[j].url">{{storage.persons[i].channelsAdmin[j].channelName}}</a>
+            </li>
           </ul>
         </td>
         <td>

@@ -77,7 +77,7 @@ class PersonUtilsImpl @Autowired constructor(
             sender.sendTextAndInlineButton(TextMessage(person.id,
                 messageSource.getMessage("message.subscribe", null, Locale.forLanguageTag(person.languageCode))
                 , null),
-                listOf(InlineButton(victorina.channel!!.channelName,
+                listOf(InlineButton(victorina.channel!!.channelName!!,
                     "${CallbackData.SUBSCRIBE}#${victorina.id}", url = victorina.channel!!.url),
                     InlineButton(messageSource.getMessage("button.ready",null,
                         Locale.forLanguageTag(person.languageCode)),
