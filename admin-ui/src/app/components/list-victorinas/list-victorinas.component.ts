@@ -16,6 +16,7 @@ export class ListVictorinasComponent implements OnInit{
   curPage = 1;
 
   isAdmin = this.storage.person?.role === PersonRole.ADMIN
+  findText:string|null = null
 
   constructor(public storage:StorageService) {
 
@@ -29,4 +30,7 @@ export class ListVictorinasComponent implements OnInit{
     return i + this.iPerPage * (this.curPage - 1)
   }
 
+  find() {
+
+  }
 }

@@ -1,12 +1,21 @@
 <div class="root-element">
   <table class="table table-bordered border-dark">
     <thead>
-    <th>Name</th>
-    <th>Period</th>
-    <th>OwnerId/Channel</th>
-    <th>Title</th>
-    <th>Questions</th>
-    <th>Actions</th>
+<!--    <mat-form-field>-->
+<!--      <mat-label>Search by name...</mat-label>-->
+<!--      <input matInput type="text" [(ngModel)]="findText" >-->
+<!--      <button mat-icon-button matSuffix (click)="find()" >-->
+<!--        <mat-icon>search</mat-icon>-->
+<!--      </button>-->
+<!--    </mat-form-field>-->
+      <tr>
+        <th>Name</th>
+        <th>Period</th>
+        <th>OwnerId/Channel</th>
+        <th>Title</th>
+        <th>Questions</th>
+        <th>Actions</th>
+      </tr>
     </thead>
     <tbody>
     <tr *ngFor="let victorina of storage.victorinas | paginate:{itemsPerPage: iPerPage, currentPage: curPage} ;let i = index; ">

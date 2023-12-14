@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {StorageService} from "../../services/storage.service";
 import {PersonRole} from "../../utils/person-role";
 import {ApiService} from "../../services/api.service";
+import {Victorina} from "../../dto/victorina";
 
 @Component({
   selector: 'app-persons',
@@ -15,8 +16,11 @@ export class PersonsComponent {
   curPage = 1
   iPerPage = 8
 
+  get arrPages():number{ return  Math.floor(this.storage.persons.length/this.iPerPage) }
+
   constructor(protected storage:StorageService, private api:ApiService) {
     storage.getPersons(this.curPage - 1, this.iPerPage*2)
+    if (storage.victorinas.length < 1) storage.refreshVictorins()
   }
 
 
@@ -27,12 +31,19 @@ export class PersonsComponent {
   }
 
   item(i:number): number {
-    const rez = i + this.iPerPage * (this.curPage - 1)
-    //if(rez >= this.storage.persons.length - 1) this.getFromDb()
-    return rez
+    return i + this.iPerPage * (this.curPage - 1)
   }
 
   getFromDb(){
     this.storage.getPersons(this.curPage - 1, this.iPerPage)
+  }
+
+  getVictorina(id:String):Victorina | undefined {
+    return  this.storage.victorinas.find(victorina => victorina.id === id)
+  }
+
+  getVictorinaIndex(id:String):number | undefined {
+    const victorina = this.getVictorina(id)
+    return  victorina ? this.storage.victorinas.indexOf(victorina) : undefined
   }
 }

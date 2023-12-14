@@ -150,7 +150,7 @@ class PersonUtilsImpl @Autowired constructor(
         sender.sendOnePoll(
             PollMessage(
                 person.id, victorina.questions[numQuestion].text, victorina.questions[numQuestion].answers,
-                victorina.questions[numQuestion].rightAnswer, null, type = type.getType()
+                victorina.questions[numQuestion].rightAnswer, victorina.questions[numQuestion].explanation, type = type.getType()
             )
         )
     }

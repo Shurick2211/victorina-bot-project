@@ -1,13 +1,15 @@
 <div>
   <table class="table table-bordered border-dark">
     <thead>
-      <th>Id</th>
-      <th>Name</th>
-      <th>Last name</th>
-      <th>User name</th>
-      <th>Role</th>
-      <th>Channel</th>
-      <th>Quizzes</th>
+      <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Last name</th>
+        <th>User name</th>
+        <th>Role</th>
+        <th>Channel</th>
+        <th>Quizzes</th>
+      </tr>
     </thead>
     <tbody>
       <tr *ngFor="let user of storage.persons | paginate:{itemsPerPage: iPerPage, currentPage: curPage}; let i=index">
@@ -35,14 +37,17 @@
         </td>
         <td>
           <ul>
-            <li *ngFor="let qu of storage.persons[item(i)].quizes; let ii=index">{{storage.persons[item(i)].quizes[ii].victorinaId}}</li>
+            <li *ngFor="let qu of storage.persons[item(i)].quizes; let ii=index">
+              <a [routerLink]="['/statistic',getVictorinaIndex(storage.persons[item(i)].quizes[ii].victorinaId)]" >
+                {{getVictorina(storage.persons[item(i)].quizes[ii].victorinaId)?.name}}</a>
+            </li>
           </ul>
         </td>
       </tr>
     </tbody>
-    <tfoot>
+    <tfoot *ngIf="arrPages === (curPage-1)">
       <tr>
-        <button class="btn btn-info" (click)="getFromDb()">Get from database</button>
+        <button class="btn btn-info" (click)="getFromDb()">Get from database more</button>
       </tr>
     </tfoot>
   </table>

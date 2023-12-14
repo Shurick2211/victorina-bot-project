@@ -31,7 +31,7 @@ export class QuestionComponent implements OnInit{
   isManyAnswer=false
 
   constructor() {
-    this.question = new Question('', new Array<string>(2), new Array<number>(1))
+    this.question = new Question('', null,new Array<string>(2), new Array<number>(1))
     this.checkeds = new Array<boolean>(this.question.answers.length)
     this.checkeds.forEach(value => value = false)
   }
