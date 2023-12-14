@@ -11,8 +11,12 @@ import {ApiService} from "../../services/api.service";
 export class PersonsComponent {
 
   roles = Object.values(PersonRole)
+
+  curPage = 1
+  iPerPage = 8
+
   constructor(protected storage:StorageService, private api:ApiService) {
-    storage.getPersons(0, 20)
+    storage.getPersons(this.curPage - 1, this.iPerPage*2)
   }
 
 
@@ -20,5 +24,15 @@ export class PersonsComponent {
     this.api.savePerson(this.storage.person!.id, this.storage.persons[i]).subscribe(response=>{
       console.log(response.status)
     })
+  }
+
+  item(i:number): number {
+    const rez = i + this.iPerPage * (this.curPage - 1)
+    //if(rez >= this.storage.persons.length - 1) this.getFromDb()
+    return rez
+  }
+
+  getFromDb(){
+    this.storage.getPersons(this.curPage - 1, this.iPerPage)
   }
 }

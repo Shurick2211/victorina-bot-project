@@ -10,35 +10,46 @@
       <th>Quizzes</th>
     </thead>
     <tbody>
-      <tr *ngFor="let user of storage.persons; let i=index">
-        <td>{{ storage.persons[i].id }}</td>
-        <td>{{ storage.persons[i].firstName }}</td>
-        <td>{{ storage.persons[i].lastName }}</td>
-        <td>{{ storage.persons[i].userName }}</td>
+      <tr *ngFor="let user of storage.persons | paginate:{itemsPerPage: iPerPage, currentPage: curPage}; let i=index">
+        <td>{{ storage.persons[item(i)].id }}</td>
+        <td>{{ storage.persons[item(i)].firstName }}</td>
+        <td>{{ storage.persons[item(i)].lastName }}</td>
+        <td>{{ storage.persons[item(i)].userName }}</td>
         <td>
           <mat-form-field  style="margin: 5px">
             <mat-label>Role</mat-label>
-            <mat-select [(ngModel)]="storage.persons[i].role">
+            <mat-select [(ngModel)]="storage.persons[item(i)].role">
               <mat-option *ngFor="let role of roles" [value]="role">{{role}}</mat-option>
             </mat-select>
           </mat-form-field>
-          <button mat-fab color="primary" aria-label="Save" (click)="save(i)">
+          <button mat-fab color="primary" aria-label="Save" (click)="save(item(i))">
             <mat-icon>save</mat-icon>
           </button>
         </td>
         <td>
           <ul>
-            <li *ngFor="let ch of storage.persons[i].channelsAdmin; let j=index">
-              <a [href]="storage.persons[i].channelsAdmin[j].url">{{storage.persons[i].channelsAdmin[j].channelName}}</a>
+            <li *ngFor="let ch of storage.persons[item(i)].channelsAdmin; let j=index">
+              <a [href]="storage.persons[item(i)].channelsAdmin[j].url">{{storage.persons[item(i)].channelsAdmin[j].channelName}}</a>
             </li>
           </ul>
         </td>
         <td>
           <ul>
-            <li *ngFor="let qu of storage.persons[i].quizes; let ii=index">{{storage.persons[i].quizes[ii].victorinaId}}</li>
+            <li *ngFor="let qu of storage.persons[item(i)].quizes; let ii=index">{{storage.persons[item(i)].quizes[ii].victorinaId}}</li>
           </ul>
         </td>
       </tr>
     </tbody>
+    <tfoot>
+      <tr>
+        <button class="btn btn-info" (click)="getFromDb()">Get from database</button>
+      </tr>
+    </tfoot>
   </table>
+
+  <div style="text-align: end">
+    <pagination-controls
+      (pageChange) = "curPage = $event"></pagination-controls>
+  </div>
+
 </div>
