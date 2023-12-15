@@ -14,7 +14,7 @@ interface VictorinaServices {
 
     fun getEndedVictorinsMarcAsActive():List<VictorinaDto>
 
-    fun getOwnerVictorinaIdByWinnerId(winnerId:String):VictorinaDto
+    fun getVictorinaByWinnerId(winnerId:String):VictorinaDto
 
     fun addParticipants(personId: String, victorinaId: String)
 

@@ -263,13 +263,12 @@ class PersonUtilsImpl @Autowired constructor(
                                 Locale.forLanguageTag(person.languageCode)) + winner.firstName + " " + (winner.lastName ?: "") + "!"
                     , null)
             )
-
         }
         victorinaServices.saveWinner(winner.id, victorina.id!!)
     }
 
     override fun sendDeliveryAddress(winnerMess: TextMessage, sender: MessageServicesSender) {
-        val victorina = victorinaServices.getOwnerVictorinaIdByWinnerId(winnerMess.userId)
+        val victorina = victorinaServices.getVictorinaByWinnerId(winnerMess.userId)
         val owner = getPerson(victorina.ownerId)!!
         sender.sendText(TextMessage(owner.id,
             victorina.name + messageSource.getMessage("message.owner", null, Locale.forLanguageTag(owner.languageCode)) +

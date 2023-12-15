@@ -40,9 +40,9 @@ class VictorinaServicesImpl @Autowired constructor(
     }
 
     override fun getEndedVictorinsMarcAsActive(): List<VictorinaDto> = victorinaRepo.findAllByIsActiveIsTrueAndHasPrizeIsTrueAndEndDateBefore(
-        LocalDateTime.now())
+        LocalDateTime.now()).filter { it.winnerId == null }
 
-    override fun getOwnerVictorinaIdByWinnerId(winnerId: String): VictorinaDto {
+    override fun getVictorinaByWinnerId(winnerId: String): VictorinaDto {
         val victorina = victorinaRepo.findByIsActiveIsTrueAndWinnerId(winnerId)
         victorina.isActive = false
         runBackgroundSaveState { victorinaRepo.save(victorina) }

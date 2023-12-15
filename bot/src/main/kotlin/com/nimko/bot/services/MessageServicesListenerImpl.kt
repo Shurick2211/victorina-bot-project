@@ -13,8 +13,6 @@ import com.nimko.messageservices.telegram.utils.CallbackData
 import com.nimko.messageservices.telegram.utils.Commands
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.context.support.ResourceBundleMessageSource
 import org.springframework.stereotype.Service
 import kotlin.random.Random
 
@@ -26,9 +24,6 @@ class MessageServicesListenerImpl @Autowired constructor(
     lateinit var sender: MessageServicesSender
 
     val log = LoggerFactory.getLogger("MSG_SERV")
-
-    @Value("\${my.address}")
-    lateinit var url:String
 
     override fun onTextMessage(textMessage: TextMessage) {
         when{
@@ -57,8 +52,7 @@ class MessageServicesListenerImpl @Autowired constructor(
                     log.info(textMessage.toString())
                     val isAdminMess = personServices.getUtils().getPerson(textMessage.userId)!!.role == PersonRole.ADMIN
                     if (isAdminMess)  sender.sendText(
-                        TextMessage(textMessage.textMessage.split("#")[0], textMessage.textMessage.split("#")[1] ,null)
-                        )
+                        TextMessage(textMessage.textMessage.split("#")[0], textMessage.textMessage.split("#")[1] ,null))
                 }
             }
         }
