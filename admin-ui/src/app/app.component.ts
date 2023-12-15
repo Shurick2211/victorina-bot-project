@@ -44,7 +44,7 @@ export class AppComponent implements OnInit {
 
   sendMess() {
     if(this.textMess !== '')
-    this.apiService.sendAdminMess(this.textMess, this.storage.person!.id)
+    this.apiService.sendAdminMess(this.textMess, this.storage.person!.id, null)
     this.textMess =''
   }
 

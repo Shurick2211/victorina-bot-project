@@ -1,6 +1,14 @@
-<div>
-  <textarea rows="2"  [(ngModel)]="message" placeholder="Message..."></textarea>
-  <button mat-fab color="primary" aria-label="Send" (click)="sendMess()" [disabled]="!(this.message.length === 0) && !(this.receivers.length === 0)">
+
+<mat-button-toggle >
+  <button   mat-button color="primary" aria-label="Send" (click)="isSend = !isSend; onMessaging.emit(isSend)" >
+    Messaging!
+  </button>
+</mat-button-toggle>
+<mat-form-field *ngIf="isSend" style="margin-left: 2%">
+  <mat-label>Message...</mat-label>
+  <textarea matInput rows="2"  [(ngModel)]="message" ></textarea>
+  <button mat-icon-button matSuffix  color="primary" aria-label="Send" (click)="sendMess()" [disabled]="!isNotEmpty">
     <mat-icon>send</mat-icon>
   </button>
-</div>
+</mat-form-field>
+

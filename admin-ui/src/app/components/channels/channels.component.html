@@ -1,15 +1,15 @@
 <div>
+
   <table class="table table-bordered border-dark">
     <thead>
-    <button *ngIf="!isSend" mat-fab color="primary" aria-label="Send" (click)="isSend = !isSend" >
-      <mat-icon>send</mat-icon>
-    </button>
-    <app-messaging *ngIf="isSend" [receivers]="receivers"></app-messaging>
-    <tr>
-      <th>Id</th>
-      <th>Name</th>
-      <th>Url</th>
-    </tr>
+      <tr>
+        <app-messaging (onMessaging)="isSend=$event" [receivers]="receivers"></app-messaging>
+      </tr>
+      <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Url</th>
+      </tr>
     </thead>
     <tbody>
     <tr *ngFor="let ch of storage.channels | paginate:{itemsPerPage: iPerPage, currentPage: curPage}; let i=index">

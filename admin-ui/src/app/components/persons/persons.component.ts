@@ -15,6 +15,8 @@ export class PersonsComponent implements OnInit{
 
   curPage = 1
   iPerPage = 8
+  isSend = false
+  receivers: string[] = []
 
   get arrPages():number{ return  Math.floor(this.storage.persons.length/this.iPerPage) }
 
@@ -48,5 +50,12 @@ export class PersonsComponent implements OnInit{
   getVictorinaIndex(id:String):number | undefined {
     const victorina = this.getVictorina(id)
     return  victorina ? this.storage.victorinas.indexOf(victorina) : undefined
+  }
+
+  addReceiver($event: Event, id: string) {
+    const target = $event.target as HTMLInputElement;
+    const checkboxValue = target.checked;
+    if (checkboxValue) this.receivers.push(id)
+    else this.receivers = this.receivers.filter( it => it !== id)
   }
 }

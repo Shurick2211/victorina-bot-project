@@ -44,10 +44,9 @@ export class ApiService {
     return this.http.put<any>(this.apiPerson,person,{observe:'response', headers:header})
   }
 
-  sendAdminMess(mess:string, headerId:string, paramId:string | null = null){
-    let paramMess = new HttpParams().set("mess", mess)
+  sendAdminMess(mess:string, headerId:string, paramId:string | null){
+    let paramMess = paramId !== null ? new HttpParams().set("mess", mess).set("receiverId", paramId) : new HttpParams().set("mess", mess)
     let header = new HttpHeaders().set("id", headerId)
-    if (paramId != null) paramMess.set("receiverId", paramId)
     this.http.get<any>(this.apiOthers +'/message',{params:paramMess, observe:"response", headers:header})
       .subscribe(response =>
         console.log(response.status))

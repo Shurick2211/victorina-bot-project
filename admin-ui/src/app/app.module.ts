@@ -30,6 +30,7 @@ import {MatSidenavModule} from "@angular/material/sidenav";
 import {PersonsComponent} from "./components/persons/persons.component";
 import {ChannelsComponent} from "./components/channels/channels.component";
 import {MessagingComponent} from "./components/messaging/messaging.component";
+import {MatButtonToggleModule} from "@angular/material/button-toggle";
 
 
 
@@ -57,32 +58,33 @@ const appRoutes: Routes = [
     ChannelsComponent,
     MessagingComponent,
   ],
-  imports: [
-    CommonModule,
-    BrowserModule,
-    RouterOutlet,
-    FormsModule,
-    RouterModule.forRoot(appRoutes),
-    FormsModule,
-    MatCardModule,
-    MatButtonModule,
-    MatCheckboxModule,
-    HttpClientModule,
-    MatDatepickerModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    MatNativeDateModule,
-    MatFormFieldModule,
-    BrowserAnimationsModule,
-    MatSlideToggleModule,
-    MatSelectModule,
-    MatSortModule,
-    MatIconModule,
-    MatExpansionModule,
-    NgxPaginationModule,
-    MatSidenavModule
+    imports: [
+        CommonModule,
+        BrowserModule,
+        RouterOutlet,
+        FormsModule,
+        RouterModule.forRoot(appRoutes),
+        FormsModule,
+        MatCardModule,
+        MatButtonModule,
+        MatCheckboxModule,
+        HttpClientModule,
+        MatDatepickerModule,
+        MatInputModule,
+        ReactiveFormsModule,
+        MatNativeDateModule,
+        MatFormFieldModule,
+        BrowserAnimationsModule,
+        MatSlideToggleModule,
+        MatSelectModule,
+        MatSortModule,
+        MatIconModule,
+        MatExpansionModule,
+        NgxPaginationModule,
+        MatSidenavModule,
+        MatButtonToggleModule
 
-  ],
+    ],
   providers: [ApiService,
     provideAnimations(),
     provideHttpClient(),

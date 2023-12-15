@@ -25,6 +25,6 @@ class OthersController @Autowired constructor(val service: FrontRequestService){
     @Operation(
         summary = "Messaging front"
     )
-    fun getMessageFront (@RequestParam("mess") mess:String, @RequestParam("receiverId") receiverId:String?, request:HttpServletRequest) =
-        service.getMessageFront(mess, request.getHeader("id"), receiverId)
+    fun getMessageFront (@RequestParam("mess") mess:String, request:HttpServletRequest) =
+        service.getMessageFront(mess, request.getHeader("id"), request.getParameter("receiverId"))
 }

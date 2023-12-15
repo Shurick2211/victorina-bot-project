@@ -2,6 +2,9 @@
   <table class="table table-bordered border-dark">
     <thead>
       <tr>
+        <app-messaging (onMessaging)="isSend=$event" [receivers]="receivers"></app-messaging>
+      </tr>
+      <tr>
         <th>Id</th>
         <th>Name</th>
         <th>Last name</th>
@@ -13,7 +16,9 @@
     </thead>
     <tbody>
       <tr *ngFor="let user of storage.persons | paginate:{itemsPerPage: iPerPage, currentPage: curPage}; let i=index">
-        <td>{{ storage.persons[item(i)].id }}</td>
+        <td><input *ngIf="isSend" type="checkbox" (change)="addReceiver($event, storage.persons[item(i)].id)"  />
+          {{ storage.persons[item(i)].id }}
+        </td>
         <td>{{ storage.persons[item(i)].firstName }}</td>
         <td>{{ storage.persons[item(i)].lastName }}</td>
         <td>{{ storage.persons[item(i)].userName }}</td>
