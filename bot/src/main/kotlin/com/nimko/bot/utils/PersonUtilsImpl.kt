@@ -1,8 +1,10 @@
 package com.nimko.bot.utils
 
+import com.nimko.bot.models.Channel
 import com.nimko.bot.models.Person
 import com.nimko.bot.models.Quiz
 import com.nimko.bot.models.VictorinaDto
+import com.nimko.bot.repositories.ChannelRepo
 import com.nimko.bot.repositories.PersonRepo
 import com.nimko.bot.services.VictorinaServices
 import com.nimko.messageservices.services.MessageServicesSender
@@ -17,6 +19,8 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.MessageSource
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.objects.User
+import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMemberAdministrator
+import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMemberOwner
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException
 import java.time.format.DateTimeFormatter
@@ -28,7 +32,8 @@ import kotlin.collections.ArrayList
 class PersonUtilsImpl @Autowired constructor(
     private val personRepo: PersonRepo,
     private val messageSource: MessageSource,
-    private val victorinaServices: VictorinaServices
+    private val victorinaServices: VictorinaServices,
+    private val channelRepo: ChannelRepo
 ):PersonUtils{
 
     @Value("\${my.address}") private lateinit var url:String
@@ -89,19 +94,27 @@ class PersonUtilsImpl @Autowired constructor(
     }
 
     override fun saveChannelForAdmin(channelIdMessage: ChannelIdMessage, sender: MessageServicesSender) {
-        val admin = getPerson(channelIdMessage.adminId)!!
-        if (admin.channelsAdmin == null){
-            admin.channelsAdmin = ArrayList()
-        }
-        val indChatOnAdmin = admin.channelsAdmin!!.indexOf(channelIdMessage)
-        val chat = sender.getChat(channelIdMessage.channelId)
-        channelIdMessage.channel.inviteLink =
-            if (chat.inviteLink != null) chat.inviteLink
-            else "https://t.me/" + chat.userName
-        if ( indChatOnAdmin == -1){
-            admin.channelsAdmin!!.add(channelIdMessage)
-        } else admin.channelsAdmin!!.set(indChatOnAdmin, channelIdMessage)
-        personRepo.save(admin)
+        if (sender.checkIsUserOfChannel(channelIdMessage.channelId,channelIdMessage.adminId) is ChatMemberAdministrator ||
+            sender.checkIsUserOfChannel(channelIdMessage.channelId,channelIdMessage.adminId) is ChatMemberOwner) {
+            val admin = getPerson(channelIdMessage.adminId)!!
+            if (admin.channelsAdmin == null) {
+                admin.channelsAdmin = ArrayList()
+            }
+            val indChatOnAdmin = admin.channelsAdmin!!.indexOf(channelIdMessage)
+            val chat = sender.getChat(channelIdMessage.channelId)
+            channelIdMessage.channel.inviteLink =
+                if (chat.inviteLink != null) chat.inviteLink
+                else "https://t.me/" + chat.userName
+            if (indChatOnAdmin == -1) {
+                admin.channelsAdmin!!.add(channelIdMessage)
+            } else admin.channelsAdmin!!.set(indChatOnAdmin, channelIdMessage)
+            channelRepo.save(Channel(chat.id.toString(), chat.title,
+                    channelIdMessage.channel.inviteLink))
+            personRepo.save(admin)
+        } else
+            sender.sendText(TextMessage(channelIdMessage.adminId,
+                messageSource.getMessage("message.not.admin",null,Locale.forLanguageTag(channelIdMessage.user.languageCode))
+                ,null))
     }
 
     override fun sendFreeMessage(userId: String, lang: Locale, sender: MessageServicesSender) {
@@ -109,11 +122,6 @@ class PersonUtilsImpl @Autowired constructor(
         val listButton = ArrayList<InlineButton>()
         victorinaServices.getActiveVictorin().forEach {
             if(!isEndedVictorinaByUser(userId, it.id!!)) {
-//                var name = "${it.name} ${
-//                    messageSource.getMessage("message.from", null, lang)
-//                } - "
-//                name += if (it.channel !== null) it.channel.channelName
-//                else getPerson(it.ownerId)!!.firstName ?: getPerson(it.ownerId)!!.userName
                 val button = InlineButton(it.name, it.id!!)
                 listButton.add(button)
             }

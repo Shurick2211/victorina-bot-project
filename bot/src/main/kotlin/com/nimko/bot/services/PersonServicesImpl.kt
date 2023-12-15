@@ -1,6 +1,7 @@
 package com.nimko.bot.services
 
 import com.nimko.bot.models.Person
+import com.nimko.bot.repositories.ChannelRepo
 import com.nimko.bot.utils.PersonRole
 import com.nimko.bot.utils.PersonState
 import com.nimko.bot.utils.PersonUtils
