@@ -29,6 +29,7 @@ import { CommonModule } from '@angular/common';
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {PersonsComponent} from "./components/persons/persons.component";
 import {ChannelsComponent} from "./components/channels/channels.component";
+import {MessagingComponent} from "./components/messaging/messaging.component";
 
 
 
@@ -54,6 +55,7 @@ const appRoutes: Routes = [
     StatisticComponent,
     PersonsComponent,
     ChannelsComponent,
+    MessagingComponent,
   ],
   imports: [
     CommonModule,

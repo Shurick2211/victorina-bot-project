@@ -1,0 +1,6 @@
+<div>
+  <textarea rows="2"  [(ngModel)]="message" placeholder="Message..."></textarea>
+  <button mat-fab color="primary" aria-label="Send" (click)="sendMess()" [disabled]="!(this.message.length === 0) && !(this.receivers.length === 0)">
+    <mat-icon>send</mat-icon>
+  </button>
+</div>

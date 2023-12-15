@@ -1,6 +1,10 @@
 <div>
   <table class="table table-bordered border-dark">
     <thead>
+    <button *ngIf="!isSend" mat-fab color="primary" aria-label="Send" (click)="isSend = !isSend" >
+      <mat-icon>send</mat-icon>
+    </button>
+    <app-messaging *ngIf="isSend" [receivers]="receivers"></app-messaging>
     <tr>
       <th>Id</th>
       <th>Name</th>
@@ -9,7 +13,10 @@
     </thead>
     <tbody>
     <tr *ngFor="let ch of storage.channels | paginate:{itemsPerPage: iPerPage, currentPage: curPage}; let i=index">
-      <td>{{ storage.channels[item(i)].channelId }}</td>
+      <td>
+        <input *ngIf="isSend" type="checkbox" (change)="addReceiver($event, storage.channels[item(i)].channelId)"  />
+        {{ storage.channels[item(i)].channelId }}
+      </td>
       <td>{{ storage.channels[item(i)].channelName }}</td>
       <td>{{ storage.channels[item(i)].url }}</td>
     </tr>
