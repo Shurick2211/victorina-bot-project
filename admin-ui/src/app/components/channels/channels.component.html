@@ -1,0 +1,24 @@
+<div>
+  <table class="table table-bordered border-dark">
+    <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Url</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let ch of storage.channels | paginate:{itemsPerPage: iPerPage, currentPage: curPage}; let i=index">
+      <td>{{ storage.channels[item(i)].channelId }}</td>
+      <td>{{ storage.channels[item(i)].channelName }}</td>
+      <td>{{ storage.channels[item(i)].url }}</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div style="text-align: end">
+    <pagination-controls
+      (pageChange) = "curPage = $event"></pagination-controls>
+  </div>
+
+</div>

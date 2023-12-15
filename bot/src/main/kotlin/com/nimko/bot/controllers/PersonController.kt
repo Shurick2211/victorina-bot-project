@@ -1,6 +1,5 @@
 package com.nimko.bot.controllers
 
-import com.nimko.bot.models.Person
 import com.nimko.bot.models.PersonDto
 import com.nimko.bot.services.FrontRequestService
 import io.swagger.v3.oas.annotations.Operation
@@ -51,11 +50,6 @@ class PersonController @Autowired constructor(val service: FrontRequestService) 
         response.sendRedirect("https://t.me/${botName}")
     }
 
-    @GetMapping("/message")
-    @Operation(
-        summary = "Messaging front"
-    )
-    fun getMessageFront (@RequestParam("mess") mess:String, request:HttpServletRequest) =
-        service.getMessageFront(mess, request.getHeader("id"))
+
 
 }

@@ -15,6 +15,9 @@
           <button class="btn btn-dark" *ngIf="storage.isAdmin" name="persons" routerLinkActive="activeButton" routerLink="/persons">
             <mat-icon>assignment_ind</mat-icon>
             All Persons</button>
+          <button class="btn btn-dark" *ngIf="storage.isAdmin" name="channels" routerLinkActive="activeButton" routerLink="/channels">
+            <mat-icon>library_books</mat-icon>
+            All Channels</button>
         </div>
         <div *ngIf="!storage.isAdmin" style="margin: 1%">
           <h3>Send message for ADMIN:</h3>

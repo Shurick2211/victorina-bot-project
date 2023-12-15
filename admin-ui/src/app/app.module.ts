@@ -28,6 +28,7 @@ import {StatisticComponent} from "./components/statistic/statistic.component";
 import { CommonModule } from '@angular/common';
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {PersonsComponent} from "./components/persons/persons.component";
+import {ChannelsComponent} from "./components/channels/channels.component";
 
 
 
@@ -36,6 +37,7 @@ const appRoutes: Routes = [
   {path: 'create', component: CreateVictorinaComponent},
   {path: 'list', component: ListVictorinasComponent},
   {path: 'persons', component: PersonsComponent},
+  {path: 'channels', component: ChannelsComponent},
   {path: 'edit/:id', component: CreateVictorinaComponent},
   {path: 'statistic/:id', component: StatisticComponent},
 
@@ -51,7 +53,7 @@ const appRoutes: Routes = [
     StartComponent,
     StatisticComponent,
     PersonsComponent,
-
+    ChannelsComponent,
   ],
   imports: [
     CommonModule,

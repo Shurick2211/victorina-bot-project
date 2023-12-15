@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders, HttpParams, HttpResponse} from "@angular/common
 import {Victorina} from "../dto/victorina";
 import {Observable} from "rxjs";
 import {Person} from "../dto/person";
+import {Channel} from "../dto/channel";
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ export class ApiService {
   private url = ''
   private apiVictorina = `${this.url}/victorinas`;
   private apiPerson = `${this.url}/persons`;
+  private apiOthers = `${this.url}/others`;
 
   constructor(private http: HttpClient) { }
 
@@ -42,10 +44,11 @@ export class ApiService {
     return this.http.put<any>(this.apiPerson,person,{observe:'response', headers:header})
   }
 
-  sendAdminMess(mess:string, userId:string){
+  sendAdminMess(mess:string, headerId:string, paramId:string | null = null){
     let paramMess = new HttpParams().set("mess", mess)
-    let header = new HttpHeaders().set("id", userId)
-    this.http.get<any>(this.apiPerson+'/message',{params:paramMess, observe:"response", headers:header})
+    let header = new HttpHeaders().set("id", headerId)
+    if (paramId != null) paramMess.set("receiverId", paramId)
+    this.http.get<any>(this.apiOthers +'/message',{params:paramMess, observe:"response", headers:header})
       .subscribe(response =>
         console.log(response.status))
   }
@@ -54,6 +57,11 @@ export class ApiService {
     let header = new HttpHeaders().set("id", headId)
     let param = new HttpParams().set("perpage", perPage).set("page", page)
     return this.http.get<Person[]>(this.apiPerson,{observe:'response', headers:header, params:param})
+  }
+
+  getChannels(headId:string):Observable<HttpResponse<Channel[]>>{
+    let header = new HttpHeaders().set("id", headId)
+    return this.http.get<Channel[]>(this.apiOthers + "/channels",{observe:'response', headers:header})
   }
 
 }

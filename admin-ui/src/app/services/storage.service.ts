@@ -4,6 +4,7 @@ import {ApiService} from "./api.service";
 import {Person} from "../dto/person";
 import {HttpStatusCode} from "@angular/common/http";
 import {PersonRole} from "../utils/person-role";
+import {Channel} from "../dto/channel";
 
 
 @Injectable({
@@ -11,9 +12,11 @@ import {PersonRole} from "../utils/person-role";
 })
 export class StorageService {
 
-  public victorinas:Victorina[];
+  public victorinas:Victorina[] = new Array<Victorina>()
 
   public persons:Person[] = Array<Person>()
+
+  public channels:Channel[] = Array<Channel>()
 
   public userId:string | null = null
 
@@ -25,7 +28,6 @@ export class StorageService {
 
   isMobileScreen = false;
   constructor(private api:ApiService) {
-    this.victorinas = new Array<Victorina>()
   }
 
   refreshPerson(){
@@ -79,6 +81,12 @@ export class StorageService {
           if(!this.persons.some(person => person.id === value.id)) this.persons.push(value);
         })
       } else console.log(response.status)
+    })
+  }
+
+  getChannels(){
+    this.api.getChannels(this.person!.id).subscribe(response => {
+      if(response.body != null) this.channels = response.body
     })
   }
 

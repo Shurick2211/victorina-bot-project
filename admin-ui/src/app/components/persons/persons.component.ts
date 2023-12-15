@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {StorageService} from "../../services/storage.service";
 import {PersonRole} from "../../utils/person-role";
 import {ApiService} from "../../services/api.service";
@@ -9,7 +9,7 @@ import {Victorina} from "../../dto/victorina";
   templateUrl: './persons.component.html',
   styleUrl: './persons.component.scss'
 })
-export class PersonsComponent {
+export class PersonsComponent implements OnInit{
 
   roles = Object.values(PersonRole)
 
@@ -19,9 +19,12 @@ export class PersonsComponent {
   get arrPages():number{ return  Math.floor(this.storage.persons.length/this.iPerPage) }
 
   constructor(protected storage:StorageService, private api:ApiService) {
-    storage.getPersons(this.curPage - 1, this.iPerPage*2)
-    if (storage.victorinas.length < 1) storage.refreshVictorins()
   }
+
+  ngOnInit(): void {
+      this.storage.getPersons(this.curPage - 1, this.iPerPage*2)
+      if (this.storage.victorinas.length < 1) this.storage.refreshVictorins()
+    }
 
 
   save(i: number) {

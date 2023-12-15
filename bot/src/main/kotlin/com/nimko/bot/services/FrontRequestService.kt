@@ -1,8 +1,9 @@
 package com.nimko.bot.services
 
-import com.nimko.bot.models.Person
+import com.nimko.bot.models.ChannelEntity
 import com.nimko.bot.models.PersonDto
 import com.nimko.bot.models.VictorinaDto
+import com.nimko.bot.repositories.ChannelRepo
 import com.nimko.bot.repositories.PersonRepo
 import com.nimko.bot.repositories.VictorinaRepo
 import com.nimko.bot.utils.PersonRole
@@ -21,9 +22,19 @@ import org.springframework.stereotype.Service
 class FrontRequestService  @Autowired constructor(
     private val victorinasDb: VictorinaRepo,
     private val personsDb: PersonRepo,
-    private val messageService:MessageServicesListener
+    private val messageService:MessageServicesListener,
+    private val channelRepo: ChannelRepo
     ) {
     val log = LoggerFactory.getLogger("FRONT_SERV")
+
+    fun getChannels(id: String):ResponseEntity<Any>{
+        val person = personsDb.findById(id).get()
+        if(person.role == PersonRole.ADMIN) {
+        val list:List<ChannelEntity> = channelRepo.findAll()
+        return ResponseEntity.ok(list)
+        }
+        return ResponseEntity.badRequest().build()
+    }
 
     fun getRequest(id: String?):ResponseEntity<Any>{
         val list:List<VictorinaDto> =
@@ -68,7 +79,7 @@ class FrontRequestService  @Autowired constructor(
         println("FROM REDIRECT" + userId)
     }
 
-    fun getMessageFront(message:String, userId:String):ResponseEntity<Any>{
+    fun getMessageFront(message: String, userId: String, receiverId: String?):ResponseEntity<Any>{
         log.info(userId+": "+message)
         val person = personsDb.findById(userId).get()
         if(person.role != PersonRole.ADMIN) {
@@ -78,8 +89,9 @@ class FrontRequestService  @Autowired constructor(
                     "${person.id}/@${person.userName}: ${message} \n\n" +
                             "Затисни повідомлення, а після натисни \"Відповісти\"", null))
             }
-        }
-
+        } else
+            if (receiverId != null)
+                messageService.onSender().sendText(TextMessage(receiverId, message, null))
         return ResponseEntity.ok().build()
     }
 
