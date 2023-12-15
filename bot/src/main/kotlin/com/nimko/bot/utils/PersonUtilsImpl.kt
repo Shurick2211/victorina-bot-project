@@ -1,9 +1,6 @@
 package com.nimko.bot.utils
 
-import com.nimko.bot.models.Channel
-import com.nimko.bot.models.Person
-import com.nimko.bot.models.Quiz
-import com.nimko.bot.models.VictorinaDto
+import com.nimko.bot.models.*
 import com.nimko.bot.repositories.ChannelRepo
 import com.nimko.bot.repositories.PersonRepo
 import com.nimko.bot.services.VictorinaServices
@@ -108,7 +105,7 @@ class PersonUtilsImpl @Autowired constructor(
             if (indChatOnAdmin == -1) {
                 admin.channelsAdmin!!.add(channelIdMessage)
             } else admin.channelsAdmin!!.set(indChatOnAdmin, channelIdMessage)
-            channelRepo.save(Channel(chat.id.toString(), chat.title,
+            channelRepo.save(ChannelEntity(chat.id.toString(), chat.title,
                     channelIdMessage.channel.inviteLink))
             personRepo.save(admin)
         } else
