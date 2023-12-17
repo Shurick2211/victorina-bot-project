@@ -48,7 +48,7 @@ export class CreateVictorinaComponent implements OnInit{
 
   addToInfo(q:Question){
     this.victorina.questions.push(q)
-    this.q = new Question('',null,new Array<string>(q.answers.length), Array.of<number>(-1))
+    this.q = new Question('',null,['',''], Array.of<number>(-1))
     this.clicManyAnswers()
   }
 
