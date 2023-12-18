@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Question} from "../../dto/question";
-import {StorageService} from "../../services/storage.service";
 
 
 @Component({
