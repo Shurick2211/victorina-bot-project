@@ -94,7 +94,7 @@ export class QuestionComponent implements OnInit{
 
   get lessTwoHundred():boolean{
     const exp = this.question.explanation
-    return exp ? exp.length<200 : false
+    return exp ? exp.length<200 : true
   }
 
   get lessThreeHundred():boolean{
