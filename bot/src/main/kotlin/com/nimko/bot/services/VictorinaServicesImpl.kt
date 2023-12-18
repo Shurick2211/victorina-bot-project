@@ -58,7 +58,7 @@ class VictorinaServicesImpl @Autowired constructor(
         }
     }
 
-    override fun startChanellAndIsActiveTrueAllVictorinas(): List<VictorinaDto> {
+    override fun startVictorinsAndIsActiveTrueAllVictorinas(): List<VictorinaDto> {
         val today = LocalDateTime.now()
         val listStart = victorinaRepo.findAllByIsActiveIsFalseAndEndDateAfter(today)
             .filter { it.startDate.isBefore(today) }
@@ -71,7 +71,7 @@ class VictorinaServicesImpl @Autowired constructor(
                 }
             }
         }
-        return listStart.filter { it.hasPrize && it.channel != null }
+        return listStart
     }
 
 

@@ -61,7 +61,7 @@ class PersonUtilsImpl @Autowired constructor(
 
     override fun sendStartVictorinaMessage(person: Person, victorina: VictorinaDto, sender: MessageServicesSender) {
         val nameOfOwner = if (victorina.channel != null) "<a href=\"${victorina.channel.url}\">${victorina.channel.channelName}</a>"
-        else getPerson(victorina.ownerId)!!.firstName
+        else "<b>${getPerson(victorina.ownerId)!!.firstName}</b>"
         val mess = TextMessage(person.id,
             "<b>${ victorina.name }</b> " +
                     messageSource.getMessage("message.from", null, Locale.forLanguageTag(person.languageCode)) + " " +
@@ -279,12 +279,20 @@ class PersonUtilsImpl @Autowired constructor(
 
     @Value("\${name.telega}")
     lateinit var nameBot:String
-    override fun sendChannelMessageForStartVictorina(
+    override fun sendMessageForStartVictorina(
         victorina: VictorinaDto,
         sender: MessageServicesSender
     ) {
         val owner = getPerson(victorina.ownerId)!!
-        sender.sendTextAndInlineButton(TextMessage(victorina.channel!!.channelId,"<b>" + victorina.name + "</b> \n"+
+        val receiverId:String
+            if (victorina.channel != null) receiverId = victorina.channel.channelId
+            else {
+                receiverId = owner.id
+                sender.sendText(TextMessage(owner.id,
+                    messageSource.getMessage("message.person.invite",null, Locale.forLanguageTag(owner.languageCode)),
+                    null))
+            }
+        sender.sendTextAndInlineButton(TextMessage(receiverId,"<b>" + victorina.name + "</b> \n"+
         victorina.title +
         messageSource.getMessage("message.channel.start", null, Locale.forLanguageTag(owner.languageCode)), null)
             , listOf(

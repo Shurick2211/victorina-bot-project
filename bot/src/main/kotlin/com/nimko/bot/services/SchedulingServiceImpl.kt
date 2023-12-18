@@ -27,11 +27,15 @@ class SchedulingServiceImpl @Autowired constructor(
 
     @Scheduled(cron = "\${checked.time.start}")
     override fun checkStartChanelViqtorinas() {
-        val listStartChanellVictorinas = victorinaServices.startChanellAndIsActiveTrueAllVictorinas()
+        val listToStart = victorinaServices.startVictorinsAndIsActiveTrueAllVictorinas()
+        val listStartChanellVictorinas = listToStart.filter { it.hasPrize && it.channel != null }
         if(listStartChanellVictorinas.isNotEmpty()) {
             log.info(listStartChanellVictorinas.stream().map { it.name }.reduce{ n, m -> n + ", " + m}.get())
-            prizeServices.startChannelVictorinasForPlayPrize(listStartChanellVictorinas)
+            prizeServices.startVictorinasForPlayPrize(listStartChanellVictorinas)
         }
+        val listPersonVictorins = listToStart.minus(listStartChanellVictorinas)
+        if(listPersonVictorins.isNotEmpty())
+            prizeServices.startVictorinasForPlayPrize(listPersonVictorins)
     }
 
 

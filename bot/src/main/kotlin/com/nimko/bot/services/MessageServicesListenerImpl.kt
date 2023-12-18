@@ -104,9 +104,9 @@ class MessageServicesListenerImpl @Autowired constructor(
         }
     }
 
-    override fun startChannelVictorinasForPlayPrize(victorinas: List<VictorinaDto>) {
+    override fun startVictorinasForPlayPrize(victorinas: List<VictorinaDto>) {
         victorinas.forEach{
-            personServices.getUtils().sendChannelMessageForStartVictorina(it, sender)
+            personServices.getUtils().sendMessageForStartVictorina(it, sender)
         }
     }
 

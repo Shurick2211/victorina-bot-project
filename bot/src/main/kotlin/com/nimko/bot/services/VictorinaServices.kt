@@ -18,5 +18,5 @@ interface VictorinaServices {
 
     fun addParticipants(personId: String, victorinaId: String)
 
-    fun startChanellAndIsActiveTrueAllVictorinas():List<VictorinaDto>
+    fun startVictorinsAndIsActiveTrueAllVictorinas():List<VictorinaDto>
 }

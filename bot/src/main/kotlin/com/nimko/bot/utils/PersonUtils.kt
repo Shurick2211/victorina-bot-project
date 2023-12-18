@@ -47,5 +47,5 @@ interface PersonUtils {
 
     fun sendDeliveryAddress(winnerMess: TextMessage, sender: MessageServicesSender)
 
-    fun sendChannelMessageForStartVictorina(victorina: VictorinaDto, sender: MessageServicesSender)
+    fun sendMessageForStartVictorina(victorina: VictorinaDto, sender: MessageServicesSender)
 }
