@@ -7,9 +7,11 @@
   </mat-card-header>
 
   <mat-card-content>
-    <textarea name="text" [disabled]="!isActive" rows="2" [(ngModel)] = "question.text"></textarea>
+    <textarea name="text" [disabled]="!isActive" rows="2" [(ngModel)] = "question.text"
+              [ngClass]="{'error-red':!lessThreeHundred}"></textarea>
     <h3>Explanation:</h3>
-    <input name="explanation" style="margin-left: 10px; width: 80%" [disabled]="!isActive"  [(ngModel)] = "question.explanation">
+    <textarea name="explanation" style="margin-left: 10px; width: 80%" rows="2" [disabled]="!isActive"  [(ngModel)] = "question.explanation"
+           [ngClass]="{'error-red':!lessTwoHundred}"></textarea>
     <h3>Options:</h3>
     <p *ngFor="let q of question.answers; let i = index; trackBy:trackByFn ">
       <span>{{i+1}}</span>
@@ -23,6 +25,8 @@
       <button mat-button class="large-font" *ngIf="isActive " (click)="clickDell()">-</button>
       <span *ngIf="notReady" style="margin-left: 20px; color: red">Not ready!<br></span>
       <span *ngIf="!lessHundred" style="margin-left: 20px; color: red">Need less 100 chars in answer!</span>
+      <span *ngIf="!lessThreeHundred" style="margin-left: 20px; color: red">Need less 300 chars in question!</span>
+      <span *ngIf="!lessTwoHundred" style="margin-left: 20px; color: red">Need less 200 chars in explanation!</span>
     </mat-card-actions>
 
 

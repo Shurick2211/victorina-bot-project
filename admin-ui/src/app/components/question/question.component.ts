@@ -65,7 +65,8 @@ export class QuestionComponent implements OnInit{
 
   save(){
     if(this.question.text !== '' && this.question.rightAnswer[0] > -1
-        && this.question.answers[0] !=='' && this.question.answers[1] !=='' && this.lessHundred) {
+        && this.question.answers[0] !=='' && this.question.answers[1] !==''
+        && this.lessHundred && this.lessTwoHundred && this.lessThreeHundred) {
         this.notReady = false
         this.quest.emit(this.question)
       if (!this.isEdit) {
@@ -90,6 +91,15 @@ export class QuestionComponent implements OnInit{
 
   get lessHundred():boolean{
     return this.question.answers.every(value => value.length<100)
+  }
+
+  get lessTwoHundred():boolean{
+    const exp = this.question.explanation
+    return exp ? exp.length<200 : false
+  }
+
+  get lessThreeHundred():boolean{
+    return this.question.text.length<300
   }
 
 }
