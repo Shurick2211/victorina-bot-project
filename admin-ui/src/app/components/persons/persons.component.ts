@@ -18,6 +18,20 @@ export class PersonsComponent implements OnInit{
   isSend = false
   receivers: string[] = []
 
+
+
+  addAll($event: Event){
+    const target = $event.target as HTMLInputElement;
+    const checkboxValue = target.checked;
+    if (checkboxValue)
+      this.receivers = this.storage.persons.map( person => person.id)
+    else this.receivers = []
+  }
+
+  get isAll():boolean{
+    return this.receivers.length === this.storage.persons.length
+  }
+
   get arrPages():number{ return  Math.floor(this.storage.persons.length/this.iPerPage) }
 
   constructor(protected storage:StorageService, private api:ApiService) {

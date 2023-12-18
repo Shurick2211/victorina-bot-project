@@ -15,6 +15,7 @@ export class ChannelsComponent implements OnInit{
   isSend = false
   receivers: string[] = []
 
+
   constructor(protected storage:StorageService) {
 
   }
@@ -33,5 +34,20 @@ export class ChannelsComponent implements OnInit{
     const checkboxValue = target.checked;
     if (checkboxValue) this.receivers.push(channelId)
     else this.receivers = this.receivers.filter( id => id !== channelId)
+  }
+
+
+  addAll($event: Event){
+    const target = $event.target as HTMLInputElement;
+    const checkboxValue = target.checked;
+    if (checkboxValue)
+      this.receivers = this.storage.channels.map( chn => chn.channelId)
+    else this.receivers = []
+    console.log(this.receivers)
+
+  }
+
+  get isAll():boolean{
+    return this.receivers.length === this.storage.channels.length
   }
 }

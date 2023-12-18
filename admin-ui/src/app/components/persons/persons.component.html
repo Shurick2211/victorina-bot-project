@@ -2,10 +2,15 @@
   <table class="table table-bordered border-dark">
     <thead>
       <tr>
-        <app-messaging (onMessaging)="isSend=$event" [receivers]="receivers"></app-messaging>
+        <th colspan="7">
+          <app-messaging (onMessaging)="isSend=$event" [receivers]="receivers"></app-messaging>
+        </th>
       </tr>
       <tr>
-        <th>Id</th>
+        <th>Id
+          <input style ="margin-left: 5%" *ngIf="isSend" type="checkbox" (change)="addAll($event)" [checked] = "isAll" />
+          <span *ngIf="isSend"><i> - selected: {{receivers.length}}</i></span>
+        </th>
         <th>Name</th>
         <th>Last name</th>
         <th>User name</th>
@@ -16,7 +21,8 @@
     </thead>
     <tbody>
       <tr *ngFor="let user of storage.persons | paginate:{itemsPerPage: iPerPage, currentPage: curPage}; let i=index">
-        <td><input *ngIf="isSend" type="checkbox" (change)="addReceiver($event, storage.persons[item(i)].id)"  />
+        <td><input *ngIf="isSend" type="checkbox" (change)="addReceiver($event, storage.persons[item(i)].id)"
+                   [checked] = "receivers.includes(storage.persons[item(i)].id)" />
           {{ storage.persons[item(i)].id }}
         </td>
         <td>{{ storage.persons[item(i)].firstName }}</td>
