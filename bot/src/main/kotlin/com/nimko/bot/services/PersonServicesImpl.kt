@@ -150,11 +150,12 @@ class PersonServicesImpl @Autowired constructor(
         victorinaId: String,
         sender: MessageServicesSender
     ) {
-        val person = personUtils.getPerson(user.id.toString())
-        if (person != null && hasEndedQuiz(person, victorinaId))
+        val person = personUtils.getPerson(user.id.toString()) ?: newPerson(user)
+        if (hasEndedQuiz(person, victorinaId))
             sender.sendText(TextMessage(user.id.toString(),
-                messageSource.getMessage("message.done.invite", null, Locale.forLanguageTag(user.languageCode)), null))
-        else personUtils.sendStartVictorinaMessage(newPerson(user), victorinaServices.getVictorinaById(victorinaId),sender)
+                messageSource.getMessage("message.done.invite",null,Locale.forLanguageTag(user.languageCode))
+                , null))
+        else personUtils.sendStartVictorinaMessage(person, victorinaServices.getVictorinaById(victorinaId),sender)
     }
 
     private fun newPerson(user:User):Person{
