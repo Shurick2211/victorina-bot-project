@@ -31,6 +31,8 @@ import {PersonsComponent} from "./components/persons/persons.component";
 import {ChannelsComponent} from "./components/channels/channels.component";
 import {MessagingComponent} from "./components/messaging/messaging.component";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
+import {PickerComponent} from "@ctrl/ngx-emoji-mart";
+import {MatDialogModule} from "@angular/material/dialog";
 
 
 
@@ -82,8 +84,9 @@ const appRoutes: Routes = [
         MatExpansionModule,
         NgxPaginationModule,
         MatSidenavModule,
-        MatButtonToggleModule
-
+        MatButtonToggleModule,
+        PickerComponent,
+        MatDialogModule,
     ],
   providers: [ApiService,
     provideAnimations(),

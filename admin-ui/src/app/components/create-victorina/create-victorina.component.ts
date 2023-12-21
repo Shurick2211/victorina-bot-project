@@ -3,6 +3,10 @@ import {Victorina} from "../../dto/victorina";
 import {Question} from "../../dto/question";
 import {StorageService} from "../../services/storage.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {MatDialog} from "@angular/material/dialog";
+import {EmojiComponent, EmojiModule} from "@ctrl/ngx-emoji-mart/ngx-emoji";
+import {PickerComponent} from "@ctrl/ngx-emoji-mart";
+
 
 
 @Component({
@@ -24,7 +28,9 @@ export class CreateVictorinaComponent implements OnInit{
  endDate:Date | null = null
  startDate: Date | null = null
 
-  constructor(protected storage:StorageService, activeRoute:ActivatedRoute, private router:Router) {
+
+
+  constructor(protected storage:StorageService, activeRoute:ActivatedRoute, private router:Router, private dialog: MatDialog) {
     this.num = activeRoute.snapshot.params['id']
     if (!this.num) {
       this.victorina = this.newVictorina()
@@ -90,5 +96,42 @@ export class CreateVictorinaComponent implements OnInit{
       new Array<Question>(), this.storage.person!.id,null,
       null, null, false, null,false,
       false,null,null);
+  }
+
+
+
+  openEmojiModal(): void {
+    const buttonElement = document.getElementById('emoji')!
+    const buttonRect = buttonElement.getBoundingClientRect()
+    const emojiWin =
+    this.dialog.open(PickerComponent, {
+      width: '25%',
+      height: '35%',
+      position:{
+        top: buttonRect.bottom + 'px',
+        left: buttonRect.left + 'px',
+      }
+    });
+    emojiWin.componentInstance.emojiSelect.subscribe(
+      em=>this.addEmoji(em)
+    )
+  }
+
+
+  addEmoji(event:any) {
+    const emoji = event.emoji.native
+    this.victorina.title = this.victorina.title + emoji
+  }
+
+  onFocus() {
+    this.dialog.closeAll()
+  }
+
+  italic() {
+
+  }
+
+  bold() {
+
   }
 }

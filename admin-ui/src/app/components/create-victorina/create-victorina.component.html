@@ -9,10 +9,24 @@
       <span class="not-ready">Victorina is not Ready!</span>
     </div>
   </div>
-  <div>
-    <span style="margin-top: 5px">Title: </span>
-    <textarea  name="victorina-title" style=" margin-left: 10px"
-              rows="3" [(ngModel)]="victorina.title"></textarea>
+
+  <div style="width: 100%">
+      <span style="margin-top: 5px">Title: </span>
+      <div>
+<!--        <mat-button-toggle >-->
+<!--            <mat-icon>format_bold</mat-icon>-->
+<!--        </mat-button-toggle>-->
+<!--        <mat-button-toggle >-->
+<!--            <mat-icon>format_italic</mat-icon>-->
+<!--        </mat-button-toggle >-->
+          <button id="emoji" mat-icon-button (click)="openEmojiModal()" >
+            <mat-icon>insert_emoticon</mat-icon>
+          </button>
+
+      </div>
+      <textarea matInput name="victorina-title" style=" margin-left: 10px"
+                rows="3" [(ngModel)]="victorina.title" (focus)="onFocus()"></textarea>
+
   </div>
 
   <div class="mat-typography" >
