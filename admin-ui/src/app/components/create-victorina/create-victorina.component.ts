@@ -1,12 +1,10 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Victorina} from "../../dto/victorina";
 import {Question} from "../../dto/question";
 import {StorageService} from "../../services/storage.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
-import {EmojiComponent, EmojiModule} from "@ctrl/ngx-emoji-mart/ngx-emoji";
 import {PickerComponent} from "@ctrl/ngx-emoji-mart";
-
 
 
 @Component({
@@ -105,8 +103,6 @@ export class CreateVictorinaComponent implements OnInit{
     const buttonRect = buttonElement.getBoundingClientRect()
     const emojiWin =
     this.dialog.open(PickerComponent, {
-      width: '25%',
-      height: '35%',
       position:{
         top: buttonRect.bottom + 'px',
         left: buttonRect.left + 'px',
@@ -121,7 +117,6 @@ export class CreateVictorinaComponent implements OnInit{
 
   addEmoji(event:any) {
     const emoji = event.emoji.native
-    console.log(this.cursorOnText)
     this.victorina.title = this.victorina.title.slice(0, this.cursorOnText)
       + emoji + this.victorina.title.slice(this.cursorOnText)
   }
@@ -130,18 +125,12 @@ export class CreateVictorinaComponent implements OnInit{
     this.dialog.closeAll()
   }
 
-  italic() {
 
+  textarea:HTMLTextAreaElement | undefined
+  onPosition($event: Event) {
+    this.textarea = $event.target as HTMLTextAreaElement
+    this.cursorOnText = this.textarea.selectionStart;
   }
 
-  bold() {
 
-  }
-
-
-  onInput($event: Event) {
-    const textarea = $event.target as HTMLTextAreaElement
-    this.cursorOnText = textarea.selectionStart;
-    console.log(this.cursorOnText)
-  }
 }

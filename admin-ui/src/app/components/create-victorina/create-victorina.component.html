@@ -12,20 +12,14 @@
 
   <div style="width: 100%">
       <span style="margin-top: 5px">Title: </span>
-      <div>
-<!--        <mat-button-toggle >-->
-<!--            <mat-icon>format_bold</mat-icon>-->
-<!--        </mat-button-toggle>-->
-<!--        <mat-button-toggle >-->
-<!--            <mat-icon>format_italic</mat-icon>-->
-<!--        </mat-button-toggle >-->
-          <button id="emoji" mat-icon-button (click)="openEmojiModal()" >
-            <mat-icon>insert_emoticon</mat-icon>
-          </button>
-
+      <div style="margin-left: 10px;">
+        <button id="emoji" mat-icon-button (click)="openEmojiModal()" >
+          <mat-icon>insert_emoticon</mat-icon>
+        </button>
       </div>
-      <textarea matInput name="victorina-title" style=" margin-left: 10px" (input)="onInput($event)"
-                rows="3" [(ngModel)]="victorina.title" (focus)="onFocus()" (click)="onInput($event)"
+      <textarea matInput name="victorina-title" style=" margin-left: 10px" (input)="onPosition($event)"
+                rows="3" [(ngModel)]="victorina.title" (focus)="onFocus()" (click)="onPosition($event)"
+                (keydown)="onPosition($event)"
       ></textarea>
 
   </div>
