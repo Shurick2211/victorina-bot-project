@@ -24,8 +24,9 @@
           </button>
 
       </div>
-      <textarea matInput name="victorina-title" style=" margin-left: 10px"
-                rows="3" [(ngModel)]="victorina.title" (focus)="onFocus()"></textarea>
+      <textarea matInput name="victorina-title" style=" margin-left: 10px" (input)="onInput($event)"
+                rows="3" [(ngModel)]="victorina.title" (focus)="onFocus()" (click)="onInput($event)"
+      ></textarea>
 
   </div>
 

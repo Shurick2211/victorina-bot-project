@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {Victorina} from "../../dto/victorina";
 import {Question} from "../../dto/question";
 import {StorageService} from "../../services/storage.service";
@@ -117,10 +117,13 @@ export class CreateVictorinaComponent implements OnInit{
     )
   }
 
+  cursorOnText: number|undefined
 
   addEmoji(event:any) {
     const emoji = event.emoji.native
-    this.victorina.title = this.victorina.title + emoji
+    console.log(this.cursorOnText)
+    this.victorina.title = this.victorina.title.slice(0, this.cursorOnText)
+      + emoji + this.victorina.title.slice(this.cursorOnText)
   }
 
   onFocus() {
@@ -133,5 +136,12 @@ export class CreateVictorinaComponent implements OnInit{
 
   bold() {
 
+  }
+
+
+  onInput($event: Event) {
+    const textarea = $event.target as HTMLTextAreaElement
+    this.cursorOnText = textarea.selectionStart;
+    console.log(this.cursorOnText)
   }
 }
